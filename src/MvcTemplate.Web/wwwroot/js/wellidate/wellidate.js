@@ -1,5 +1,5 @@
 /*!
- * Wellidate 2.1.0
+ * Wellidate 2.2.0
  * https://github.com/NonFactors/Wellidate
  *
  * Copyright © NonFactors
@@ -34,6 +34,7 @@
         }
 
         validate() {
+            const pending = [];
             const validatable = this;
 
             validatable.isValid = true;
@@ -41,15 +42,35 @@
             for (const method of Object.keys(validatable.rules)) {
                 const rule = validatable.rules[method];
 
-                if (rule.isEnabled() && !rule.isValid(validatable)) {
-                    validatable.isValid = false;
-                    validatable.error(method);
+                if (rule.isEnabled()) {
+                    const isValid = rule.isValid(validatable);
+
+                    if (!isValid) {
+                        validatable.isValid = false;
+                        validatable.error(method);
+                    } else if (typeof isValid !== "boolean") {
+                        pending.push(isValid);
+                        validatable.pending();
+
+                        isValid.then(result => {
+                            if (validatable.isValid && !result) {
+                                validatable.isValid = false;
+                                validatable.error(method);
+                            }
+                        });
+                    }
 
                     break;
                 }
             }
 
-            if (validatable.isValid) {
+            if (pending.length) {
+                Promise.all(pending).then(isValid => {
+                    if (validatable.isValid && isValid.every(Boolean)) {
+                        validatable.success();
+                    }
+                });
+            } else if (validatable.isValid) {
                 validatable.success();
             }
 
@@ -162,25 +183,25 @@
             const validatable = this;
             const wellidate = this.wellidate;
             const input = validatable.element;
-            const event = input.tagName == "SELECT" || input.type == "hidden" ? "change" : "input";
+            const event = input.tagName === "SELECT" || input.type === "hidden" ? "change" : "input";
 
-            const changeEvent = function () {
-                if (this.type == "hidden" || validatable.isDirty) {
+            function changeEvent() {
+                if (this.type === "hidden" || validatable.isDirty) {
                     validatable.validate();
                 }
-            };
-            const blurEvent = function () {
+            }
+            function blurEvent() {
                 if (validatable.isDirty || this.value.length) {
                     validatable.isDirty = !validatable.validate();
                 }
-            };
-            const focusEvent = function () {
+            }
+            function focusEvent() {
                 if (wellidate.focusCleanup) {
                     validatable.reset();
                 }
 
                 wellidate.lastActive = this;
-            };
+            }
 
             for (const element of validatable.elements) {
                 element.addEventListener("blur", blurEvent);
@@ -223,7 +244,7 @@
                 rules.required = Object.assign({}, defaultRule, defaultRules.required, { element });
             }
 
-            if (element.type == "email" && defaultRules.email) {
+            if (element.type === "email" && defaultRules.email) {
                 rules.email = Object.assign({}, defaultRule, defaultRules.email, { element });
             }
 
@@ -329,7 +350,7 @@
             wellidate.container = container;
             wellidate.validatables = [];
 
-            if (container.tagName == "FORM") {
+            if (container.tagName === "FORM") {
                 container.noValidate = true;
             }
 
@@ -383,18 +404,18 @@
 
             if (wellidate.container.matches(wellidate.include)) {
                 const group = wellidate.buildGroupElements(wellidate.container);
-                const validatable = wellidate.validatables.find(validatable => validatable.element == group[0]);
+                const current = wellidate.validatables.find(validatable => validatable.element === group[0]);
 
-                validatables.push(validatable || new WellidateValidatable(wellidate, group));
+                validatables.push(current || new WellidateValidatable(wellidate, group));
                 validatables[validatables.length - 1].bind();
             } else {
                 for (const element of wellidate.container.querySelectorAll(wellidate.include)) {
                     const group = wellidate.buildGroupElements(element);
 
-                    if (element == group[0]) {
-                        const validatable = wellidate.validatables.find(validatable => validatable.element == element);
+                    if (element === group[0]) {
+                        const current = wellidate.validatables.find(validatable => validatable.element === element);
 
-                        validatables.push(validatable || new WellidateValidatable(wellidate, group));
+                        validatables.push(current || new WellidateValidatable(wellidate, group));
                         validatables[validatables.length - 1].bind();
                     }
                 }
@@ -403,36 +424,27 @@
             wellidate.validatables = validatables;
         }
         form(...filter) {
-            const wellidate = this;
-            const result = wellidate.validate(...filter);
-
-            for (const valid of result.valid) {
-                valid.validatable.success();
-            }
-
-            for (const invalid of result.invalid) {
-                invalid.validatable.error(invalid.method);
-            }
-
-            wellidate.summary.show(result);
-
-            if (wellidate.focusInvalid) {
-                wellidate.focus(result.invalid.map(invalid => invalid.validatable));
-            }
-
-            wellidate.container.classList.add(wellidate.wasValidatedClass);
-
-            return !result.invalid.length;
+            return !this.validateAndApply(...filter).invalid.length;
         }
         isValid(...filter) {
             for (const validatable of this.filterValidatables(...filter)) {
                 for (const method of Object.keys(validatable.rules)) {
                     const rule = validatable.rules[method];
 
-                    if (rule.isEnabled() && !rule.isValid(validatable)) {
-                        validatable.isValid = false;
+                    if (rule.isEnabled()) {
+                        const isValid = rule.isValid(validatable);
 
-                        return false;
+                        if (!isValid) {
+                            validatable.isValid = false;
+
+                            return false;
+                        } else if (typeof isValid !== "boolean") {
+                            isValid.then(result => {
+                                if (!result) {
+                                    validatable.isValid = false;
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -446,11 +458,11 @@
                 for (const validatable of this.filterValidatables(selector)) {
                     const result = results[selector];
 
-                    if (typeof result.error != "undefined") {
+                    if (typeof result.error !== "undefined") {
                         validatable.error(null, result.error);
-                    } else if (typeof result.success != "undefined") {
+                    } else if (typeof result.success !== "undefined") {
                         validatable.success(result.success);
-                    } else if (typeof result.reset != "undefined") {
+                    } else if (typeof result.reset !== "undefined") {
                         validatable.reset(result.reset);
                     }
                 }
@@ -471,35 +483,36 @@
 
                 for (const method of Object.keys(validatable.rules)) {
                     const rule = validatable.rules[method];
+                    const isValid = !rule.isEnabled() || rule.isValid(validatable);
 
-                    if (rule.isEnabled()) {
-                        const isValid = rule.isValid(validatable);
+                    if (!isValid) {
+                        results.invalid.push({
+                            message: rule.formatMessage(),
+                            validatable: validatable,
+                            method: method
+                        });
 
-                        if (isValid === false) {
-                            results.invalid.push({
-                                message: rule.formatMessage(),
+                        validatable.isValid = false;
+                        results.isValid = false;
+
+                        break;
+                    } else if (typeof isValid !== "boolean") {
+                        isValid.then(result => {
+                            validatable.isValid = validatable.isValid && result;
+                        });
+
+                        rules.push({ method: method, promise: isValid });
+
+                        if (!results.pending.some(pending => pending.validatable === validatable)) {
+                            results.pending.push({
                                 validatable: validatable,
-                                method: method
+                                rules: rules
                             });
-
-                            validatable.isValid = false;
-                            results.isValid = false;
-
-                            break;
-                        } else if (typeof isValid != "boolean") {
-                            rules.push({ method: method, promise: isValid });
-
-                            if (!results.pending.some(rule => rule.validatable == validatable)) {
-                                results.pending.push({
-                                    validatable: validatable,
-                                    rules: rules
-                                });
-                            }
                         }
                     }
                 }
 
-                if (validatable.isValid) {
+                if (validatable.isValid && !rules.length) {
                     results.valid.push({ validatable });
                 }
             }
@@ -524,7 +537,7 @@
 
             for (const arg of args) {
                 for (const key of Object.keys(arg)) {
-                    if (Object.prototype.toString.call(options[key]) == "[object Object]") {
+                    if (Object.prototype.toString.call(options[key]) === "[object Object]") {
                         options[key] = this.extend(options[key], arg[key]);
                     } else {
                         options[key] = arg[key];
@@ -537,8 +550,8 @@
         setOption(option, value) {
             const wellidate = this;
 
-            if (typeof value != "undefined") {
-                if (Object.prototype.toString.call(value) == "[object Object]") {
+            if (typeof value !== "undefined") {
+                if (Object.prototype.toString.call(value) === "[object Object]") {
                     wellidate[option] = wellidate.extend(wellidate[option], value);
                 } else {
                     wellidate[option] = value;
@@ -561,11 +574,11 @@
                 let invalid = errors[0];
 
                 for (let i = 1; i < errors.length; i++) {
-                    if (this.lastActive == errors[i].element) {
+                    if (this.lastActive === errors[i].element) {
                         invalid = errors[i];
 
                         break;
-                    } else if (invalid.element.compareDocumentPosition(errors[i].element) == 2) {
+                    } else if (invalid.element.compareDocumentPosition(errors[i].element) === 2) {
                         invalid = errors[i];
                     }
                 }
@@ -588,6 +601,42 @@
 
             return false;
         }
+        validateAndApply(...filter) {
+            const wellidate = this;
+            const results = wellidate.validate(...filter);
+
+            for (const valid of results.valid) {
+                valid.validatable.success();
+            }
+
+            for (const pending of results.pending) {
+                pending.validatable.pending();
+
+                Promise.all(pending.rules.map(rule => rule.promise)).then(promises => {
+                    const error = promises.findIndex(isValid => !isValid);
+
+                    if (error >= 0) {
+                        pending.validatable.error(pending.rules[error].method);
+                    } else {
+                        pending.validatable.success();
+                    }
+                });
+            }
+
+            for (const invalid of results.invalid) {
+                invalid.validatable.error(invalid.method);
+            }
+
+            wellidate.summary.show(results);
+
+            if (wellidate.focusInvalid) {
+                wellidate.focus(results.invalid.map(invalid => invalid.validatable));
+            }
+
+            wellidate.container.classList.add(wellidate.wasValidatedClass);
+
+            return results;
+        }
         filterValidatables(...filter) {
             return this.validatables.filter(validatable => {
                 for (const filterId of filter) {
@@ -603,9 +652,18 @@
         bind() {
             const wellidate = this;
 
-            if (wellidate.container.tagName == "FORM") {
+            if (wellidate.container.tagName === "FORM") {
                 wellidate.container.addEventListener("submit", function (e) {
-                    if (wellidate.form()) {
+                    const results = wellidate.validateAndApply();
+
+                    if (results.invalid.length) {
+                        e.preventDefault();
+
+                        this.dispatchEvent(new CustomEvent("wellidate-invalid", {
+                            detail: { wellidate },
+                            bubbles: true
+                        }));
+                    } else {
                         this.dispatchEvent(new CustomEvent("wellidate-valid", {
                             detail: { wellidate },
                             bubbles: true
@@ -614,15 +672,8 @@
                         if (wellidate.submitHandler) {
                             e.preventDefault();
 
-                            wellidate.submitHandler(e);
+                            wellidate.submitHandler(e, results);
                         }
-                    } else {
-                        e.preventDefault();
-
-                        this.dispatchEvent(new CustomEvent("wellidate-invalid", {
-                            detail: { wellidate },
-                            bubbles: true
-                        }));
                     }
                 });
 
@@ -665,6 +716,34 @@
 
                             summary.appendChild(list);
                         }
+
+                        for (const pending of result.pending) {
+                            Promise.all(pending.rules.map(rule => rule.promise)).then(results => {
+                                const error = results.findIndex(isValid => !isValid);
+
+                                if (error >= 0) {
+                                    this.append(pending.validatable.rules[pending.rules[error].method].formatMessage());
+                                }
+                            });
+                        }
+                    }
+                }
+            },
+            append(error) {
+                if (this.container) {
+                    const summary = document.querySelector(this.container);
+
+                    if (summary) {
+                        summary.classList.add("validation-summary-errors");
+                        summary.classList.remove("validation-summary-valid");
+
+                        const list = document.createElement("ul");
+                        const item = document.createElement("li");
+
+                        item.innerHTML = error;
+                        list.appendChild(item);
+
+                        summary.appendChild(list);
                     }
                 }
             },
@@ -709,9 +788,9 @@
                 const input = element || this.element;
                 let value = input.value;
 
-                if (input.tagName == "SELECT" && input.multiple) {
+                if (input.tagName === "SELECT" && input.multiple) {
                     return Array.from(input.options).filter(option => option.selected).length.toString();
-                } else if (input.type == "radio") {
+                } else if (input.type === "radio") {
                     if (input.name) {
                         const name = input.name.replace(/(["\]\\])/g, "\\$1");
                         const checked = document.querySelector(`input[name="${name}"]:checked`);
@@ -720,7 +799,7 @@
                     } else {
                         value = input.checked ? value : "";
                     }
-                } else if (input.type == "file") {
+                } else if (input.type === "file") {
                     if (value.lastIndexOf("\\") >= 0) {
                         value = value.substring(value.lastIndexOf("\\") + 1);
                     } else if (value.lastIndexOf("/") >= 0) {
@@ -743,7 +822,7 @@
                 isValid() {
                     const other = document.getElementById(this.other);
 
-                    return other != null && this.normalizeValue() == this.normalizeValue(other);
+                    return other && this.normalizeValue() === this.normalizeValue(other);
                 }
             },
             length: {
@@ -864,7 +943,7 @@
                     const max = parseFloat(this.max);
                     const value = this.normalizeValue();
 
-                    return !value || (min == null || min <= value) && (value <= max || max == null);
+                    return !value || (isNaN(min) || min <= value) && (value <= max || isNaN(max));
                 },
                 formatMessage() {
                     const range = this;
@@ -927,7 +1006,7 @@
                 isValid() {
                     const value = this.normalizeValue();
 
-                    return !value || value % parseInt(this.value) == 0;
+                    return !value || value % parseInt(this.value) === 0;
                 },
                 formatMessage() {
                     return this.message.replace("{0}", this.value);
@@ -958,14 +1037,14 @@
 
                         for (const type of filter) {
                             if (type.startsWith(".")) {
-                                if (file.name != extension && `.${extension}` == type) {
+                                if (file.name !== extension && `.${extension}` === type) {
                                     return true;
                                 }
                             } else if (type.endsWith("/*")) {
                                 if (file.type.startsWith(type.replace(/\*$/, ""))) {
                                     return true;
                                 }
-                            } else if (file.type == type) {
+                            } else if (file.type === type) {
                                 return true;
                             }
                         }
@@ -973,7 +1052,7 @@
                         return !filter.length;
                     });
 
-                    return this.element.files.length == correct.length;
+                    return this.element.files.length === correct.length;
                 }
             },
             regex: {
@@ -1004,27 +1083,25 @@
                             if (validatable.isValid) {
                                 remote.controller = new AbortController();
 
-                                remote.prepare(validatable).then(response => {
-                                    if (validatable.isValid && response.ok) {
-                                        return response.text();
-                                    }
+                                remote.prepare(validatable)
+                                    .then(response => response.ok ? response.text() : "")
+                                    .then(response => {
+                                        if (response) {
+                                            const result = JSON.parse(response);
 
-                                    return "";
-                                }).then(response => {
-                                    if (response) {
-                                        resolve(remote.apply(validatable, response));
-                                    } else {
-                                        resolve(true);
-                                    }
-                                }).catch(reason => {
-                                    if (reason.name == "AbortError") {
-                                        resolve(true);
-                                    }
+                                            remote.message = result.message || remote.message;
 
-                                    reject(reason);
-                                });
+                                            resolve(result.isValid !== false);
+                                        } else {
+                                            resolve(true);
+                                        }
+                                    }).catch(reason => {
+                                        if (reason.name === "AbortError") {
+                                            resolve(true);
+                                        }
 
-                                validatable.pending();
+                                        reject(reason);
+                                    });
                             } else {
                                 resolve(true);
                             }
@@ -1052,15 +1129,6 @@
                         signal: this.controller.signal,
                         headers: { "X-Requested-With": "XMLHttpRequest" }
                     });
-                },
-                apply(validatable, response) {
-                    const result = JSON.parse(response);
-
-                    if (result.isValid === false) {
-                        validatable.error("remote", result.message);
-                    } else {
-                        validatable.success(result.message);
-                    }
                 }
             }
         }

@@ -10,9 +10,9 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
-    "@bevacqua/rome": "^3.0.3",
-    "bootstrap.native": "^3.0.14",
-    "moment": "^2.29.1",
-    "wellidate": "^2.1.0"
+    "@bevacqua/rome": "3.0.3",
+    "bootstrap.native": "3.0.14",
+    "moment": "2.29.1",
+    "wellidate": "2.2.0"
   }
 }
