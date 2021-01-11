@@ -20,7 +20,6 @@ namespace MvcTemplate.Controllers
         }
 
         [HttpGet]
-        [AjaxOnly]
         public JsonResult Role(LookupFilter filter)
         {
             return Json(new MvcLookup<Role, RoleView>(UnitOfWork) { Filter = filter }.GetData());
