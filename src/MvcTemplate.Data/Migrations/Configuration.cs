@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
 using System;
@@ -11,9 +12,9 @@ namespace MvcTemplate.Data.Migrations
         private DbContext Context { get; }
         private IUnitOfWork UnitOfWork { get; }
 
-        public Configuration(DbContext context)
+        public Configuration(DbContext context, IMapper mapper)
         {
-            UnitOfWork = new AuditedUnitOfWork(context, 0);
+            UnitOfWork = new AuditedUnitOfWork(context, mapper, 0);
             Context = context;
         }
 

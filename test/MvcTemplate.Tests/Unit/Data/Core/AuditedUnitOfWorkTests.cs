@@ -18,7 +18,7 @@ namespace MvcTemplate.Data.Tests
         {
             context = TestingContext.Create();
             model = ObjectsFactory.CreateRole(0);
-            unitOfWork = new AuditedUnitOfWork(context, 1);
+            unitOfWork = new AuditedUnitOfWork(context, TestingContext.Mapper, 1);
 
             context.Drop().Add(model);
             context.SaveChanges();
@@ -35,7 +35,7 @@ namespace MvcTemplate.Data.Tests
             context.Dispose();
             unitOfWork.Dispose();
             context = TestingContext.Create();
-            unitOfWork = new AuditedUnitOfWork(context, 1);
+            unitOfWork = new AuditedUnitOfWork(context, TestingContext.Mapper, 1);
             unitOfWork.Insert(ObjectsFactory.CreateRole(1));
 
             LoggableEntity expected = new(context.ChangeTracker.Entries<AModel>().Single());

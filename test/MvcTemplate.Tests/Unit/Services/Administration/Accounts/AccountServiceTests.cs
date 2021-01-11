@@ -1,4 +1,3 @@
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -30,9 +29,9 @@ namespace MvcTemplate.Services.Tests
             context = TestingContext.Create();
             hasher = Substitute.For<IHasher>();
             httpContext = new DefaultHttpContext();
-            service = new AccountService(new UnitOfWork(TestingContext.Create()), hasher);
-            hasher.HashPassword(Arg.Any<String>()).Returns(info => $"{info.Arg<String>()}Hashed");
+            service = new AccountService(new UnitOfWork(TestingContext.Create(), TestingContext.Mapper), hasher);
 
+            hasher.HashPassword(Arg.Any<String>()).Returns(info => $"{info.Arg<String>()}Hashed");
             context.Drop().Add(account = ObjectsFactory.CreateAccount(0));
             context.SaveChanges();
 
@@ -47,8 +46,8 @@ namespace MvcTemplate.Services.Tests
         [Fact]
         public void Get_ReturnsViewById()
         {
+            AccountView expected = TestingContext.Mapper.Map<AccountView>(account);
             AccountView actual = service.Get<AccountView>(account.Id)!;
-            AccountView expected = Mapper.Map<AccountView>(account);
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Equal(expected.RoleTitle, actual.RoleTitle);
@@ -64,7 +63,7 @@ namespace MvcTemplate.Services.Tests
             AccountView[] actual = service.GetViews().ToArray();
             AccountView[] expected = context
                 .Set<Account>()
-                .ProjectTo<AccountView>()
+                .ProjectTo<AccountView>(TestingContext.Mapper.ConfigurationProvider)
                 .OrderByDescending(view => view.Id)
                 .ToArray();
 

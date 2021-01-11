@@ -41,7 +41,7 @@ namespace MvcTemplate.Resources.Tests
         public void Resources_HasAllPermissionAreaTitles()
         {
             using DbContext context = TestingContext.Create();
-            using Configuration configuration = new(context);
+            using Configuration configuration = new(context, TestingContext.Mapper);
 
             configuration.Seed();
 
@@ -53,7 +53,7 @@ namespace MvcTemplate.Resources.Tests
         public void Resources_HasAllPermissionControllerTitles()
         {
             using DbContext context = TestingContext.Create();
-            using Configuration configuration = new(context);
+            using Configuration configuration = new(context, TestingContext.Mapper);
 
             configuration.Seed();
 
@@ -65,7 +65,7 @@ namespace MvcTemplate.Resources.Tests
         public void Resources_HasAllPermissionActionTitles()
         {
             using DbContext context = TestingContext.Create();
-            using Configuration configuration = new(context);
+            using Configuration configuration = new(context, TestingContext.Mapper);
 
             configuration.Seed();
 

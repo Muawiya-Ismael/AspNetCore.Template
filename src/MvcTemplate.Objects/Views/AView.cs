@@ -1,3 +1,4 @@
+using AutoMapper;
 using System;
 
 namespace MvcTemplate.Objects
@@ -34,6 +35,13 @@ namespace MvcTemplate.Objects
         {
             get;
             set;
+        }
+    }
+    public abstract class AView<TModel> : AView
+    {
+        internal virtual void Map(Profile profile)
+        {
+            profile.CreateMap(typeof(TModel), GetType()).ReverseMap();
         }
     }
 }

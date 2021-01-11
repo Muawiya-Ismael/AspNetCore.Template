@@ -11,10 +11,12 @@ namespace MvcTemplate.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
+        protected IMapper Mapper { get; }
         protected DbContext Context { get; }
 
-        public UnitOfWork(DbContext context)
+        public UnitOfWork(DbContext context, IMapper mapper)
         {
+            Mapper = mapper;
             Context = context;
         }
 
@@ -22,7 +24,7 @@ namespace MvcTemplate.Data
         {
             return id == null
                 ? default
-                : Context.Set<TModel>().Where(model => model.Id == id).ProjectTo<TDestination>().FirstOrDefault();
+                : Context.Set<TModel>().Where(model => model.Id == id).ProjectTo<TDestination>(Mapper.ConfigurationProvider).FirstOrDefault();
         }
         public TModel? Get<TModel>(Int64? id) where TModel : AModel
         {
@@ -35,7 +37,7 @@ namespace MvcTemplate.Data
 
         public IQuery<TModel> Select<TModel>() where TModel : AModel
         {
-            return new Query<TModel>(Context.Set<TModel>());
+            return new Query<TModel>(Context.Set<TModel>(), Mapper);
         }
 
         public void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : AModel

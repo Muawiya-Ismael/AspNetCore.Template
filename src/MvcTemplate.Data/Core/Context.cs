@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MvcTemplate.Components.Mvc;
-using MvcTemplate.Data.Mapping;
 using MvcTemplate.Objects;
 using System;
 using System.Linq;
@@ -11,10 +10,6 @@ namespace MvcTemplate.Data
 {
     public class Context : DbContext
     {
-        static Context()
-        {
-            ObjectMapper.MapObjects();
-        }
         public Context(DbContextOptions options)
             : base(options)
         {

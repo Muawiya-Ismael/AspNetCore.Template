@@ -17,7 +17,7 @@ namespace MvcTemplate.Data.Migrations.Tests
         public ConfigurationTests()
         {
             context = TestingContext.Create();
-            configuration = new Configuration(context);
+            configuration = new Configuration(context, TestingContext.Mapper);
 
             context.Drop();
         }

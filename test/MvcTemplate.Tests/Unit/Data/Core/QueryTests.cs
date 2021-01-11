@@ -19,7 +19,7 @@ namespace MvcTemplate.Data.Tests
         public QueryTests()
         {
             context = TestingContext.Create();
-            select = new Query<Role>(context.Set<Role>());
+            select = new Query<Role>(context.Set<Role>(), TestingContext.Mapper);
 
             context.Drop().Add(ObjectsFactory.CreateRole(0));
             context.SaveChanges();
@@ -46,7 +46,7 @@ namespace MvcTemplate.Data.Tests
             ((IQueryable)set).Expression.Returns(Expression.Empty());
             testingContext.Set<Role>().Returns(set);
 
-            select = new Query<Role>(testingContext.Set<Role>());
+            select = new Query<Role>(testingContext.Set<Role>(), TestingContext.Mapper);
 
             Object expected = ((IQueryable)set).Expression;
             Object actual = select.Expression;
@@ -86,7 +86,7 @@ namespace MvcTemplate.Data.Tests
         [Fact]
         public void To_ProjectsSet()
         {
-            IEnumerable<Int64> expected = context.Set<Role>().ProjectTo<RoleView>().Select(view => view.Id).ToArray();
+            IEnumerable<Int64> expected = context.Set<Role>().ProjectTo<RoleView>(TestingContext.Mapper.ConfigurationProvider).Select(view => view.Id).ToArray();
             IEnumerable<Int64> actual = select.To<RoleView>().Select(view => view.Id).ToArray();
 
             Assert.Equal(expected, actual);

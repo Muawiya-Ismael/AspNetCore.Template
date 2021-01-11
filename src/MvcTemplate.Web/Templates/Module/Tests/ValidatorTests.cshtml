@@ -25,7 +25,7 @@ namespace MvcTemplate.Validators.Tests
         public @(Model.ValidatorTests)()
         {
             context = TestingContext.Create();
-            validator = new @(Model.Validator)(new UnitOfWork(TestingContext.Create()));
+            validator = new @(Model.Validator)(new UnitOfWork(TestingContext.Create(), TestingContext.Mapper));
 
             context.Drop().Add(@Model.ModelVarName = ObjectsFactory.Create@(Model.Model)(0));
             context.SaveChanges();

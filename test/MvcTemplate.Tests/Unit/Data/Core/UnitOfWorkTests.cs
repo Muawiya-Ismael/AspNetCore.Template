@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MvcTemplate.Objects;
@@ -21,7 +20,7 @@ namespace MvcTemplate.Data.Tests
         {
             context = TestingContext.Create();
             model = ObjectsFactory.CreateRole(0);
-            unitOfWork = new UnitOfWork(context);
+            unitOfWork = new UnitOfWork(context, TestingContext.Mapper);
 
             context.Drop();
         }
@@ -43,7 +42,7 @@ namespace MvcTemplate.Data.Tests
             context.Add(model);
             context.SaveChanges();
 
-            RoleView expected = Mapper.Map<RoleView>(model);
+            RoleView expected = TestingContext.Mapper.Map<RoleView>(model);
             RoleView actual = unitOfWork.GetAs<Role, RoleView>(model.Id)!;
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
@@ -80,8 +79,8 @@ namespace MvcTemplate.Data.Tests
         [Fact]
         public void To_ConvertsSourceToDestination()
         {
+            RoleView expected = TestingContext.Mapper.Map<RoleView>(model);
             RoleView actual = unitOfWork.To<RoleView>(model);
-            RoleView expected = Mapper.Map<RoleView>(model);
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Equal(expected.Title, actual.Title);
@@ -108,7 +107,7 @@ namespace MvcTemplate.Data.Tests
 
             unitOfWork.Dispose();
 
-            unitOfWork = new UnitOfWork(testingContext);
+            unitOfWork = new UnitOfWork(testingContext, TestingContext.Mapper);
             unitOfWork.InsertRange(roles);
 
             foreach (Role role in roles)
@@ -188,7 +187,7 @@ namespace MvcTemplate.Data.Tests
         public void Commit_SavesChanges()
         {
             using DbContext testingContext = Substitute.For<DbContext>();
-            using UnitOfWork testingUnitOfWork = new(testingContext);
+            using UnitOfWork testingUnitOfWork = new(testingContext, TestingContext.Mapper);
 
             testingUnitOfWork.Commit();
 
@@ -200,7 +199,7 @@ namespace MvcTemplate.Data.Tests
         {
             DbContext testingContext = Substitute.For<DbContext>();
 
-            new UnitOfWork(testingContext).Dispose();
+            new UnitOfWork(testingContext, TestingContext.Mapper).Dispose();
 
             testingContext.Received().Dispose();
         }

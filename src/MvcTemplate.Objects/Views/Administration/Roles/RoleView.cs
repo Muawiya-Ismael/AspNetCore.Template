@@ -1,11 +1,13 @@
+using AutoMapper;
 using MvcTemplate.Components;
 using NonFactors.Mvc.Lookup;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MvcTemplate.Objects
 {
-    public class RoleView : AView
+    public class RoleView : AView<Role>
     {
         [LookupColumn]
         [StringLength(128)]
@@ -16,6 +18,12 @@ namespace MvcTemplate.Objects
         public RoleView()
         {
             Permissions = new MvcTree();
+        }
+
+        internal override void Map(Profile profile)
+        {
+            profile.CreateMap<Role, RoleView>().ForMember(role => role.Permissions, member => member.Ignore());
+            profile.CreateMap<RoleView, Role>().ForMember(role => role.Permissions, member => member.MapFrom(_ => new List<RolePermission>()));
         }
     }
 }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Components;
@@ -23,7 +22,7 @@ namespace MvcTemplate.Services.Tests
         public RoleServiceTests()
         {
             context = TestingContext.Create();
-            service = Substitute.ForPartsOf<RoleService>(new UnitOfWork(TestingContext.Create()));
+            service = Substitute.ForPartsOf<RoleService>(new UnitOfWork(TestingContext.Create(), TestingContext.Mapper));
 
             role = SetUpData();
         }
@@ -39,7 +38,7 @@ namespace MvcTemplate.Services.Tests
             RoleView[] actual = service.GetViews().ToArray();
             RoleView[] expected = context
                 .Set<Role>()
-                .ProjectTo<RoleView>()
+                .ProjectTo<RoleView>(TestingContext.Mapper.ConfigurationProvider)
                 .OrderByDescending(view => view.Id)
                 .ToArray();
 
@@ -61,7 +60,7 @@ namespace MvcTemplate.Services.Tests
         [Fact]
         public void GetView_ReturnsViewById()
         {
-            RoleView expected = Mapper.Map<RoleView>(role);
+            RoleView expected = TestingContext.Mapper.Map<RoleView>(role);
             RoleView actual = service.GetView(role.Id)!;
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);

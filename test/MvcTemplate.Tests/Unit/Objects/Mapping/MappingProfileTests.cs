@@ -5,18 +5,13 @@ using Xunit;
 
 namespace MvcTemplate.Data.Mapping.Tests
 {
-    public class ObjectMapperTests
+    public class MappingProfileTests
     {
-        static ObjectMapperTests()
-        {
-            ObjectMapper.MapObjects();
-        }
-
         [Fact]
-        public void MapRoles_Role_RoleView()
+        public void Map_Role_RoleView()
         {
             Role expected = ObjectsFactory.CreateRole(0);
-            RoleView actual = Mapper.Map<RoleView>(expected);
+            RoleView actual = TestingContext.Mapper.Map<RoleView>(expected);
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Empty(actual.Permissions.SelectedIds);
@@ -26,10 +21,10 @@ namespace MvcTemplate.Data.Mapping.Tests
         }
 
         [Fact]
-        public void MapRoles_RoleView_Role()
+        public void Map_RoleView_Role()
         {
             RoleView expected = ObjectsFactory.CreateRoleView(0);
-            Role actual = Mapper.Map<Role>(expected);
+            Role actual = TestingContext.Mapper.Map<Role>(expected);
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Equal(expected.Title, actual.Title);

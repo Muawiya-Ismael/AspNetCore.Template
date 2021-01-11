@@ -1,5 +1,4 @@
 @model ModuleModel
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Data;
@@ -20,7 +19,7 @@ namespace MvcTemplate.Services.Tests
         public @(Model.ServiceTests)()
         {
             context = TestingContext.Create();
-            service = new @(Model.Service)(new UnitOfWork(TestingContext.Create()));
+            service = new @(Model.Service)(new UnitOfWork(TestingContext.Create(), TestingContext.Mapper));
 
             context.Drop().Add(@Model.ModelVarName = ObjectsFactory.Create@(Model.Model)(0));
             context.SaveChanges();
@@ -34,8 +33,8 @@ namespace MvcTemplate.Services.Tests
         [Fact]
         public void Get_ReturnsViewById()
         {
+            @Model.View expected = TestingContext.Mapper.Map<@Model.View>(@Model.ModelVarName);
             @Model.View actual = service.Get<@Model.View>(@(Model.ModelVarName).Id)!;
-            @Model.View expected = Mapper.Map<@Model.View>(@Model.ModelVarName);
 
             @if (Model.ViewProperties.Length == 0)
             {
@@ -56,7 +55,7 @@ namespace MvcTemplate.Services.Tests
             @(Model.View)[] actual = service.GetViews().ToArray();
             @(Model.View)[] expected = context
                 .Set<@Model.Model>()
-                .ProjectTo<@Model.View>()
+                .ProjectTo<@Model.View>(TestingContext.Mapper.ConfigurationProvider)
                 .OrderByDescending(view => view.Id)
                 .ToArray();
 

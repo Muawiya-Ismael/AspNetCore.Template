@@ -22,7 +22,7 @@ namespace MvcTemplate.Components.Security.Tests
             services = Substitute.For<IServiceProvider>();
 
             services.GetService(typeof(IAuthorization)).Returns(Substitute.For<IAuthorization>());
-            services.GetService(typeof(IUnitOfWork)).Returns(_ => new UnitOfWork(TestingContext.Create()));
+            services.GetService(typeof(IUnitOfWork)).Returns(_ => new UnitOfWork(TestingContext.Create(), TestingContext.Mapper));
 
             authorization = new Authorization(Assembly.GetExecutingAssembly(), services);
         }

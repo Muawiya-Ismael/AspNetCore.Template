@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MvcTemplate.Objects
 {
-    public class AccountView : AView
+    public class AccountView : AView<Account>
     {
         [StringLength(32)]
         public String Username { get; set; }

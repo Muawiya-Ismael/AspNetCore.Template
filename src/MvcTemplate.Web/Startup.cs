@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -119,12 +120,14 @@ namespace MvcTemplate.Web
             services.AddDbContext<DbContext, Context>(options => options.UseSqlServer(Config["Data:Connection"]));
             services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
                 provider.GetRequiredService<DbContext>(),
+                provider.GetRequiredService<IMapper>(),
                 provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User?.Id()));
 
             services.AddSingleton<IHasher, BCrypter>();
             services.AddSingleton<IMailClient, SmtpMailClient>();
             services.AddSingleton<IValidationAttributeAdapterProvider, ValidationAdapterProvider>();
             services.AddSingleton<IAuthorization>(provider => new Authorization(typeof(AController).Assembly, provider));
+            services.AddSingleton(new MapperConfiguration(mapper => mapper.AddMaps(typeof(AView).Assembly)).CreateMapper());
 
             Language[] supported = Config.GetSection("Languages:Supported").Get<Language[]>();
             services.AddSingleton<ILanguages>(new Languages(Config["Languages:Default"], supported));

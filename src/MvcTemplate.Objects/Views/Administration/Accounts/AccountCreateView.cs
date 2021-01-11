@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MvcTemplate.Objects
 {
-    public class AccountCreateView : AView
+    public class AccountCreateView : AView<Account>
     {
         [StringLength(32)]
         public String Username { get; set; }

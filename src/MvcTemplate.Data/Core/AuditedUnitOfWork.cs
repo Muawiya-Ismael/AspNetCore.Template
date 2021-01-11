@@ -1,7 +1,8 @@
-using System;
-using System.Linq;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
+using System;
+using System.Linq;
 
 namespace MvcTemplate.Data
 {
@@ -9,8 +10,8 @@ namespace MvcTemplate.Data
     {
         private Int64? AccountId { get; }
 
-        public AuditedUnitOfWork(DbContext context, Int64? accountId)
-            : base(context)
+        public AuditedUnitOfWork(DbContext context, IMapper mapper, Int64? accountId)
+            : base(context, mapper)
         {
             AccountId = accountId;
         }

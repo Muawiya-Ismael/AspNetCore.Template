@@ -1,15 +1,19 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
+using MvcTemplate.Objects.Mapping;
 
 namespace MvcTemplate.Tests
 {
     public static class TestingContext
     {
+        public static IMapper Mapper { get; }
         private static DbContextOptions Options { get; }
 
         static TestingContext()
         {
+            Mapper = new MapperConfiguration(mapper => mapper.AddProfile(new MappingProfile())).CreateMapper();
             Options = new DbContextOptionsBuilder()
                 .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MvcTemplateTest;Trusted_Connection=True;MultipleActiveResultSets=True")
                 .Options;
