@@ -14,7 +14,7 @@ namespace MvcTemplate.Components.Logging
         private String LogDirectory { get; }
         private String RollingFileFormat { get; }
         private IHttpContextAccessor Accessor { get; }
-        private static Object LogWriting { get; } = new Object();
+        private static Object LogWriting { get; } = new();
 
         public FileLogger(String path, Int64 rollSize)
         {
@@ -53,8 +53,8 @@ namespace MvcTemplate.Components.Logging
             {
                 log.Append("    ").Append(exception.GetType()).Append(": ").AppendLine(exception.Message);
 
-                if (exception.StackTrace is String stackTrace)
-                    foreach (String line in stackTrace.Split('\n'))
+                if (exception.StackTrace is String trace)
+                    foreach (String line in trace.Split('\n'))
                         log.Append("     ").AppendLine(line.TrimEnd('\r'));
 
                 exception = exception.InnerException;
@@ -64,7 +64,9 @@ namespace MvcTemplate.Components.Logging
 
             lock (LogWriting)
             {
-                Directory.CreateDirectory(LogDirectory);
+                if (!String.IsNullOrEmpty(LogDirectory))
+                    Directory.CreateDirectory(LogDirectory);
+
                 File.AppendAllText(LogPath, log.ToString());
 
                 if (RollSize <= new FileInfo(LogPath).Length)

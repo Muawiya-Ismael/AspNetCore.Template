@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Routing;
 using MvcTemplate.Tests;
-using NSubstitute;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,22 +21,16 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Fact]
         public async Task BindModelAsync_DoesNotTrimValue()
         {
-            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.StringField));
-            DefaultModelBindingContext context = new();
-            NotTrimmedAttribute attribute = new();
+            DefaultModelBindingContext context = new()
+            {
+                ModelName = "Test",
+                ModelState = new ModelStateDictionary(),
+                ActionContext = MvcHelperFactory.CreateViewContext(),
+                ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(String)),
+                ValueProvider = new RouteValueProvider(BindingSource.Path, new RouteValueDictionary(new { Test = " Value  " }))
+            };
 
-            context.ModelMetadata = metadata;
-            context.ActionContext = new ActionContext();
-            context.ModelState = new ModelStateDictionary();
-            context.ModelName = nameof(AllTypesView.StringField);
-            context.ValueProvider = Substitute.For<IValueProvider>();
-            context.ActionContext.HttpContext = new DefaultHttpContext();
-            context.HttpContext.RequestServices = Substitute.For<IServiceProvider>();
-            context.ValueProvider.GetValue(context.ModelName).Returns(ValueProviderResult.None);
-            context.ValueProvider.GetValue(nameof(AllTypesView.StringField)).Returns(new ValueProviderResult(" Value  "));
-            context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory)).Returns(Substitute.For<ILoggerFactory>());
-
-            await attribute.BindModelAsync(context);
+            await new NotTrimmedAttribute().BindModelAsync(context);
 
             ModelBindingResult expected = ModelBindingResult.Success(" Value  ");
             ModelBindingResult actual = context.Result;

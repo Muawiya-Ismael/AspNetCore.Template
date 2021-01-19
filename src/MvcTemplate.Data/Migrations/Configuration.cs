@@ -80,7 +80,7 @@ namespace MvcTemplate.Data.Migrations
         {
             Account[] accounts =
             {
-                new Account
+                new()
                 {
                     Username = "admin",
                     Passhash = "$2b$13$ouxA6L7QZ/eSeVZD8lawSOEwtRn/hOoRY67Pwaj/WJaZe7S4.cHJC", // Will be generated on project rename

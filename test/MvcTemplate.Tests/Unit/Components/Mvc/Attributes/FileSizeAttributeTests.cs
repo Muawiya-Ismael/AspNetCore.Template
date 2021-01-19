@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using MvcTemplate.Resources;
-using NSubstitute;
 using System;
+using System.IO;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc.Tests
@@ -18,8 +18,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Fact]
         public void FileSizeAttribute_SetsMaximumMB()
         {
-            Decimal actual = new FileSizeAttribute(12.25).MaximumMB;
             Decimal expected = 12.25M;
+            Decimal actual = new FileSizeAttribute(12.25).MaximumMB;
 
             Assert.Equal(expected, actual);
         }
@@ -50,10 +50,10 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Theory]
         [InlineData(240546)]
         [InlineData(12845056)]
-        public void IsValid_LowerOrEqualFileSize(Int64 size)
+        public void IsValid_LowerOrEqualFileSize(Int64 length)
         {
-            IFormFile file = Substitute.For<IFormFile>();
-            file.Length.Returns(size);
+            using MemoryStream stream = new();
+            IFormFile file = new FormFile(stream, 0, length, "File", "file.txt");
 
             Assert.True(attribute.IsValid(file));
         }
@@ -61,8 +61,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Fact]
         public void IsValid_GreaterThanMaximumIsNotValid()
         {
-            IFormFile file = Substitute.For<IFormFile>();
-            file.Length.Returns(12845057);
+            using MemoryStream stream = new();
+            IFormFile file = new FormFile(stream, 0, 12845057, "File", "file.txt");
 
             Assert.False(attribute.IsValid(file));
         }
@@ -70,11 +70,14 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Theory]
         [InlineData(240546, 4574)]
         [InlineData(12840000, 5056)]
-        public void IsValid_LowerOrEqualFileSizes(Int64 firstFileSize, Int64 secondFileSize)
+        public void IsValid_LowerOrEqualFileSizes(Int64 firstLength, Int64 secondLength)
         {
-            IFormFile?[] files = { Substitute.For<IFormFile>(), Substitute.For<IFormFile>() };
-            files[1]?.Length.Returns(secondFileSize);
-            files[0]?.Length.Returns(firstFileSize);
+            using MemoryStream stream = new();
+            IFormFile[] files =
+            {
+                new FormFile(stream, 0, firstLength, "FirstFile", "first.txt"),
+                new FormFile(stream, 0, secondLength, "SecondFile", "second.txt")
+            };
 
             Assert.True(attribute.IsValid(files));
         }
@@ -82,9 +85,12 @@ namespace MvcTemplate.Components.Mvc.Tests
         [Fact]
         public void IsValid_GreaterThanMaximumSizesAreNotValid()
         {
-            IFormFile?[] files = { Substitute.For<IFormFile>(), Substitute.For<IFormFile>() };
-            files[1]?.Length.Returns(12840000);
-            files[0]?.Length.Returns(5057);
+            using MemoryStream stream = new();
+            IFormFile[] files =
+            {
+                new FormFile(stream, 0, 5057, "FirstFile", "first.txt"),
+                new FormFile(stream, 0, 12840000, "SecondFile", "second.txt")
+            };
 
             Assert.False(attribute.IsValid(files));
         }

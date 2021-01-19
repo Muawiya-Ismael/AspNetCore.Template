@@ -114,7 +114,7 @@ namespace MvcTemplate.Services
                     Action = Resource.ForAction(permission.Action),
                     Controller = Resource.ForController($"{permission.Area}/{permission.Controller}".Trim('/'))
                 })
-                .OrderBy(permission => permission.Area ?? permission.Controller)
+                .OrderBy(permission => permission.Area.Length == 0 ? permission.Controller : permission.Area)
                 .ThenBy(permission => permission.Controller)
                 .ThenBy(permission => permission.Action);
         }

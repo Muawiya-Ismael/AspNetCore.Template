@@ -25,10 +25,12 @@ using MvcTemplate.Services;
 using MvcTemplate.Validators;
 using NonFactors.Mvc.Grid;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace MvcTemplate.Web
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         private IConfiguration Config { get; }
@@ -121,7 +123,7 @@ namespace MvcTemplate.Web
             services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
                 provider.GetRequiredService<DbContext>(),
                 provider.GetRequiredService<IMapper>(),
-                provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User?.Id()));
+                provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User.Id()));
 
             services.AddSingleton<IHasher, BCrypter>();
             services.AddSingleton<IMailClient, SmtpMailClient>();

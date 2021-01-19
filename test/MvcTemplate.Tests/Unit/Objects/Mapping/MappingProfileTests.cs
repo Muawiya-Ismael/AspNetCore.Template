@@ -1,4 +1,3 @@
-using AutoMapper;
 using MvcTemplate.Objects;
 using MvcTemplate.Tests;
 using Xunit;

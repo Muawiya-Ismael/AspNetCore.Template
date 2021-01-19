@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,47 +34,32 @@ namespace MvcTemplate.Components.Mvc
                 try
                 {
                     Logger.LogError(exception, "An unhandled exception has occurred while executing the request.");
+
+                    await View(context, "/home/error");
                 }
                 catch
                 {
                 }
-
-                await View(context, "/home/error");
             }
         }
 
         private async Task View(HttpContext context, String path)
         {
-            String originalPath = context.Request.Path;
-            Match abbreviation = Regex.Match(originalPath, "^/(\\w{2})(/|$)");
+            Match abbreviation = Regex.Match(context.Request.Path, "^/(?<abbreviation>\\w{2})(/|$)");
 
-            try
-            {
-                if (abbreviation.Success)
-                {
-                    Language language = Languages[abbreviation.Groups[1].Value];
+            if (abbreviation.Success)
+                context.Request.Path = $"/{Languages[abbreviation.Groups["abbreviation"].Value].Abbreviation}{path}";
+            else
+                context.Request.Path = path;
 
-                    if (language != Languages.Default)
-                        context.Request.Path = $"/{language.Abbreviation}{path}";
-                }
-                else
-                {
-                    context.Request.Path = path;
-                }
+            context.Request.Method = HttpMethods.Get;
+            context.Request.RouteValues.Clear();
+            context.SetEndpoint(null);
 
-                context.Features.Get<IRouteValuesFeature>()?.RouteValues?.Clear();
-                context.Request.Method = "GET";
-                context.SetEndpoint(null);
+            using IServiceScope scope = context.RequestServices.CreateScope();
+            context.RequestServices = scope.ServiceProvider;
 
-                using IServiceScope scope = context.RequestServices.CreateScope();
-                context.RequestServices = scope.ServiceProvider;
-
-                await Next(context);
-            }
-            finally
-            {
-                context.Request.Path = originalPath;
-            }
+            await Next(context);
         }
     }
 }

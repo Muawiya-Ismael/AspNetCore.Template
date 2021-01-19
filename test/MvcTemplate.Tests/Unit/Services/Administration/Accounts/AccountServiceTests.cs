@@ -164,8 +164,8 @@ namespace MvcTemplate.Services.Tests
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Equal(expected.IsLocked, actual.IsLocked);
             Assert.Equal(expected.Username, actual.Username);
-            Assert.Null(actual.RecoveryTokenExpiration);
             Assert.Equal(expected.RoleId, actual.RoleId);
+            Assert.Null(actual.RecoveryTokenExpiration);
             Assert.Equal(expected.Email, actual.Email);
             Assert.Equal(expected.Id, actual.Id);
             Assert.Null(actual.RecoveryToken);
@@ -185,10 +185,10 @@ namespace MvcTemplate.Services.Tests
 
             Assert.Equal(hasher.HashPassword(expected.Password), actual.Passhash);
             Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.Email?.ToLower(), actual.Email);
+            Assert.Equal(expected.Email.ToLower(), actual.Email);
             Assert.Equal(expected.Username, actual.Username);
-            Assert.Null(actual.RecoveryTokenExpiration);
             Assert.Equal(expected.RoleId, actual.RoleId);
+            Assert.Null(actual.RecoveryTokenExpiration);
             Assert.Null(actual.RecoveryToken);
             Assert.False(actual.IsLocked);
         }

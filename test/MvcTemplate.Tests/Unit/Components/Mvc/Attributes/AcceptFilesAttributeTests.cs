@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using MvcTemplate.Resources;
-using NSubstitute;
 using System;
+using System.IO;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc.Tests
@@ -55,8 +55,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         [InlineData(".docx.doc")]
         public void IsValid_DifferentExtensionReturnsFalse(String fileName)
         {
-            IFormFile file = Substitute.For<IFormFile>();
-            file.FileName.Returns(fileName);
+            using MemoryStream stream = new();
+            IFormFile file = new FormFile(stream, 0, 1, "File", fileName);
 
             Assert.False(attribute.IsValid(file));
         }
@@ -69,9 +69,12 @@ namespace MvcTemplate.Components.Mvc.Tests
         [InlineData(".docx.doc")]
         public void IsValid_DifferentExtensionsReturnsFalse(String fileName)
         {
-            IFormFile[] files = { Substitute.For<IFormFile>(), Substitute.For<IFormFile>() };
-            files[0].FileName.Returns("File.docx");
-            files[1].FileName.Returns(fileName);
+            using MemoryStream stream = new();
+            IFormFile[] files =
+            {
+                new FormFile(stream, 0, 1, "FirstFile", fileName),
+                new FormFile(stream, 0, 1, "SecondFile", "File.docx")
+            };
 
             Assert.False(attribute.IsValid(files));
         }
@@ -84,8 +87,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         [InlineData("xlsx.doc.xlsx")]
         public void IsValid_Extension(String fileName)
         {
-            IFormFile file = Substitute.For<IFormFile>();
-            file.FileName.Returns(fileName);
+            using MemoryStream stream = new();
+            IFormFile file = new FormFile(stream, 0, 1, "File", fileName);
 
             Assert.True(attribute.IsValid(file));
         }
@@ -96,11 +99,14 @@ namespace MvcTemplate.Components.Mvc.Tests
         [InlineData(".xlsx", "docx..docx")]
         [InlineData(".docx", "xlsx.doc.xlsx")]
         [InlineData("xlsx.doc.xlsx", ".docx.docx")]
-        public void IsValid_Exntesions(String firstFileName, String secondFileName)
+        public void IsValid_Extensions(String firstFileName, String secondFileName)
         {
-            IFormFile[] files = { Substitute.For<IFormFile>(), Substitute.For<IFormFile>() };
-            files[1].FileName.Returns(secondFileName);
-            files[0].FileName.Returns(firstFileName);
+            using MemoryStream stream = new();
+            IFormFile[] files =
+            {
+                new FormFile(stream, 0, 1, "FirstFile", firstFileName),
+                new FormFile(stream, 0, 1, "SecondFile", secondFileName)
+            };
 
             Assert.True(attribute.IsValid(files));
         }

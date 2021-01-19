@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using MvcTemplate.Components.Lookups;
-using MvcTemplate.Components.Mvc;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;

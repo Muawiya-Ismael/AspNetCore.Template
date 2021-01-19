@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,11 +17,11 @@ namespace MvcTemplate.Components.Mvc.Tests
         public FormInputTagHelperTests()
         {
             TagHelperContent content = new DefaultTagHelperContent();
-            ModelMetadata metadata = Substitute.For<ModelMetadata>(ModelMetadataIdentity.ForType(typeof(String)));
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(String));
 
             context = new TagHelperContext(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
-            output = new TagHelperOutput("input", new TagHelperAttributeList(), (_, __) => Task.FromResult(content));
-            helper = new FormInputTagHelper() { For = new ModelExpression("IsChecked", new ModelExplorer(new EmptyModelMetadataProvider(), metadata, null)) };
+            output = new TagHelperOutput("input", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
+            helper = new FormInputTagHelper { For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, null)) };
         }
 
         [Theory]

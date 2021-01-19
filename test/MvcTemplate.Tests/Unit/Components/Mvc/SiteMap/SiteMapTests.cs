@@ -19,9 +19,9 @@ namespace MvcTemplate.Components.Mvc.Tests
 
         public SiteMapTests()
         {
+            context = MvcHelperFactory.CreateViewContext();
             authorization = Substitute.For<IAuthorization>();
             siteMap = new SiteMap(CreateSiteMap(), authorization);
-            context = HtmlHelperFactory.CreateHtmlHelper().ViewContext;
             route = context.RouteData.Values;
         }
 

@@ -298,7 +298,7 @@ namespace MvcTemplate.Services.Tests
                     Controller = Resource.ForController($"{permission.Area}/{permission.Controller}".Trim('/'))
                 });
 
-            foreach (IGrouping<String, PermissionView> area in permissions.GroupBy(permission => permission.Area).OrderBy(permission => permission.Key ?? permission.FirstOrDefault()?.Controller))
+            foreach (IGrouping<String, PermissionView> area in permissions.GroupBy(permission => permission.Area).OrderBy(permission => permission.Key.Length == 0 ? permission.First().Controller : permission.Key))
             {
                 List<MvcTreeNode> nodes = new();
 

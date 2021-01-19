@@ -47,7 +47,7 @@ namespace MvcTemplate.Components.Mvc
             {
                 Styles[path] = null;
 
-                if (ScriptsAvailable(path))
+                if (StylesAvailable(path))
                     Styles[path] = UrlFactory(ViewContext).Content($"~/css/application/{path}");
             }
 
@@ -57,16 +57,16 @@ namespace MvcTemplate.Components.Mvc
                 output.Attributes.SetAttribute("href", Styles[path]);
         }
 
-        private Boolean ScriptsAvailable(String path)
+        private Boolean StylesAvailable(String path)
         {
             return File.Exists(Path.Combine(Environment.WebRootPath, $"css/application/{path}"));
         }
         private String FormPath()
         {
-            String extension = Environment.IsDevelopment() ? ".css" : ".min.css";
-            RouteValueDictionary route = ViewContext?.RouteData.Values ?? new RouteValueDictionary();
+            RouteValueDictionary route = ViewContext!.RouteData.Values;
+            String extension = Environment.IsDevelopment() ? "css" : "min.css";
 
-            return $"{route["area"]}/{route["controller"]}/{Action}{extension}".ToLower().Trim('/');
+            return $"{route["area"]}/{route["controller"]}/{Action}.{extension}".ToLower().Trim('/');
         }
     }
 }

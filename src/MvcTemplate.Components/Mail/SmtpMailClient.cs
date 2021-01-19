@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MvcTemplate.Components.Mail
 {
+    [ExcludeFromCodeCoverage]
     public class SmtpMailClient : IMailClient
     {
         private MailConfiguration Config { get; }

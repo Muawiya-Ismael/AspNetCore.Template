@@ -14,10 +14,10 @@ namespace MvcTemplate.Rename
             String templateName = "MvcTemplate";
 
             Console.Write("Enter root namespace name: ");
-            while ((project = Console.ReadLine()?.Trim() ?? "") == "") { }
+            while ((project = Console.ReadLine()?.Trim() ?? "").Length == 0) { }
 
             Console.Write("Enter new site admin user password (32 symbols max): ");
-            while ((password = Console.ReadLine()?.Trim() ?? "") == "") { }
+            while ((password = Console.ReadLine()?.Trim() ?? "").Length == 0) { }
 
             Int32 port = new Random().Next(1000, 19175);
             Int32 sslPort = new Random().Next(44300, 44400);

@@ -12,7 +12,7 @@ namespace MvcTemplate.Data
         private Object? NewValue { get; }
         private String Property { get; }
 
-        private static JsonSerializerOptions Options = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+        private static JsonSerializerOptions Options = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
         public LoggableProperty(PropertyEntry entry, Object? newValue)
         {

@@ -9,7 +9,7 @@ namespace MvcTemplate.Objects.Mapping
     {
         public MappingProfile()
         {
-            Object[] profile = new[] { this };
+            Object[] profile = { this };
             Type[] views = GetType()
                 .Assembly
                 .GetTypes()

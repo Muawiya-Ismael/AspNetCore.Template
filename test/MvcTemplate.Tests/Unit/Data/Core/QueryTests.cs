@@ -19,7 +19,7 @@ namespace MvcTemplate.Data.Tests
         public QueryTests()
         {
             context = TestingContext.Create();
-            select = new Query<Role>(context.Set<Role>(), TestingContext.Mapper);
+            select = new Query<Role>(context.Set<Role>(), TestingContext.Mapper.ConfigurationProvider);
 
             context.Drop().Add(ObjectsFactory.CreateRole(0));
             context.SaveChanges();
@@ -46,7 +46,7 @@ namespace MvcTemplate.Data.Tests
             ((IQueryable)set).Expression.Returns(Expression.Empty());
             testingContext.Set<Role>().Returns(set);
 
-            select = new Query<Role>(testingContext.Set<Role>(), TestingContext.Mapper);
+            select = new Query<Role>(testingContext.Set<Role>(), TestingContext.Mapper.ConfigurationProvider);
 
             Object expected = ((IQueryable)set).Expression;
             Object actual = select.Expression;

@@ -4,7 +4,6 @@ using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,18 +18,17 @@ namespace MvcTemplate.Components.Mvc.Tests
 
         public AuthorizeTagHelperTests()
         {
+            authorization = Substitute.For<IAuthorization>();
             TagHelperContent content = new DefaultTagHelperContent();
-
-            output = new TagHelperOutput("authorize", new TagHelperAttributeList(), (_, __) => Task.FromResult(content));
+            helper = new AuthorizeTagHelper(authorization) { ViewContext = MvcHelperFactory.CreateViewContext() };
             context = new TagHelperContext(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
-            helper = new AuthorizeTagHelper(authorization = Substitute.For<IAuthorization>());
-            helper.ViewContext = HtmlHelperFactory.CreateHtmlHelper().ViewContext;
+            output = new TagHelperOutput("authorize", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
         }
 
         [Theory]
         [InlineData("A/B/C", "A", "B", "C", "D", "E", "F")]
         [InlineData("A/B/C", null, null, null, "A", "B", "C")]
-        public void Process_NotAuthorized_SurpressesOutput(
+        public void Process_NotAuthorized_SuppressesOutput(
             String permission,
             String? area, String? controller, String? action,
             String? routeArea, String? routeController, String? routeAction)
@@ -38,8 +36,7 @@ namespace MvcTemplate.Components.Mvc.Tests
             authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
             authorization.IsGrantedFor(1, permission).Returns(false);
 
-            helper.ViewContext!.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
-            helper.ViewContext.RouteData.Values["controller"] = routeController;
+            helper.ViewContext!.RouteData.Values["controller"] = routeController;
             helper.ViewContext.RouteData.Values["action"] = routeAction;
             helper.ViewContext.RouteData.Values["area"] = routeArea;
 
@@ -75,8 +72,7 @@ namespace MvcTemplate.Components.Mvc.Tests
             authorization.IsGrantedFor(1, Arg.Any<String>()).Returns(false);
             authorization.IsGrantedFor(1, permission).Returns(true);
 
-            helper.ViewContext!.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
-            helper.ViewContext.RouteData.Values["controller"] = routeController;
+            helper.ViewContext!.RouteData.Values["controller"] = routeController;
             helper.ViewContext.RouteData.Values["action"] = routeAction;
             helper.ViewContext.RouteData.Values["area"] = routeArea;
 

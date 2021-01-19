@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using MvcTemplate.Components.Extensions.Tests;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,19 +17,17 @@ namespace MvcTemplate.Components.Mvc.Tests
         public MvcTreeTagHelperTests()
         {
             MvcTree tree = new();
+            TagHelperContent content = new DefaultTagHelperContent();
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(MvcTree));
+
             tree.SelectedIds.Add(123456);
             tree.Nodes.Add(new MvcTreeNode("Test"));
             tree.Nodes[0].Children.Add(new MvcTreeNode(4567, "Test2"));
             tree.Nodes[0].Children.Add(new MvcTreeNode(123456, "Test1"));
 
-            EmptyModelMetadataProvider provider = new();
-            TagHelperContent content = new DefaultTagHelperContent();
-            ModelExplorer explorer = new(provider, provider.GetMetadataForProperty(typeof(MvcTreeView), "MvcTree"), tree);
-
-            helper = new MvcTreeTagHelper();
-            helper.For = new ModelExpression("MvcTree", explorer);
-            output = new TagHelperOutput("div", new TagHelperAttributeList(), (_, __) => Task.FromResult(content));
+            output = new TagHelperOutput("div", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
             context = new TagHelperContext(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
+            helper = new MvcTreeTagHelper { For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, tree)) };
         }
 
         [Fact]
@@ -38,7 +35,7 @@ namespace MvcTemplate.Components.Mvc.Tests
         {
             helper.Process(context, output);
 
-            Object expected = "MvcTree.SelectedIds";
+            Object expected = "Test.SelectedIds";
             Object actual = output.Attributes["data-for"].Value;
 
             Assert.Equal(expected, actual);
@@ -84,7 +81,7 @@ namespace MvcTemplate.Components.Mvc.Tests
             String actual = output.Content.GetContent();
             String expected =
                 "<div class=\"mvc-tree-ids\">" +
-                    "<input name=\"MvcTree.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
+                    "<input name=\"Test.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
                 "</div>" +
                 "<ul class=\"mvc-tree-view\">" +
                     "<li class=\"mvc-tree-branch\">" +
@@ -113,7 +110,7 @@ namespace MvcTemplate.Components.Mvc.Tests
             String actual = output.Content.GetContent();
             String expected =
                 "<div class=\"mvc-tree-ids\">" +
-                    "<input name=\"MvcTree.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
+                    "<input name=\"Test.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
                 "</div>" +
                 "<ul class=\"mvc-tree-view\">" +
                     "<li class=\"mvc-tree-collapsed mvc-tree-branch\">" +

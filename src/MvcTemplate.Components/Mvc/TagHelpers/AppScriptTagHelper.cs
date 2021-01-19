@@ -63,10 +63,10 @@ namespace MvcTemplate.Components.Mvc
         }
         private String FormPath()
         {
-            String extension = Environment.IsDevelopment() ? ".js" : ".min.js";
-            RouteValueDictionary route = ViewContext?.RouteData.Values ?? new RouteValueDictionary();
+            RouteValueDictionary route = ViewContext!.RouteData.Values;
+            String extension = Environment.IsDevelopment() ? "js" : "min.js";
 
-            return $"{route["area"]}/{route["controller"]}/{Action}{extension}".ToLower().Trim('/');
+            return $"{route["area"]}/{route["controller"]}/{Action}.{extension}".ToLower().Trim('/');
         }
     }
 }

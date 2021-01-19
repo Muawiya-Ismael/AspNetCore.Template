@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace MvcTemplate.Resources
 {
@@ -110,11 +109,6 @@ namespace MvcTemplate.Resources
             String language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
             return resources[language, group, key] ?? resources["", group, key] ?? "";
-        }
-
-        private static String[] SplitCamelCase(String value)
-        {
-            return Regex.Split(value, "(?<!^)(?=[A-Z])");
         }
     }
 }

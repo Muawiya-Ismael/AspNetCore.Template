@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace MvcTemplate.Web
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         public static void Main()

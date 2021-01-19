@@ -15,10 +15,10 @@ namespace MvcTemplate.Data
         public Expression Expression => Set.Expression;
         public IQueryProvider Provider => Set.Provider;
 
-        private IMapper Mapper { get; }
         private IQueryable<TModel> Set { get; }
+        private IConfigurationProvider Mapper { get; }
 
-        public Query(IQueryable<TModel> set, IMapper mapper)
+        public Query(IQueryable<TModel> set, IConfigurationProvider mapper)
         {
             Set = set;
             Mapper = mapper;
@@ -35,7 +35,7 @@ namespace MvcTemplate.Data
 
         public IQueryable<TView> To<TView>()
         {
-            return Set.AsNoTracking().ProjectTo<TView>(Mapper.ConfigurationProvider);
+            return Set.AsNoTracking().ProjectTo<TView>(Mapper);
         }
 
         public IEnumerator<TModel> GetEnumerator()

@@ -18,11 +18,10 @@ namespace MvcTemplate.Components.Mvc.Tests
             TagHelperContent content = new DefaultTagHelperContent();
             ModelMetadata metadata = Substitute.For<ModelMetadata>(ModelMetadataIdentity.ForType(typeof(String)));
             TagHelperContext context = new(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
-            TagHelperOutput output = new("input", new TagHelperAttributeList(), (_, __) => Task.FromResult(content));
-            PlaceholderTagHelper helper = new() { For = new ModelExpression("Total", new ModelExplorer(new EmptyModelMetadataProvider(), metadata, null)) };
+            TagHelperOutput output = new("input", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
+            PlaceholderTagHelper helper = new() { For = new ModelExpression("Total", new ModelExplorer(metadata, metadata, null)) };
 
             metadata.DisplayName.Returns("Test");
-
             helper.Process(context, output);
 
             Assert.Single(output.Attributes);

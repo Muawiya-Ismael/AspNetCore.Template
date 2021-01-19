@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace MvcTemplate.Components.System
 {
-    public class Constant
+    public static class Constant
     {
         private static ConcurrentDictionary<String, Object> Values { get; }
 

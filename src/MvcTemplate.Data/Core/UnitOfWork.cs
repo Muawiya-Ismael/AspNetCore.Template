@@ -24,7 +24,11 @@ namespace MvcTemplate.Data
         {
             return id == null
                 ? default
-                : Context.Set<TModel>().Where(model => model.Id == id).ProjectTo<TDestination>(Mapper.ConfigurationProvider).FirstOrDefault();
+                : Context
+                    .Set<TModel>()
+                    .Where(model => model.Id == id)
+                    .ProjectTo<TDestination>(Mapper.ConfigurationProvider)
+                    .FirstOrDefault();
         }
         public TModel? Get<TModel>(Int64? id) where TModel : AModel
         {
@@ -37,7 +41,7 @@ namespace MvcTemplate.Data
 
         public IQuery<TModel> Select<TModel>() where TModel : AModel
         {
-            return new Query<TModel>(Context.Set<TModel>(), Mapper);
+            return new Query<TModel>(Context.Set<TModel>(), Mapper.ConfigurationProvider);
         }
 
         public void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : AModel
