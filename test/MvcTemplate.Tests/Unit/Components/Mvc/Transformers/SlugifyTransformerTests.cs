@@ -7,12 +7,18 @@ namespace MvcTemplate.Components.Mvc.Tests
     public class SlugifyTransformerTests
     {
         [Fact]
-        public void TransformOutbound_Null()
+        public void TransformOutbound_SameValues()
         {
-            Assert.Null(new SlugifyTransformer().TransformOutbound(null));
+            String? expected = new SlugifyTransformer().TransformOutbound("TestOne");
+            String? actual = new SlugifyTransformer().TransformOutbound("TestOne");
+
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
+        [InlineData("", "")]
+        [InlineData(1, null)]
+        [InlineData(null, null)]
         [InlineData("test", "test")]
         [InlineData("Test", "Test")]
         [InlineData("VIPWeek", "VIP-Week")]
@@ -23,7 +29,7 @@ namespace MvcTemplate.Components.Mvc.Tests
         [InlineData("VIPWeekMulti", "VIP-Week-Multi")]
         [InlineData("TestWeekMulti", "Test-Week-Multi")]
         [InlineData("TestWEEKMulti", "Test-WEEK-Multi")]
-        public void TransformOutbound_Value(Object value, String slug)
+        public void TransformOutbound_Value(Object? value, String slug)
         {
             String? expected = slug;
             String? actual = new SlugifyTransformer().TransformOutbound(value);

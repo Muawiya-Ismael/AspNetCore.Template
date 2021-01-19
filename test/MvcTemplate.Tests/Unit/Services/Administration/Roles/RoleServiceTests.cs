@@ -1,6 +1,8 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Components;
+using MvcTemplate.Controllers;
+using MvcTemplate.Controllers.Administration;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
@@ -160,10 +162,10 @@ namespace MvcTemplate.Services.Tests
 
             service.Seed(view.Permissions);
 
-            IEnumerable<MvcTreeNode> nodes = view.Permissions.Nodes;
-            IEnumerable<MvcTreeNode> leafs = GetLeafNodes(nodes);
+            IEnumerable<MvcTreeNode> actual = GetLeafNodes(view.Permissions.Nodes);
 
-            Assert.Empty(leafs.Where(leaf => leaf.Id == null));
+            Assert.Empty(actual.Where(leaf => leaf.Id == null));
+            Assert.Equal(4, actual.Count());
         }
 
         [Fact]
@@ -259,24 +261,24 @@ namespace MvcTemplate.Services.Tests
 
         private Role SetUpData()
         {
-            Role role = ObjectsFactory.CreateRole(0);
+            Role model = ObjectsFactory.CreateRole(0);
 
-            foreach (String controller in new[] { "TestController1", "TestController2" })
-                foreach (String action in new[] { "Action1", "Action2" })
-                    role.Permissions.Add(new RolePermission
+            foreach (String controller in new[] { nameof(Accounts), nameof(Roles) })
+                foreach (String action in new[] { nameof(Roles.Create), nameof(Accounts.Details) })
+                    model.Permissions.Add(new RolePermission
                     {
                         Permission = new Permission
                         {
-                            Area = controller == "TestController1" ? "TestingArea" : "",
+                            Area = controller == nameof(Roles) ? nameof(Area.Administration) : "",
                             Controller = controller,
                             Action = action
                         }
                     });
 
-            context.Drop().Add(role);
+            context.Drop().Add(model);
             context.SaveChanges();
 
-            return role;
+            return model;
         }
 
         private MvcTree CreatePermissions()
@@ -325,7 +327,7 @@ namespace MvcTemplate.Services.Tests
         {
             List<MvcTreeNode> leafs = new();
 
-            foreach (MvcTreeNode node in nodes.Where(node => node.Children.Count > 0))
+            foreach (MvcTreeNode node in nodes)
                 if (node.Children.Count > 0)
                     leafs.AddRange(GetLeafNodes(node.Children));
                 else

@@ -242,5 +242,15 @@ namespace MvcTemplate.Controllers.Tests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void OnActionExecuted_NoAlerts()
+        {
+            controller.Alerts.Clear();
+
+            controller.OnActionExecuted(new ActionExecutedContext(action, new List<IFilterMetadata>(), controller));
+
+            Assert.Null(controller.TempData["Alerts"]);
+        }
     }
 }

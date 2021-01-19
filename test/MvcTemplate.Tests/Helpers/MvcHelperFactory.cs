@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MvcTemplate.Components.Security;
 using NSubstitute;
@@ -29,11 +30,12 @@ namespace MvcTemplate.Tests
 
             context.RouteData = new RouteData();
             context.HttpContext = new DefaultHttpContext();
+            context.HttpContext.Request.Path = "/en/home/index";
             context.HttpContext.User = new ClaimsPrincipal(identity);
             context.HttpContext.RequestServices = Substitute.For<IServiceProvider>();
             context.HttpContext.RequestServices.GetService(typeof(IUrlHelperFactory)).Returns(factory);
             context.HttpContext.RequestServices.GetService(typeof(IAuthorization)).Returns(Substitute.For<IAuthorization>());
-            context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory)).Returns(Substitute.For<ILoggerFactory>());
+            context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory)).Returns(Substitute.For<ILoggerFactory>()); context.HttpContext.RequestServices.GetService(typeof(IServiceScopeFactory)).Returns(Substitute.For<IServiceScopeFactory>());
 
             return context;
         }

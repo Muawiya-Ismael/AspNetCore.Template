@@ -1,4 +1,5 @@
 using MvcTemplate.Data;
+using NonFactors.Mvc.Lookup;
 using NSubstitute;
 using Xunit;
 
@@ -18,6 +19,14 @@ namespace MvcTemplate.Controllers.Tests
         {
             controller.Dispose();
             unitOfWork.Dispose();
+        }
+
+        [Fact]
+        public void Role_Lookup()
+        {
+            LookupData actual = Assert.IsType<LookupData>(controller.Role(new LookupFilter()).Value);
+
+            Assert.NotEmpty(actual.Columns);
         }
 
         [Fact]

@@ -35,5 +35,14 @@ namespace MvcTemplate.Components.Mvc.Tests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void PopulateValues_DoesNothing()
+        {
+            ActionContext context = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
+            ViewLocationExpanderContext expander = new(context, "Index", null, null, null, true);
+
+            new ViewLocationExpander().PopulateValues(expander);
+        }
     }
 }

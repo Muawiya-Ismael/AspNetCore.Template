@@ -6,20 +6,25 @@ using Xunit;
 
 namespace MvcTemplate.Components.Mvc.Tests
 {
-    public class EqualToAttributeTests
+    public class EqualToAttributeTests : IDisposable
     {
         private EqualToAttribute attribute;
 
         public EqualToAttributeTests()
         {
             attribute = new EqualToAttribute(nameof(AllTypesView.StringField));
+            Resource.Set(nameof(AllTypesView))["", "Titles", nameof(AllTypesView.StringField)] = "Other title";
+        }
+        public void Dispose()
+        {
+            Resource.Set(nameof(AllTypesView))["", "Titles", nameof(AllTypesView.StringField)] = null;
         }
 
         [Fact]
         public void EqualToAttribute_SetsOtherPropertyName()
         {
-            String actual = new EqualToAttribute("Other").OtherPropertyName;
-            String expected = "Other";
+            String actual = new EqualToAttribute("OtherProperty").OtherPropertyName;
+            String expected = "OtherProperty";
 
             Assert.Equal(expected, actual);
         }
@@ -48,8 +53,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         {
             ValidationContext context = new(new AllTypesView());
 
+            String? expected = Validation.For("EqualTo", context.DisplayName, "Other title");
             String? actual = attribute.GetValidationResult("Test", context)?.ErrorMessage;
-            String? expected = Validation.For("EqualTo", context.DisplayName, attribute.OtherPropertyName);
 
             Assert.Equal(expected, actual);
         }

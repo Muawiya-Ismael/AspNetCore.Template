@@ -42,5 +42,14 @@ namespace MvcTemplate.Components.Mvc.Tests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void OnResourceExecuted_DoesNothing()
+        {
+            ActionContext action = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
+            Languages languages = new("en", new[] { new Language { Abbreviation = "en", Culture = new CultureInfo("en-gb") } });
+
+            new LanguageFilter(languages).OnResourceExecuted(new ResourceExecutedContext(action, Array.Empty<IFilterMetadata>()));
+        }
     }
 }

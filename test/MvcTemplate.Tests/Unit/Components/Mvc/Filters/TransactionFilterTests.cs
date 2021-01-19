@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
@@ -14,12 +15,22 @@ namespace MvcTemplate.Components.Mvc.Tests
     public class TransactionFilterTests
     {
         [Fact]
-        public void OnResourceExecuted_WithExceptionRollsback()
+        public void OnResourceExecuting_DoesNothing()
+        {
+            using DbContext testingContext = TestingContext.Create();
+            ActionContext action = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
+            ResourceExecutingContext context = new(action, Array.Empty<IFilterMetadata>(), Array.Empty<IValueProviderFactory>());
+
+            new TransactionFilter(testingContext).OnResourceExecuting(context);
+        }
+
+        [Fact]
+        public void OnResourceExecuted_Exception_Rollbacks()
         {
             ActionContext action = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
             ResourceExecutedContext context = new(action, Array.Empty<IFilterMetadata>());
-            DbContext currentContext = TestingContext.Create();
-            DbContext testingContext = TestingContext.Create();
+            using DbContext currentContext = TestingContext.Create();
+            using DbContext testingContext = TestingContext.Create();
             Role role = ObjectsFactory.CreateRole(0);
             context.Exception = new Exception();
 
@@ -44,8 +55,8 @@ namespace MvcTemplate.Components.Mvc.Tests
         {
             ActionContext action = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
             ResourceExecutedContext context = new(action, Array.Empty<IFilterMetadata>());
-            DbContext currentContext = TestingContext.Create();
-            DbContext testingContext = TestingContext.Create();
+            using DbContext currentContext = TestingContext.Create();
+            using DbContext testingContext = TestingContext.Create();
             Role role = ObjectsFactory.CreateRole(0);
 
             testingContext.Drop();

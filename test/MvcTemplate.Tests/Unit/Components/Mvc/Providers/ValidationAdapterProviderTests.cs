@@ -55,6 +55,12 @@ namespace MvcTemplate.Components.Mvc.Tests
         }
 
         [Fact]
+        public void GetAttributeAdapter_MaxLength()
+        {
+            Assert.IsType<MaxLengthAdapter>(provider.GetAttributeAdapter(new MaxLengthAttribute(45), null));
+        }
+
+        [Fact]
         public void GetAttributeAdapter_MaxValue()
         {
             Assert.IsType<MaxValueAdapter>(provider.GetAttributeAdapter(new MaxValueAttribute(45), null));
