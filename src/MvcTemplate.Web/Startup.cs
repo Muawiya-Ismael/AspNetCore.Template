@@ -80,8 +80,10 @@ namespace MvcTemplate.Web
 
             services.AddAuthentication("Cookies").AddCookie(authentication =>
             {
+                authentication.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 authentication.Cookie.Name = Config["Cookies:Auth"];
                 authentication.Events = new AuthenticationEvents();
+                authentication.Cookie.HttpOnly = true;
             });
 
             services.AddMvcGrid(filters =>
@@ -102,15 +104,27 @@ namespace MvcTemplate.Web
         }
         private void ConfigureOptions(IServiceCollection services)
         {
-            services.Configure<CookieTempDataProviderOptions>(provider => provider.Cookie.Name = Config["Cookies:TempData"]);
             services.Configure<RouteOptions>(options => options.ConstraintMap["slug"] = typeof(SlugifyTransformer));
-            services.Configure<SessionOptions>(session => session.Cookie.Name = Config["Cookies:Session"]);
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             services.Configure<MailConfiguration>(Config.GetSection("Mail"));
+            services.Configure<CookieTempDataProviderOptions>(tempData =>
+            {
+                tempData.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                tempData.Cookie.Name = Config["Cookies:TempData"];
+                tempData.Cookie.HttpOnly = true;
+            });
             services.Configure<AntiforgeryOptions>(antiforgery =>
             {
+                antiforgery.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 antiforgery.Cookie.Name = Config["Cookies:Antiforgery"];
                 antiforgery.FormFieldName = "_Token_";
+                antiforgery.Cookie.HttpOnly = true;
+            });
+            services.Configure<SessionOptions>(session =>
+            {
+                session.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                session.Cookie.Name = Config["Cookies:Session"];
+                session.Cookie.HttpOnly = true;
             });
         }
         private void ConfigureDependencies(IServiceCollection services)
