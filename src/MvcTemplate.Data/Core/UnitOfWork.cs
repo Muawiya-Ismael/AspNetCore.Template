@@ -26,6 +26,7 @@ namespace MvcTemplate.Data
                 ? default
                 : Context
                     .Set<TModel>()
+                    .AsNoTracking()
                     .Where(model => model.Id == id)
                     .ProjectTo<TDestination>(Mapper.ConfigurationProvider)
                     .FirstOrDefault();
