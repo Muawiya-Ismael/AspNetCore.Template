@@ -89,7 +89,7 @@ namespace MvcTemplate.Components.Mvc
                     TagBuilder branch = new("ul");
                     item.AddCssClass("mvc-tree-branch");
 
-                    if (HideDepth <= depth)
+                    if (HideDepth <= depth + 1)
                         item.AddCssClass("mvc-tree-collapsed");
 
                     foreach (TagBuilder leaf in Build(model, node.Children, depth + 1))
