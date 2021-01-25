@@ -67,16 +67,21 @@ hr {
     background-color: rgba(0, 0, 0, 0.02);
 }
 
-.btn-primary:not(:disabled):not(.disabled) {
+.btn-primary {
     background: linear-gradient(#84b2ca, #67a0be);
     border: 1px solid #5997b8;
 }
 
-.btn-primary:not(:disabled):not(.disabled):focus,
-.btn-primary:not(:disabled):not(.disabled):hover,
-.btn-primary:not(:disabled):not(.disabled):active {
+.btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:active {
     background: linear-gradient(#75a9c4, #5997b8);
     border: 1px solid #5997b8;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+    filter: grayscale(100%);
 }
 
 .input-group .form-control {
