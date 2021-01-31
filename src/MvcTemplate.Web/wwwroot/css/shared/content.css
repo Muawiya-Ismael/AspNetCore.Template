@@ -76,6 +76,10 @@ body.private {
     display: none;
 }
 
+.control-content input[type="checkbox"][readonly] {
+    filter: grayscale(1);
+}
+
 .control-content input[type="checkbox"] {
     margin: 12px 0;
     height: 14px;
