@@ -1,5 +1,5 @@
 using AutoMapper;
-using MvcTemplate.Components;
+using MvcTemplate.Components.Tree;
 using NonFactors.Mvc.Lookup;
 using System;
 using System.Collections.Generic;

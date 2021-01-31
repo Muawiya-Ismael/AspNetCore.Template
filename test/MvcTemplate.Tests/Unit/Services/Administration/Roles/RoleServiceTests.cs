@@ -1,6 +1,6 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using MvcTemplate.Components;
+using MvcTemplate.Components.Tree;
 using MvcTemplate.Controllers;
 using MvcTemplate.Controllers.Administration;
 using MvcTemplate.Data;
