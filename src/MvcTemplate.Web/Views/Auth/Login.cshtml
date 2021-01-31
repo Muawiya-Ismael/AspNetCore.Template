@@ -10,12 +10,12 @@
     <div class="input-group">
         <span class="fa fa-user"></span>
         <input asp-for="Username" asp-placeholder />
-        <span class="input-error fa fa-exclamation-triangle"></span>
+        <span class="input-error fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="-" data-placement="right" data-delay="1"></span>
     </div>
     <div class="input-group">
         <span class="fa fa-lock"></span>
         <input asp-for="Password" asp-placeholder type="password" />
-        <span class="input-error fa fa-exclamation-triangle"></span>
+        <span class="input-error fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="-" data-placement="right" data-delay="1"></span>
     </div>
 
     @{ ILanguages languages = Context.RequestServices.GetRequiredService<ILanguages>(); }

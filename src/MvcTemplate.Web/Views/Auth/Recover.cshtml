@@ -10,7 +10,7 @@
     <div class="input-group">
         <span class="fa fa-envelope"></span>
         <input asp-for="Email" asp-placeholder />
-        <span class="input-error fa fa-exclamation-triangle"></span>
+        <span class="input-error fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="-" data-placement="right" data-delay="1"></span>
     </div>
 
     <button class="btn btn-block btn-primary mt-3 mb-3">@Resource.ForAction(nameof(Auth.Recover))</button>
