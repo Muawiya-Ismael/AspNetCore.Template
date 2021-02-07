@@ -47,8 +47,6 @@ namespace MvcTemplate.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("[controller]/not-found")]
-        [HttpGet("{language}/[controller]/not-found")]
         public new ActionResult NotFound()
         {
             if (Service.IsLoggedIn(User) && !Service.IsActive(CurrentAccountId))
