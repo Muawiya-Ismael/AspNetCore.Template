@@ -5,6 +5,7 @@ body {
 body.public {
     background-image: url("../../img/shared/content-background.jpg");
     background-color: #f2f2f2;
+    font-size: 0.875em;
 }
 
 body.private {
