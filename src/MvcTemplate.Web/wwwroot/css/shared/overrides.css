@@ -92,10 +92,6 @@ hr {
     width: auto;
 }
 
-@-ms-viewport {
-    width: auto;
-}
-
 /* rome */
 .rd-container {
     font-family: Verdana, Arial, sans-serif;
