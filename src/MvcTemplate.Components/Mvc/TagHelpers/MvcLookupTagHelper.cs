@@ -17,7 +17,7 @@ namespace MvcTemplate.Components.Mvc
         {
         }
 
-        public override void Process(TagHelperContext? context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             Url ??= $"~/Lookup/{Handler}";
             Title ??= Resource.ForLookup(Handler!);
