@@ -1,13 +1,10 @@
 {
   "scripts": {
-    "gulp": "gulp"
+    "build": "node bundle.js"
   },
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-uglify-es": "^2.0.0",
-    "gulp-uglifycss": "^1.1.0",
-    "rimraf": "^3.0.2"
+    "esbuild": "^0.8.42",
+    "glob": "^7.1.6"
   },
   "dependencies": {
     "@bevacqua/rome": "3.0.3",

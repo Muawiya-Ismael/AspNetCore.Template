@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <Target Name="PrePublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="npm install" />
-    <Exec Command="npm run gulp minify" />
+    <Exec Command="npm install --no-save" />
+    <Exec Command="npm run build" />
   </Target>
 </Project>
