@@ -340,6 +340,17 @@ namespace MvcTemplate.Controllers.Tests
         }
 
         [Fact]
+        public async Task Logout_ClearsSiteData()
+        {
+            await controller.Logout();
+
+            String expected = @"""cookies"", ""storage"", ""executionContexts""";
+            String actual = controller.Response.Headers["Clear-Site-Data"];
+
+            Assert.Same(expected, actual);
+        }
+
+        [Fact]
         public async Task Logout_RedirectsToLogin()
         {
             Object expected = RedirectToAction(controller, nameof(Auth.Login));

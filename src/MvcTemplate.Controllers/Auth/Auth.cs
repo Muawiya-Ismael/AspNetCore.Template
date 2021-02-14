@@ -109,6 +109,8 @@ namespace MvcTemplate.Controllers
         {
             await Service.Logout(HttpContext);
 
+            Response.Headers["Clear-Site-Data"] = @"""cookies"", ""storage"", ""executionContexts""";
+
             return RedirectToAction(nameof(Login));
         }
     }
