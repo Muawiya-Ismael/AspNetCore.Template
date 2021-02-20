@@ -109,7 +109,7 @@ body.private {
 }
 
 .form-control[readonly]:focus {
-    box-shadow: 0 0 0 0.2rem rgba(154, 149, 150, 0.25);
+    box-shadow: 0 0 0 0.2rem rgb(154 149 150 / 0.25);
     border-color: #ced4da;
 }
 
@@ -118,13 +118,13 @@ body.private {
 }
 
 .input-validation-error:focus {
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    box-shadow: 0 0 0 0.2rem rgb(220 53 69 / 0.25);
     border-color: #dc3545;
 }
 
 .title {
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6), 0 0 1px rgba(0, 0, 0, 0.3);
-    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 1px rgb(255 255 255 / 0.6), 0 0 1px rgb(0 0 0 / 0.3);
+    color: rgb(0 0 0 / 0.2);
     font-weight: bold;
     font-size: 2.5em;
 }
@@ -135,8 +135,8 @@ body.private {
 }
 
 .description {
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6), 0 0 1px rgba(0, 0, 0, 0.3);
-    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 1px rgb(255 255 255 / 0.6), 0 0 1px rgb(0 0 0 / 0.3);
+    color: rgb(0 0 0 / 0.2);
     font-size: 1.2em;
 }
 

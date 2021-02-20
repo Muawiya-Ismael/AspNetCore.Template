@@ -1,4 +1,5 @@
 .alerts {
+    font-size: 0.875em;
     margin: 7.5px 0;
 }
 
@@ -20,5 +21,7 @@
 }
 
 .alerts .alert .close {
+    line-height: 1rem;
+    font-size: 1rem;
     cursor: pointer;
 }

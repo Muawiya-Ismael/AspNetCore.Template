@@ -3,12 +3,12 @@
 }
 
 .navigation .navigation-search {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgb(255 255 255 / 0.25);
     margin: 50px 10px 10px;
 }
 
 .navigation .navigation-search input {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgb(0 0 0 / 0.2);
     border-radius: 4px;
     border-style: none;
     text-align: center;
@@ -75,13 +75,13 @@
 }
 
 .navigation ul li ul a {
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgb(0 0 0 / 0.15);
     justify-content: initial;
     padding-left: 25px;
 }
 
 .navigation ul li ul ul a {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgb(0 0 0 / 0.3);
     padding-left: 35px;
 }
 
