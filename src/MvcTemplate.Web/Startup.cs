@@ -133,7 +133,11 @@ namespace MvcTemplate.Web
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<Configuration>();
-            services.AddDbContext<DbContext, Context>(options => options.UseSqlServer(Config["Data:Connection"]));
+            services.AddDbContext<DbContext, Context>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(Config["Data:Connection"]);
+            });
             services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
                 provider.GetRequiredService<DbContext>(),
                 provider.GetRequiredService<IMapper>(),
