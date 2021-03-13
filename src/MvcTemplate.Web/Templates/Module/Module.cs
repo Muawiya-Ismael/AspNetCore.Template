@@ -39,19 +39,20 @@ namespace MvcTemplate.Web.Templates
         public override void Run()
         {
             String path = $"{Area}/{Controller}".Trim('/');
+            String shortPath = Area == null ? "" : $"{Area}/";
 
             Dictionary<String, GennyScaffoldingResult> results = new()
             {
-                { $"../MvcTemplate.Controllers/{path}/{Controller}.cs", Scaffold("Controllers/Controller") },
-                { $"../../test/MvcTemplate.Tests/Unit/Controllers/{path}/{Controller}Tests.cs", Scaffold("Tests/ControllerTests") },
+                { $"../MvcTemplate.Controllers/{shortPath}{Controller}.cs", Scaffold("Controllers/Controller") },
+                { $"../../test/MvcTemplate.Tests/Unit/Controllers/{shortPath}{Controller}Tests.cs", Scaffold("Tests/ControllerTests") },
 
-                { $"../MvcTemplate.Services/{path}/{Model}Service.cs", Scaffold("Services/Service") },
-                { $"../MvcTemplate.Services/{path}/I{Model}Service.cs", Scaffold("Services/IService") },
-                { $"../../test/MvcTemplate.Tests/Unit/Services/{path}/{Model}ServiceTests.cs", Scaffold("Tests/ServiceTests") },
+                { $"../MvcTemplate.Services/{shortPath}{Model}Service.cs", Scaffold("Services/Service") },
+                { $"../MvcTemplate.Services/{shortPath}I{Model}Service.cs", Scaffold("Services/IService") },
+                { $"../../test/MvcTemplate.Tests/Unit/Services/{shortPath}{Model}ServiceTests.cs", Scaffold("Tests/ServiceTests") },
 
-                { $"../MvcTemplate.Validators/{path}/{Model}Validator.cs", Scaffold("Validators/Validator") },
-                { $"../MvcTemplate.Validators/{path}/I{Model}Validator.cs", Scaffold("Validators/IValidator") },
-                { $"../../test/MvcTemplate.Tests/Unit/Validators/{path}/{Model}ValidatorTests.cs", Scaffold("Tests/ValidatorTests") },
+                { $"../MvcTemplate.Validators/{shortPath}{Model}Validator.cs", Scaffold("Validators/Validator") },
+                { $"../MvcTemplate.Validators/{shortPath}I{Model}Validator.cs", Scaffold("Validators/IValidator") },
+                { $"../../test/MvcTemplate.Tests/Unit/Validators/{shortPath}{Model}ValidatorTests.cs", Scaffold("Tests/ValidatorTests") },
 
                 { $"../MvcTemplate.Web/Views/{path}/Index.cshtml", Scaffold("Web/Index") },
                 { $"../MvcTemplate.Web/Views/{path}/Create.cshtml", Scaffold("Web/Create") },
