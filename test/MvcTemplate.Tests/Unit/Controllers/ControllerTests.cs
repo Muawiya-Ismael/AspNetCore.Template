@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using System;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public abstract class ControllerTests : IDisposable
     {

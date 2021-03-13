@@ -6,14 +6,13 @@ using MvcTemplate.Controllers.Administration;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Services.Tests
+namespace MvcTemplate.Services
 {
     public class RoleServiceTests : IDisposable
     {

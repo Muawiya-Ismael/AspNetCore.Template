@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace MvcTemplate.Components.Security.Tests
+namespace MvcTemplate.Components.Security
 {
     public class BCrypterTests
     {

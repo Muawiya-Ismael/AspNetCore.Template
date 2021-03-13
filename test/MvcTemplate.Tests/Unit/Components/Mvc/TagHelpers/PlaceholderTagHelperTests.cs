@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class PlaceholderTagHelperTests
     {

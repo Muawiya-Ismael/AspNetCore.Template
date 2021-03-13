@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class ErrorResponseMiddlewareTests
     {
@@ -55,8 +53,8 @@ namespace MvcTemplate.Components.Mvc.Tests
             {
                 if (actual.Request.Path != renderedPath)
                     throw new Exception();
-                else
-                    asserted = true;
+
+                asserted = true;
 
                 return Task.CompletedTask;
             }, languages, logger).Invoke(actual);

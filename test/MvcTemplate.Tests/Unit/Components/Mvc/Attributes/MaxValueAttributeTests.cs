@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class MaxValueAttributeTests
     {

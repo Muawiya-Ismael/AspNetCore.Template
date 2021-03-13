@@ -8,7 +8,7 @@ using NSubstitute;
 using System;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public class HomeTests : ControllerTests
     {

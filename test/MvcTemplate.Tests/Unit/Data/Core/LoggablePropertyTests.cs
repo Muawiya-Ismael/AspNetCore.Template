@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using Xunit;
 
-namespace MvcTemplate.Data.Tests
+namespace MvcTemplate.Data
 {
     public class LoggablePropertyTests
     {

@@ -3,7 +3,7 @@ using NonFactors.Mvc.Lookup;
 using NSubstitute;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public class LookupTests : ControllerTests
     {

@@ -3,7 +3,7 @@ using NSubstitute;
 using System;
 using Xunit;
 
-namespace MvcTemplate.Services.Tests
+namespace MvcTemplate.Services
 {
     public class AServiceTests : IDisposable
     {

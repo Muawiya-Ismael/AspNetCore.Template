@@ -3,7 +3,7 @@ using MvcTemplate.Objects;
 using System;
 using System.Linq.Expressions;
 
-namespace MvcTemplate.Validators.Tests
+namespace MvcTemplate.Validators
 {
     public class AValidatorProxy : AValidator
     {

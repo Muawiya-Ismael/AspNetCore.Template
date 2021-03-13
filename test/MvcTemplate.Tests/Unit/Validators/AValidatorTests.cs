@@ -1,13 +1,12 @@
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Validators.Tests
+namespace MvcTemplate.Validators
 {
     public class AValidatorTests : IDisposable
     {

@@ -1,8 +1,7 @@
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using Xunit;
 
-namespace MvcTemplate.Data.Mapping.Tests
+namespace MvcTemplate.Data.Mapping
 {
     public class MappingProfileTests
     {

@@ -3,7 +3,6 @@ using MvcTemplate.Components.Mvc;
 using MvcTemplate.Controllers;
 using MvcTemplate.Data.Migrations;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using Xunit;
 
-namespace MvcTemplate.Resources.Tests
+namespace MvcTemplate.Resources
 {
     public class ResourcesTests
     {

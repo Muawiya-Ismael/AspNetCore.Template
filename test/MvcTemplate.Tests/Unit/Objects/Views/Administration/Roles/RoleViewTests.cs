@@ -1,7 +1,7 @@
 using MvcTemplate.Components.Tree;
 using Xunit;
 
-namespace MvcTemplate.Objects.Tests
+namespace MvcTemplate.Objects
 {
     public class RoleViewTests
     {

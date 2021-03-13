@@ -1,14 +1,13 @@
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace MvcTemplate.Components.Lookups.Tests
+namespace MvcTemplate.Components.Lookups
 {
     public class MvcLookupTests : IDisposable
     {

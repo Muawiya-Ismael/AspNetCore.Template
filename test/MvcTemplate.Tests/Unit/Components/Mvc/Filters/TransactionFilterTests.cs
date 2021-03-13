@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class TransactionFilterTests
     {

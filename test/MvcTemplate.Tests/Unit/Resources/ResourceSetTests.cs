@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace MvcTemplate.Resources.Tests
+namespace MvcTemplate.Resources
 {
     public class ResourceSetTests
     {

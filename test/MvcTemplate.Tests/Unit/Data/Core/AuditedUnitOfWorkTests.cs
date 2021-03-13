@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Data.Tests
+namespace MvcTemplate.Data
 {
     public class AuditedUnitOfWorkTests : IDisposable
     {

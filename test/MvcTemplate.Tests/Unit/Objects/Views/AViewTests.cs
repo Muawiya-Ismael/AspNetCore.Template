@@ -2,7 +2,7 @@ using NSubstitute;
 using System;
 using Xunit;
 
-namespace MvcTemplate.Objects.Tests
+namespace MvcTemplate.Objects
 {
     public class AViewTests
     {

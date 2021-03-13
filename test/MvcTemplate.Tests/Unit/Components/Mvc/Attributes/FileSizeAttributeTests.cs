@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class FileSizeAttributeTests
     {

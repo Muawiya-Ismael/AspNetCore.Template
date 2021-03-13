@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text.Json;
 using Xunit;
 
-namespace MvcTemplate.Resources.Tests
+namespace MvcTemplate.Resources
 {
     public class ResourceTests
     {

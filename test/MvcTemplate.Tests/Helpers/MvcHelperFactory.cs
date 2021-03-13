@@ -10,7 +10,7 @@ using NSubstitute;
 using System;
 using System.Security.Claims;
 
-namespace MvcTemplate.Tests
+namespace MvcTemplate
 {
     public static class MvcHelperFactory
     {
@@ -35,7 +35,8 @@ namespace MvcTemplate.Tests
             context.HttpContext.RequestServices = Substitute.For<IServiceProvider>();
             context.HttpContext.RequestServices.GetService(typeof(IUrlHelperFactory)).Returns(factory);
             context.HttpContext.RequestServices.GetService(typeof(IAuthorization)).Returns(Substitute.For<IAuthorization>());
-            context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory)).Returns(Substitute.For<ILoggerFactory>()); context.HttpContext.RequestServices.GetService(typeof(IServiceScopeFactory)).Returns(Substitute.For<IServiceScopeFactory>());
+            context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory)).Returns(Substitute.For<ILoggerFactory>());
+            context.HttpContext.RequestServices.GetService(typeof(IServiceScopeFactory)).Returns(Substitute.For<IServiceScopeFactory>());
 
             return context;
         }

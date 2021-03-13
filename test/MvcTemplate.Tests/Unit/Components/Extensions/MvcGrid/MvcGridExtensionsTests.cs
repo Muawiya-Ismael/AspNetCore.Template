@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Resources;
-using MvcTemplate.Tests;
 using NonFactors.Mvc.Grid;
 using NSubstitute;
 using System;
@@ -14,7 +13,7 @@ using System.Linq.Expressions;
 using System.Text.Encodings.Web;
 using Xunit;
 
-namespace MvcTemplate.Components.Extensions.Tests
+namespace MvcTemplate.Components.Extensions
 {
     public class MvcGridExtensionsTests
     {

@@ -1,13 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace MvcTemplate.Data.Migrations.Tests
+namespace MvcTemplate.Data.Migrations
 {
     public class ConfigurationTests : IDisposable
     {

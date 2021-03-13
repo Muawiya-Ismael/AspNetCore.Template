@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace MvcTemplate.Components.Tree.Tests
+namespace MvcTemplate.Components.Tree
 {
     public class MvcTreeNodeTests
     {

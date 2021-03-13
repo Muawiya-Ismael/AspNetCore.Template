@@ -2,17 +2,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using MvcTemplate.Components.Security;
-using MvcTemplate.Controllers.Tests;
 using MvcTemplate.Objects;
 using MvcTemplate.Services;
-using MvcTemplate.Tests;
 using MvcTemplate.Validators;
 using NSubstitute;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Administration.Tests
+namespace MvcTemplate.Controllers.Administration
 {
     public class AccountsTests : ControllerTests
     {

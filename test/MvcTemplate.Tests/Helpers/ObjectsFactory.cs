@@ -2,7 +2,7 @@ using MvcTemplate.Objects;
 using System;
 using System.Collections.Generic;
 
-namespace MvcTemplate.Tests
+namespace MvcTemplate
 {
     public static class ObjectsFactory
     {

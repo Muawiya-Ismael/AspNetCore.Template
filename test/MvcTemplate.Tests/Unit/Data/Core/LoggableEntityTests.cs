@@ -2,12 +2,11 @@ using Castle.DynamicProxy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Data.Tests
+namespace MvcTemplate.Data
 {
     public class LoggableEntityTests : IDisposable
     {

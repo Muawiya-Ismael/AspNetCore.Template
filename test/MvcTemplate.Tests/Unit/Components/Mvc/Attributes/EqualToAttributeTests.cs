@@ -1,10 +1,9 @@
 using MvcTemplate.Resources;
-using MvcTemplate.Tests;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class EqualToAttributeTests : IDisposable
     {

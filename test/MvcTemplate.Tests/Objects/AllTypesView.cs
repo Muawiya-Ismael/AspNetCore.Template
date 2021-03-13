@@ -4,7 +4,7 @@ using MvcTemplate.Components.Notifications;
 using MvcTemplate.Objects;
 using System;
 
-namespace MvcTemplate.Tests
+namespace MvcTemplate
 {
     public class AllTypesView : AView
     {

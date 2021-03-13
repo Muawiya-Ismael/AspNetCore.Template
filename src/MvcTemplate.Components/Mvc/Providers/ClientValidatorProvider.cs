@@ -13,20 +13,20 @@ namespace MvcTemplate.Components.Mvc
         {
             IntegerTypes = new HashSet<Type>
             {
-              typeof(Byte),
-              typeof(SByte),
-              typeof(Int16),
-              typeof(UInt16),
-              typeof(Int32),
-              typeof(UInt32),
-              typeof(Int64),
-              typeof(UInt64)
+                typeof(Byte),
+                typeof(SByte),
+                typeof(Int16),
+                typeof(UInt16),
+                typeof(Int32),
+                typeof(UInt32),
+                typeof(Int64),
+                typeof(UInt64)
             };
             DecimalTypes = new HashSet<Type>
             {
-              typeof(Single),
-              typeof(Double),
-              typeof(Decimal)
+                typeof(Single),
+                typeof(Double),
+                typeof(Decimal)
             };
         }
 

@@ -6,14 +6,13 @@ using MvcTemplate.Components.Security;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
 using MvcTemplate.Services;
-using MvcTemplate.Tests;
 using MvcTemplate.Validators;
 using NSubstitute;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public class ProfileTests : ControllerTests
     {

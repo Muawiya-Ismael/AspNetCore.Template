@@ -2,7 +2,7 @@ using System;
 using System.Security.Claims;
 using Xunit;
 
-namespace MvcTemplate.Components.Extensions.Tests
+namespace MvcTemplate.Components.Extensions
 {
     public class ClaimsPrincipalExtensionsTests
     {

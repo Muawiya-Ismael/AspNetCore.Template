@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Linq;
@@ -14,7 +13,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Services.Tests
+namespace MvcTemplate.Services
 {
     public class AccountServiceTests : IDisposable
     {

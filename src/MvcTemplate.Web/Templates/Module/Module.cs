@@ -111,10 +111,12 @@ namespace MvcTemplate.Web.Templates
 
                     if (Area != null)
                         AddResource("Shared", "Areas", Area, Area.Humanize());
+
                     AddResource("Shared", "Controllers", $"{Area}/{Controller}".Trim('/'), Model.Pluralize().Humanize());
 
                     if (Area != null)
                         AddResource("SiteMap", "Titles", Area, Area.Humanize());
+
                     AddResource("SiteMap", "Titles", $"{Area}/{Controller}/Create".Trim('/'), "Create");
                     AddResource("SiteMap", "Titles", $"{Area}/{Controller}/Delete".Trim('/'), "Delete");
                     AddResource("SiteMap", "Titles", $"{Area}/{Controller}/Details".Trim('/'), "Details");
@@ -410,7 +412,8 @@ namespace MvcTemplate.Web.Templates
                         return $"{set}DateTime.Now.AddDays(id)";
 
                     return $"{set}id";
-                })) + "\n";
+                })) +
+                "\n";
 
             creation += "            };\n";
             creation += "        }";

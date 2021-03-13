@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class SecureHeadersMiddlewareTests
     {

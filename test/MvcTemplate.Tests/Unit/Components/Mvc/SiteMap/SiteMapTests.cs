@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Security;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class SiteMapTests
     {

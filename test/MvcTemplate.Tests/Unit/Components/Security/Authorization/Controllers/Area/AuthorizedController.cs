@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MvcTemplate.Components.Security.Tests;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcTemplate.Components.Security.Area.Tests
+namespace MvcTemplate.Components.Security.Area
 {
     [Authorize]
     [Area("Area")]

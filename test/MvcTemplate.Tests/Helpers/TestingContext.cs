@@ -4,7 +4,7 @@ using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Objects.Mapping;
 
-namespace MvcTemplate.Tests
+namespace MvcTemplate
 {
     public static class TestingContext
     {

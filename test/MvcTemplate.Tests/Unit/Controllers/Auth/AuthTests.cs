@@ -8,7 +8,6 @@ using MvcTemplate.Components.Security;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
 using MvcTemplate.Services;
-using MvcTemplate.Tests;
 using MvcTemplate.Validators;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -17,7 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public class AuthTests : ControllerTests
     {

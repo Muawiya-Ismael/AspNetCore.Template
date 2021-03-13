@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Components.Notifications.Tests
+namespace MvcTemplate.Components.Notifications
 {
     public class AlertsTests
     {

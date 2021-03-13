@@ -57,7 +57,7 @@ namespace MvcTemplate.Web.Templates
             IValidator = $"I{Model}Validator";
             Validator = $"{Model}Validator";
 
-            ControllerTestsNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}.Tests";
+            ControllerTestsNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}";
             ControllerNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}";
             ControllerTests = $"{controller}Tests";
             Controller = controller;

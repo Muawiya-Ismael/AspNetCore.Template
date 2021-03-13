@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Xunit;
 
-namespace MvcTemplate.Controllers.Tests
+namespace MvcTemplate.Controllers
 {
     public class AControllerTests : ControllerTests
     {

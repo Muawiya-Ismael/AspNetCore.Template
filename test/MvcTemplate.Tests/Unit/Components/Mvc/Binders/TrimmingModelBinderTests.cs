@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Routing;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class TrimmingModelBinderTests
     {

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Linq;
 using Xunit;
 
-namespace MvcTemplate.Components.Mvc.Tests
+namespace MvcTemplate.Components.Mvc
 {
     public class LanguagesTests
     {

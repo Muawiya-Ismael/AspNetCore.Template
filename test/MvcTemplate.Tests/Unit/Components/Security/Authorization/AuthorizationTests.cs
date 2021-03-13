@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using MvcTemplate.Components.Security.Area.Tests;
+using MvcTemplate.Components.Security.Area;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Reflection;
 using Xunit;
 
-namespace MvcTemplate.Components.Security.Tests
+namespace MvcTemplate.Components.Security
 {
     public class AuthorizationTests : IDisposable
     {

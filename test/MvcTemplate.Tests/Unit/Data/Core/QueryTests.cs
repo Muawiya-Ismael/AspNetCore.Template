@@ -1,7 +1,6 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Objects;
-using MvcTemplate.Tests;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace MvcTemplate.Data.Tests
+namespace MvcTemplate.Data
 {
     public class QueryTests : IDisposable
     {
