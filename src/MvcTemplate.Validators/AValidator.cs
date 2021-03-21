@@ -10,9 +10,8 @@ namespace MvcTemplate.Validators
 {
     public abstract class AValidator : IValidator
     {
-        public ModelStateDictionary ModelState { get; set; }
-        public Int64 CurrentAccountId { get; set; }
         public Alerts Alerts { get; set; }
+        public ModelStateDictionary ModelState { get; set; }
 
         protected IUnitOfWork UnitOfWork { get; }
 

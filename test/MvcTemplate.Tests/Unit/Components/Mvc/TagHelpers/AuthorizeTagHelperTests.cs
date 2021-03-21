@@ -32,7 +32,7 @@ namespace MvcTemplate.Components.Mvc
             String? area, String? controller, String? action,
             String? routeArea, String? routeController, String? routeAction)
         {
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
             authorization.IsGrantedFor(1, permission).Returns(false);
 
             helper.ViewContext!.RouteData.Values["controller"] = routeController;

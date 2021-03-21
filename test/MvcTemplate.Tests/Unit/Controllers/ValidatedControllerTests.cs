@@ -49,32 +49,6 @@ namespace MvcTemplate.Controllers
         }
 
         [Fact]
-        public void OnActionExecuting_SetsServiceCurrentAccountId()
-        {
-            controller.CurrentAccountId.Returns(1);
-
-            controller.OnActionExecuting(context);
-
-            Int64 expected = controller.CurrentAccountId;
-            Int64 actual = service.CurrentAccountId;
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void OnActionExecuting_SetsValidatorCurrentAccountId()
-        {
-            controller.CurrentAccountId.Returns(1);
-
-            controller.OnActionExecuting(context);
-
-            Int64 expected = controller.CurrentAccountId;
-            Int64 actual = validator.CurrentAccountId;
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
         public void OnActionExecuting_SetsValidatorAlerts()
         {
             controller.OnActionExecuting(context);

@@ -8,9 +8,9 @@ namespace MvcTemplate.Data
 {
     public class AuditedUnitOfWork : UnitOfWork
     {
-        private Int64? AccountId { get; }
+        private Int64 AccountId { get; }
 
-        public AuditedUnitOfWork(DbContext context, IMapper mapper, Int64? accountId)
+        public AuditedUnitOfWork(DbContext context, IMapper mapper, Int64 accountId)
             : base(context, mapper)
         {
             AccountId = accountId;

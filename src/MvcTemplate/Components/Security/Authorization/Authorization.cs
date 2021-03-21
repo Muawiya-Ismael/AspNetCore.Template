@@ -34,7 +34,7 @@ namespace MvcTemplate.Components.Security
             Refresh(services);
         }
 
-        public Boolean IsGrantedFor(Int64? accountId, String permission)
+        public Boolean IsGrantedFor(Int64 accountId, String permission)
         {
             if (Actions.ContainsKey(permission))
             {
@@ -44,7 +44,7 @@ namespace MvcTemplate.Components.Security
                     return true;
             }
 
-            return accountId is Int64 id && Permissions.ContainsKey(id) && Permissions[id].Contains(permission);
+            return Permissions.ContainsKey(accountId) && Permissions[accountId].Contains(permission);
         }
 
         public void Refresh(IServiceProvider services)

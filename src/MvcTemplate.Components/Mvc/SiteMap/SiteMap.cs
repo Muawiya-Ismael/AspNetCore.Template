@@ -62,7 +62,7 @@ namespace MvcTemplate.Components.Mvc
 
             return copies.ToArray();
         }
-        private SiteMapNode[] Authorize(Int64? accountId, SiteMapNode[] menu)
+        private SiteMapNode[] Authorize(Int64 accountId, SiteMapNode[] menu)
         {
             List<SiteMapNode> authorized = new();
 

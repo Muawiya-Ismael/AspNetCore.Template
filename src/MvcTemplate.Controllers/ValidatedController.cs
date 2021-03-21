@@ -21,7 +21,6 @@ namespace MvcTemplate.Controllers
         {
             base.OnActionExecuting(context);
 
-            Validator.CurrentAccountId = Service.CurrentAccountId;
             Validator.ModelState = ModelState;
             Validator.Alerts = Alerts;
         }

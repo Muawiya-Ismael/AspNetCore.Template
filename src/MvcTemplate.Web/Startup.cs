@@ -141,7 +141,7 @@ namespace MvcTemplate.Web
             services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
                 provider.GetRequiredService<DbContext>(),
                 provider.GetRequiredService<IMapper>(),
-                provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User.Id()));
+                provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User.Id() ?? 0));
 
             services.AddSingleton<IHasher, BCrypter>();
             services.AddSingleton<IMailClient, SmtpMailClient>();

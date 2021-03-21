@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Notifications;
 using MvcTemplate.Components.Security;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text.Json;
 using Xunit;
 
@@ -114,7 +114,7 @@ namespace MvcTemplate.Controllers
         [Fact]
         public void IsAuthorizedFor_ReturnsAuthorizationResult()
         {
-            controller.Authorization.IsGrantedFor(controller.CurrentAccountId, "Area/Controller/Action").Returns(true);
+            controller.Authorization.IsGrantedFor(controller.User.Id(), "Area/Controller/Action").Returns(true);
 
             Assert.True(controller.IsAuthorizedFor("Area/Controller/Action"));
         }
@@ -181,21 +181,6 @@ namespace MvcTemplate.Controllers
             Object actual = controller.Authorization;
 
             Assert.Same(expected, actual);
-        }
-
-        [Theory]
-        [InlineData("", 0)]
-        [InlineData("1", 1)]
-        public void OnActionExecuting_SetsCurrentAccountId(String identifier, Int64 accountId)
-        {
-            controller.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Returns(new Claim(ClaimTypes.NameIdentifier, identifier));
-
-            controller.OnActionExecuting(context);
-
-            Int64? actual = controller.CurrentAccountId;
-            Int64? expected = accountId;
-
-            Assert.Equal(expected, actual);
         }
 
         [Fact]

@@ -33,8 +33,6 @@ namespace MvcTemplate.Services
             hasher.HashPassword(Arg.Any<String>()).Returns(info => $"{info.Arg<String>()}Hashed");
             context.Drop().Add(account = ObjectsFactory.CreateAccount(0));
             context.SaveChanges();
-
-            service.CurrentAccountId = account.Id;
         }
         public void Dispose()
         {
@@ -220,7 +218,7 @@ namespace MvcTemplate.Services
         [Fact]
         public void Edit_Profile()
         {
-            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id + 1);
+            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id);
             account.Passhash = hasher.HashPassword(view.NewPassword!);
             view.Username = account.Username += "Test";
             view.Email = account.Email += "Test";
@@ -247,7 +245,7 @@ namespace MvcTemplate.Services
         [InlineData("   ")]
         public void Edit_NullOrEmptyNewPassword_DoesNotEditPassword(String newPassword)
         {
-            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id + 1);
+            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id);
             view.NewPassword = newPassword;
 
             service.Edit(httpContext.User, view);
@@ -267,7 +265,7 @@ namespace MvcTemplate.Services
                 new Claim(ClaimTypes.Name, "TestName")
             }));
 
-            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id + 1);
+            ProfileEditView view = ObjectsFactory.CreateProfileEditView(account.Id);
             view.Username = account.Username += "Test";
             view.Email = account.Email += "Test";
 

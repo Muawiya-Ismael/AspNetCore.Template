@@ -335,11 +335,11 @@ namespace MvcTemplate.Components.Security
         }
 
         [Fact]
-        public void IsGrantedFor_DoesNotAuthorizeNullAccount()
+        public void IsGrantedFor_DoesNotAuthorizeNotFoundAccount()
         {
             CreateAccountWithPermissionFor("", nameof(AuthorizeController), nameof(AuthorizeController.Action));
 
-            Assert.False(authorization.IsGrantedFor(null, $"{nameof(AuthorizeController)}/{nameof(AuthorizeController.Action)}"));
+            Assert.False(authorization.IsGrantedFor(0, $"{nameof(AuthorizeController)}/{nameof(AuthorizeController.Action)}"));
         }
 
         [Fact]

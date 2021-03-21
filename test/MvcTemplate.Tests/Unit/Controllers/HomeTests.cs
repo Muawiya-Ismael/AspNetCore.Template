@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
+using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Services;
 using NSubstitute;
@@ -23,7 +24,6 @@ namespace MvcTemplate.Controllers
             ActionContext context = new(new DefaultHttpContext(), new RouteData(), new ControllerActionDescriptor());
             controller.Authorization.Returns(Substitute.For<IAuthorization>());
             controller.ControllerContext = new ControllerContext(context);
-            controller.CurrentAccountId.Returns(1);
         }
         public override void Dispose()
         {
@@ -34,7 +34,7 @@ namespace MvcTemplate.Controllers
         [Fact]
         public void Index_NotActive_RedirectsToLogout()
         {
-            service.IsActive(controller.CurrentAccountId).Returns(false);
+            service.IsActive(controller.User.Id()).Returns(false);
 
             Object expected = RedirectToAction(controller, "Logout", "Auth");
             Object actual = controller.Index();
@@ -45,7 +45,7 @@ namespace MvcTemplate.Controllers
         [Fact]
         public void Index_ReturnsEmptyView()
         {
-            service.IsActive(controller.CurrentAccountId).Returns(true);
+            service.IsActive(controller.User.Id()).Returns(true);
 
             ViewResult actual = Assert.IsType<ViewResult>(controller.Index());
 
@@ -76,7 +76,7 @@ namespace MvcTemplate.Controllers
         public void NotFound_NotActive_RedirectsToLogout()
         {
             service.IsLoggedIn(controller.User).Returns(true);
-            service.IsActive(controller.CurrentAccountId).Returns(false);
+            service.IsActive(controller.User.Id()).Returns(false);
 
             Object expected = RedirectToAction(controller, "Logout", "Auth");
             Object actual = controller.NotFound();
@@ -90,7 +90,7 @@ namespace MvcTemplate.Controllers
         [InlineData(false, false)]
         public void NotFound_ReturnsEmptyView(Boolean isLoggedIn, Boolean isActive)
         {
-            service.IsActive(controller.CurrentAccountId).Returns(isActive);
+            service.IsActive(controller.User.Id()).Returns(isActive);
             service.IsLoggedIn(controller.User).Returns(isLoggedIn);
 
             ViewResult actual = Assert.IsType<ViewResult>(controller.NotFound());

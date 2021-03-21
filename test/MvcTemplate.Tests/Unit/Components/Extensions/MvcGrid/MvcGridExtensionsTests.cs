@@ -47,7 +47,7 @@ namespace MvcTemplate.Components.Extensions
             IAuthorization authorization = html.Grid.ViewContext!.HttpContext.RequestServices.GetRequiredService<IAuthorization>();
 
             url.Action(Arg.Any<UrlActionContext>()).Returns("/test");
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), "Details").Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), "Details").Returns(true);
 
             IGridColumn<AllTypesView, IHtmlContent> column = columns.AddAction("Details", "fa fa-info");
             column.ValueFor(new GridRow<AllTypesView>(new AllTypesView(), 0)).WriteTo(writer, HtmlEncoder.Default);
@@ -63,7 +63,7 @@ namespace MvcTemplate.Components.Extensions
         {
             IAuthorization authorization = html.Grid.ViewContext!.HttpContext.RequestServices.GetRequiredService<IAuthorization>();
             IGridColumnsOf<Object> gridColumns = new GridColumns<Object>(new Grid<Object>(Array.Empty<Object>()));
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
             gridColumns.Grid.ViewContext = html.Grid.ViewContext;
 
             IGridColumn<Object, IHtmlContent> column = gridColumns.AddAction("Delete", "fa fa-times");

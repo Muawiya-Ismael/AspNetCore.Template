@@ -27,7 +27,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void For_NoAuthorization_ReturnsAllNodes()
         {
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
 
             SiteMapNode[] actual = siteMap.For(context).ToArray();
 
@@ -105,7 +105,7 @@ namespace MvcTemplate.Components.Mvc
             route["controller"] = "Roles";
             route["area"] = "Administration";
 
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
 
             SiteMapNode[] actual = siteMap.For(context).ToArray();
 
@@ -129,7 +129,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void For_RemovesEmptyNodes()
         {
-            authorization.IsGrantedFor(Arg.Any<Int64?>(), Arg.Any<String>()).Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
             authorization.IsGrantedFor(context.HttpContext.User.Id(), "Administration/Roles/Create").Returns(false);
 
             SiteMapNode[] actual = siteMap.For(context).ToArray();

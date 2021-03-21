@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Filters;
 using MvcTemplate.Services;
 using System;
 
@@ -12,13 +11,6 @@ namespace MvcTemplate.Controllers
         protected ServicedController(TService service)
         {
             Service = service;
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-
-            Service.CurrentAccountId = CurrentAccountId;
         }
 
         protected override void Dispose(Boolean disposing)

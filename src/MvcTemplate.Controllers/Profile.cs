@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
@@ -18,16 +19,18 @@ namespace MvcTemplate.Controllers
         [HttpGet]
         public ActionResult Edit()
         {
-            if (!Service.IsActive(CurrentAccountId))
+            if (!Service.IsActive(User.Id()))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
-            return View(Service.Get<ProfileEditView>(CurrentAccountId));
+            return View(Service.Get<ProfileEditView>(User.Id()));
         }
 
         [HttpPost]
         public ActionResult Edit(ProfileEditView profile)
         {
-            if (!Service.IsActive(CurrentAccountId))
+            profile.Id = User.Id();
+
+            if (!Service.IsActive(profile.Id))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
             if (!Validator.CanEdit(profile))
@@ -43,7 +46,7 @@ namespace MvcTemplate.Controllers
         [HttpGet]
         public ActionResult Delete()
         {
-            if (!Service.IsActive(CurrentAccountId))
+            if (!Service.IsActive(User.Id()))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
             Alerts.AddWarning(Message.For<AccountView>("ProfileDeleteDisclaimer"));
@@ -55,7 +58,9 @@ namespace MvcTemplate.Controllers
         [ActionName("Delete")]
         public ActionResult DeleteConfirmed(ProfileDeleteView profile)
         {
-            if (!Service.IsActive(CurrentAccountId))
+            profile.Id = User.Id();
+
+            if (!Service.IsActive(profile.Id))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
             if (!Validator.CanDelete(profile))
@@ -65,7 +70,7 @@ namespace MvcTemplate.Controllers
                 return View();
             }
 
-            Service.Delete(CurrentAccountId);
+            Service.Delete(profile.Id);
 
             Authorization.Refresh(HttpContext.RequestServices);
 

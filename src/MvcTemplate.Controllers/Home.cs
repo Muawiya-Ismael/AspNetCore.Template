@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Notifications;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Resources;
@@ -19,7 +20,7 @@ namespace MvcTemplate.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            if (!Service.IsActive(CurrentAccountId))
+            if (!Service.IsActive(User.Id()))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
             return View();
@@ -49,7 +50,7 @@ namespace MvcTemplate.Controllers
         [AllowAnonymous]
         public new ActionResult NotFound()
         {
-            if (Service.IsLoggedIn(User) && !Service.IsActive(CurrentAccountId))
+            if (Service.IsLoggedIn(User) && !Service.IsActive(User.Id()))
                 return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
             Response.StatusCode = StatusCodes.Status404NotFound;

@@ -7,22 +7,25 @@ namespace MvcTemplate.Components.Extensions
     public class ClaimsPrincipalExtensionsTests
     {
         [Fact]
-        public void Id_NoClaim_ReturnsNull()
+        public void Id_NoClaim_Zero()
         {
-            Assert.Null(new ClaimsPrincipal().Id());
+            Int64 expected = 0;
+            Int64 actual = new ClaimsPrincipal().Id();
+
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
+        [InlineData("", 0)]
         [InlineData("1", 1)]
-        [InlineData("", null)]
-        public void Id_ReturnsNameIdentifierClaim(String identifier, Int64? id)
+        public void Id_ReturnsNameIdentifierClaim(String identifier, Int64 id)
         {
             ClaimsIdentity identity = new();
             ClaimsPrincipal principal = new(identity);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier));
 
-            Int64? actual = principal.Id();
-            Int64? expected = id;
+            Int64 actual = principal.Id();
+            Int64 expected = id;
 
             Assert.Equal(expected, actual);
         }

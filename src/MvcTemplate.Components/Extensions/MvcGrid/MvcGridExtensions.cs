@@ -98,7 +98,7 @@ namespace MvcTemplate.Components.Extensions
         }
         private static Boolean IsAuthorizedFor(ActionContext context, String action)
         {
-            Int64? account = context.HttpContext.User.Id();
+            Int64 account = context.HttpContext.User.Id();
             String? area = context.RouteData.Values["area"] as String;
             String? controller = context.RouteData.Values["controller"] as String;
             IAuthorization authorization = context.HttpContext.RequestServices.GetRequiredService<IAuthorization>();

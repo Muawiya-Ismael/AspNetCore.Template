@@ -18,7 +18,6 @@ namespace MvcTemplate.Controllers
     public abstract class AController : Controller
     {
         public virtual IAuthorization Authorization { get; protected set; }
-        public virtual Int64 CurrentAccountId { get; protected set; }
         public Alerts Alerts { get; protected set; }
 
         protected AController()
@@ -51,7 +50,7 @@ namespace MvcTemplate.Controllers
 
         public virtual Boolean IsAuthorizedFor(String permission)
         {
-            return Authorization.IsGrantedFor(CurrentAccountId, permission);
+            return Authorization.IsGrantedFor(User.Id(), permission);
         }
 
         public override RedirectToActionResult RedirectToAction(String? actionName, String? controllerName, Object? routeValues)
@@ -72,8 +71,6 @@ namespace MvcTemplate.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             Authorization = HttpContext.RequestServices.GetRequiredService<IAuthorization>();
-
-            CurrentAccountId = User.Id() ?? 0;
         }
         public override void OnActionExecuted(ActionExecutedContext context)
         {
