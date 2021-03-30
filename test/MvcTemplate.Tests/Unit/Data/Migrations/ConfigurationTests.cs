@@ -44,12 +44,10 @@ namespace MvcTemplate.Data.Migrations
 
         [Theory]
         [InlineData("Administration", "Accounts", "Create")]
-        [InlineData("Administration", "Accounts", "Details")]
         [InlineData("Administration", "Accounts", "Edit")]
         [InlineData("Administration", "Accounts", "Index")]
         [InlineData("Administration", "Roles", "Create")]
         [InlineData("Administration", "Roles", "Delete")]
-        [InlineData("Administration", "Roles", "Details")]
         [InlineData("Administration", "Roles", "Edit")]
         [InlineData("Administration", "Roles", "Index")]
         public void Seed_Permissions(String area, String controller, String action)

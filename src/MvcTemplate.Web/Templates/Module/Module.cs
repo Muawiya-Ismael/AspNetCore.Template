@@ -222,7 +222,6 @@ namespace MvcTemplate.Web.Templates
             String[] newPermissions = permissions
                 .Append($@"                new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Create"" }}")
                 .Append($@"                new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Delete"" }}")
-                .Append($@"                new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Details"" }}")
                 .Append($@"                new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Edit"" }}")
                 .Append($@"                new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Index"" }}")
                 .Distinct()

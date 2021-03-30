@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MvcTemplate.Components.Security;
 using MvcTemplate.Objects;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
@@ -40,6 +41,7 @@ namespace MvcTemplate.Controllers.Administration
         }
 
         [HttpGet]
+        [AuthorizeAs(nameof(Index))]
         public ActionResult Details(Int64 id)
         {
             return NotEmptyView(Service.Get<AccountView>(id));

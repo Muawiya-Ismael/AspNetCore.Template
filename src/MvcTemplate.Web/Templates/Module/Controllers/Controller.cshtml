@@ -42,6 +42,7 @@ namespace @Model.ControllerNamespace
         }
 
         [HttpGet]
+        [AuthorizeAs(nameof(Index))]
         public ActionResult Details(Int64 id)
         {
             return NotEmptyView(Service.Get<@Model.View>(id));

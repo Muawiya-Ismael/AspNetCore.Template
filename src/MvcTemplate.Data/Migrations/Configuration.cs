@@ -37,12 +37,10 @@ namespace MvcTemplate.Data.Migrations
             List<Permission> permissions = new()
             {
                 new Permission { Area = "Administration", Controller = "Accounts", Action = "Create" },
-                new Permission { Area = "Administration", Controller = "Accounts", Action = "Details" },
                 new Permission { Area = "Administration", Controller = "Accounts", Action = "Edit" },
                 new Permission { Area = "Administration", Controller = "Accounts", Action = "Index" },
                 new Permission { Area = "Administration", Controller = "Roles", Action = "Create" },
                 new Permission { Area = "Administration", Controller = "Roles", Action = "Delete" },
-                new Permission { Area = "Administration", Controller = "Roles", Action = "Details" },
                 new Permission { Area = "Administration", Controller = "Roles", Action = "Edit" },
                 new Permission { Area = "Administration", Controller = "Roles", Action = "Index" }
             };
