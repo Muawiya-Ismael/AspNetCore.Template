@@ -4,7 +4,11 @@
     },
     "Controllers": {
         "Administration/Accounts": "Accounts",
-        "Administration/Roles": "Roles"
+        "Administration/Roles": "Roles",
+        "Auth": "Authorization",
+        "Home": "Home",
+        "Lookup": "Lookup",
+        "Profile": "Profile"
     },
     "Actions": {
         "Copy": "Copy",

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace MvcTemplate.Controllers
 {
     [AllowAnonymous]
-    public class Auth : ValidatedController<IAccountValidator, IAccountService>
+    public class Auth : ValidatedController<AccountValidator, AccountService>
     {
-        public IMailClient MailClient { get; }
+        private IMailClient MailClient { get; }
 
-        public Auth(IAccountValidator validator, IAccountService service, IMailClient mailClient)
+        public Auth(AccountValidator validator, AccountService service, IMailClient mailClient)
             : base(validator, service)
         {
             MailClient = mailClient;
@@ -25,7 +25,7 @@ namespace MvcTemplate.Controllers
         public ActionResult Recover()
         {
             if (Service.IsLoggedIn(User))
-                return RedirectToDefault();
+                return RedirectToAction(nameof(Home.Index), nameof(Home));
 
             return View();
         }
@@ -34,7 +34,7 @@ namespace MvcTemplate.Controllers
         public async Task<ActionResult> Recover(AccountRecoveryView account)
         {
             if (Service.IsLoggedIn(User))
-                return RedirectToDefault();
+                return RedirectToAction(nameof(Home.Index), nameof(Home));
 
             if (!Validator.CanRecover(account))
                 return View(account);
@@ -57,9 +57,9 @@ namespace MvcTemplate.Controllers
         public ActionResult Reset(String? token)
         {
             if (Service.IsLoggedIn(User))
-                return RedirectToDefault();
+                return RedirectToAction(nameof(Home.Index), nameof(Home));
 
-            if (!Validator.CanReset(new AccountResetView { Token = token ?? "" }))
+            if (!Validator.CanReset(new AccountResetView { Token = token }))
                 return RedirectToAction(nameof(Recover));
 
             return View();
@@ -69,7 +69,7 @@ namespace MvcTemplate.Controllers
         public ActionResult Reset(AccountResetView account)
         {
             if (Service.IsLoggedIn(User))
-                return RedirectToDefault();
+                return RedirectToAction(nameof(Home.Index), nameof(Home));
 
             if (!Validator.CanReset(account))
                 return RedirectToAction(nameof(Recover));
@@ -91,17 +91,17 @@ namespace MvcTemplate.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(AccountLoginView account, String? returnUrl)
+        public async Task<ActionResult> Login(AccountLoginView account)
         {
             if (Service.IsLoggedIn(User))
-                return RedirectToLocal(returnUrl);
+                return RedirectToLocal(account.ReturnUrl);
 
             if (!Validator.CanLogin(account))
                 return View(account);
 
             await Service.Login(HttpContext, account.Username);
 
-            return RedirectToLocal(returnUrl);
+            return RedirectToLocal(account.ReturnUrl);
         }
 
         [HttpGet]

@@ -9,14 +9,14 @@ namespace MvcTemplate.Data
 {
     public class AuditedUnitOfWorkTests : IDisposable
     {
-        private Role model;
+        private Permission model;
         private DbContext context;
         private AuditedUnitOfWork unitOfWork;
 
         public AuditedUnitOfWorkTests()
         {
             context = TestingContext.Create();
-            model = ObjectsFactory.CreateRole(0);
+            model = ObjectsFactory.CreatePermission(0);
             unitOfWork = new AuditedUnitOfWork(context, TestingContext.Mapper, 1);
 
             context.Drop().Add(model);
@@ -35,7 +35,7 @@ namespace MvcTemplate.Data
             unitOfWork.Dispose();
             context = TestingContext.Create();
             unitOfWork = new AuditedUnitOfWork(context, TestingContext.Mapper, 1);
-            unitOfWork.Insert(ObjectsFactory.CreateRole(1));
+            unitOfWork.Insert(ObjectsFactory.CreatePermission(1));
 
             LoggableEntity expected = new(context.ChangeTracker.Entries<AModel>().Single());
 
@@ -53,7 +53,7 @@ namespace MvcTemplate.Data
         [Fact]
         public void Commit_ModifiedAudit()
         {
-            model.Title += "Test";
+            model.Action += "Test";
 
             unitOfWork.Update(model);
 
@@ -125,7 +125,7 @@ namespace MvcTemplate.Data
         {
             context.ChangeTracker.AutoDetectChangesEnabled = detectChanges;
 
-            unitOfWork.Insert(ObjectsFactory.CreateRole(1));
+            unitOfWork.Insert(ObjectsFactory.CreatePermission(1));
             unitOfWork.Commit();
 
             Boolean actual = context.ChangeTracker.AutoDetectChangesEnabled;

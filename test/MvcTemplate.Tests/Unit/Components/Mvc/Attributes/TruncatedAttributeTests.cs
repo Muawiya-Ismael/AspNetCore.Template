@@ -19,7 +19,7 @@ namespace MvcTemplate.Components.Mvc
             context = new DefaultModelBindingContext();
             context.ModelState = new ModelStateDictionary();
             context.ModelName = "TruncatedDateTimeParameter";
-            context.ActionContext = MvcHelperFactory.CreateViewContext();
+            context.ActionContext = HttpFactory.CreateViewContext();
             context.ValueProvider = new RouteValueProvider(BindingSource.Path, values);
             context.ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(DateTime?));
         }

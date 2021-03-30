@@ -11,9 +11,9 @@ namespace @Model.ControllerNamespace
     {
     @:[Area(nameof(Area.@(Model.Area)))]
     }
-    public class @Model.Controller : ValidatedController<@Model.IValidator, @Model.IService>
+    public class @Model.Controller : ValidatedController<@Model.Validator, @Model.Service>
     {
-        public @(Model.Controller)(@Model.IValidator validator, @Model.IService service)
+        public @(Model.Controller)(@Model.Validator validator, @Model.Service service)
             : base(validator, service)
         {
         }

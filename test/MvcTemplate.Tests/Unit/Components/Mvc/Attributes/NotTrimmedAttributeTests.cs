@@ -24,7 +24,7 @@ namespace MvcTemplate.Components.Mvc
             {
                 ModelName = "Test",
                 ModelState = new ModelStateDictionary(),
-                ActionContext = MvcHelperFactory.CreateViewContext(),
+                ActionContext = HttpFactory.CreateViewContext(),
                 ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(String)),
                 ValueProvider = new RouteValueProvider(BindingSource.Path, new RouteValueDictionary(new { Test = " Value  " }))
             };

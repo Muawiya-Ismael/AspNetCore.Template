@@ -23,8 +23,8 @@ namespace MvcTemplate.Components.Mvc
         {
             host = Substitute.For<IWebHostEnvironment>();
             TagHelperContent content = new DefaultTagHelperContent();
-            ViewContext viewContext = MvcHelperFactory.CreateViewContext();
-            IUrlHelperFactory factory = MvcHelperFactory.CreateUrlHelperFactory(viewContext);
+            ViewContext viewContext = HttpFactory.CreateViewContext();
+            IUrlHelperFactory factory = HttpFactory.CreateUrlHelperFactory(viewContext);
             context = new TagHelperContext(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
             output = new TagHelperOutput("link", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
 

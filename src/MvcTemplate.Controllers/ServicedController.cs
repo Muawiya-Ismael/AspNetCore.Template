@@ -6,7 +6,7 @@ namespace MvcTemplate.Controllers
     public abstract class ServicedController<TService> : AController
         where TService : IService
     {
-        public TService Service { get; }
+        protected TService Service { get; }
 
         protected ServicedController(TService service)
         {

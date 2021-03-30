@@ -5,13 +5,14 @@ using MvcTemplate.Objects;
 using MvcTemplate.Resources;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
+using System.Security.Claims;
 
 namespace MvcTemplate.Controllers
 {
     [AllowUnauthorized]
-    public class Profile : ValidatedController<IAccountValidator, IAccountService>
+    public class Profile : ValidatedController<AccountValidator, AccountService>
     {
-        public Profile(IAccountValidator validator, IAccountService service)
+        public Profile(AccountValidator validator, AccountService service)
             : base(validator, service)
         {
         }
@@ -36,7 +37,10 @@ namespace MvcTemplate.Controllers
             if (!Validator.CanEdit(profile))
                 return View(profile);
 
-            Service.Edit(User, profile);
+            Service.Edit(profile);
+
+            User.UpdateClaim(ClaimTypes.Name, profile.Username);
+            User.UpdateClaim(ClaimTypes.Email, profile.Email.ToLower());
 
             Alerts.AddSuccess(Message.For<AccountView>("ProfileUpdated"), 4000);
 
@@ -67,7 +71,7 @@ namespace MvcTemplate.Controllers
             {
                 Alerts.AddWarning(Message.For<AccountView>("ProfileDeleteDisclaimer"));
 
-                return View();
+                return View(profile);
             }
 
             Service.Delete(profile.Id);

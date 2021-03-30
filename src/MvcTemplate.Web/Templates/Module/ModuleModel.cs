@@ -19,14 +19,8 @@ namespace MvcTemplate.Web.Templates
         public String View { get; }
 
         public String Service { get; }
-        public String IService { get; }
-        public String ServiceTests { get; }
-
         public String Validator { get; }
-        public String IValidator { get; }
-        public String ValidatorTests { get; }
 
-        public String ControllerTestsNamespace { get; }
         public String ControllerNamespace { get; }
         public String ControllerTests { get; }
         public String Controller { get; }
@@ -48,16 +42,9 @@ namespace MvcTemplate.Web.Templates
             Model = model;
 
             View = $"{Model}View";
-
-            ServiceTests = $"{Model}ServiceTests";
-            IService = $"I{Model}Service";
             Service = $"{Model}Service";
-
-            ValidatorTests = $"{Model}ValidatorTests";
-            IValidator = $"I{Model}Validator";
             Validator = $"{Model}Validator";
 
-            ControllerTestsNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}";
             ControllerNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}";
             ControllerTests = $"{controller}Tests";
             Controller = controller;

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace MvcTemplate.Services
 {
-    public class RoleService : AService, IRoleService
+    public class RoleService : AService
     {
         public RoleService(IUnitOfWork unitOfWork)
             : base(unitOfWork)
@@ -24,25 +24,13 @@ namespace MvcTemplate.Services
         }
         public RoleView? GetView(Int64 id)
         {
-            if (UnitOfWork.GetAs<Role, RoleView>(id) is RoleView role)
-            {
-                role.Permissions.SelectedIds = new HashSet<Int64>(UnitOfWork
-                    .Select<RolePermission>()
-                    .Where(rolePermission => rolePermission.RoleId == role.Id)
-                    .Select(rolePermission => rolePermission.PermissionId));
-
-                Seed(role.Permissions);
-
-                return role;
-            }
-
-            return null;
+            return UnitOfWork.GetAs<Role, RoleView>(id) is RoleView role ? Seed(role) : null;
         }
 
-        public virtual void Seed(MvcTree permissions)
+        public RoleView Seed(RoleView view)
         {
             MvcTreeNode root = new(Resource.ForString("All"));
-            permissions.Nodes.Add(root);
+            view.Permissions.Nodes.Add(root);
 
             foreach (IGrouping<String, PermissionView> area in GetAllPermissions().GroupBy(permission => permission.Area))
             {
@@ -61,17 +49,13 @@ namespace MvcTemplate.Services
                 else
                     root.Children.Add(new MvcTreeNode(area.Key) { Children = nodes });
             }
+
+            return view;
         }
+
         public void Create(RoleView view)
         {
             Role role = UnitOfWork.To<Role>(view);
-
-            foreach (Int64 permissionId in view.Permissions.SelectedIds)
-                role.Permissions.Add(new RolePermission
-                {
-                    RoleId = role.Id,
-                    PermissionId = permissionId
-                });
 
             UnitOfWork.Insert(role);
             UnitOfWork.Commit();

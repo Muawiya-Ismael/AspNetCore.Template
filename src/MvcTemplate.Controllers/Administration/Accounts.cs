@@ -7,9 +7,9 @@ using System;
 namespace MvcTemplate.Controllers.Administration
 {
     [Area(nameof(Area.Administration))]
-    public class Accounts : ValidatedController<IAccountValidator, IAccountService>
+    public class Accounts : ValidatedController<AccountValidator, AccountService>
     {
-        public Accounts(IAccountValidator validator, IAccountService service)
+        public Accounts(AccountValidator validator, AccountService service)
             : base(validator, service)
         {
         }

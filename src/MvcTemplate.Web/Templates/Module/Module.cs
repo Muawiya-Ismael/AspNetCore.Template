@@ -43,16 +43,10 @@ namespace MvcTemplate.Web.Templates
 
             Dictionary<String, GennyScaffoldingResult> results = new()
             {
-                { $"../MvcTemplate.Controllers/{shortPath}{Controller}.cs", Scaffold("Controllers/Controller") },
-                { $"../../test/MvcTemplate.Tests/Unit/Controllers/{shortPath}{Controller}Tests.cs", Scaffold("Tests/ControllerTests") },
-
                 { $"../MvcTemplate.Services/{shortPath}{Model}Service.cs", Scaffold("Services/Service") },
-                { $"../MvcTemplate.Services/{shortPath}I{Model}Service.cs", Scaffold("Services/IService") },
-                { $"../../test/MvcTemplate.Tests/Unit/Services/{shortPath}{Model}ServiceTests.cs", Scaffold("Tests/ServiceTests") },
-
                 { $"../MvcTemplate.Validators/{shortPath}{Model}Validator.cs", Scaffold("Validators/Validator") },
-                { $"../MvcTemplate.Validators/{shortPath}I{Model}Validator.cs", Scaffold("Validators/IValidator") },
-                { $"../../test/MvcTemplate.Tests/Unit/Validators/{shortPath}{Model}ValidatorTests.cs", Scaffold("Tests/ValidatorTests") },
+                { $"../MvcTemplate.Controllers/{shortPath}{Controller}.cs", Scaffold("Controllers/Controller") },
+                { $"../../test/MvcTemplate.Tests/Integration/Controllers/{shortPath}{Controller}Tests.cs", Scaffold("Tests/ControllerTests") },
 
                 { $"../MvcTemplate.Web/Views/{path}/Index.cshtml", Scaffold("Web/Index") },
                 { $"../MvcTemplate.Web/Views/{path}/Create.cshtml", Scaffold("Web/Create") },

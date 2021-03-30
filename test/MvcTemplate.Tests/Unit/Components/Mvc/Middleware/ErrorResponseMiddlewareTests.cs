@@ -16,7 +16,7 @@ namespace MvcTemplate.Components.Mvc
         {
             ILanguages languages = new Languages("en-GB", new[] { new Language { Abbreviation = "en-GB" } });
             ILogger<ErrorResponseMiddleware> logger = Substitute.For<ILogger<ErrorResponseMiddleware>>();
-            HttpContext actual = MvcHelperFactory.CreateViewContext().HttpContext;
+            HttpContext actual = HttpFactory.CreateHttpContext();
             actual.Request.RouteValues.Add("test", "test");
             actual.Request.Path = path;
             Boolean asserted = false;
@@ -44,7 +44,7 @@ namespace MvcTemplate.Components.Mvc
         {
             ILanguages languages = new Languages("en-GB", new[] { new Language { Abbreviation = "en-GB" } });
             ILogger<ErrorResponseMiddleware> logger = Substitute.For<ILogger<ErrorResponseMiddleware>>();
-            HttpContext actual = MvcHelperFactory.CreateViewContext().HttpContext;
+            HttpContext actual = HttpFactory.CreateHttpContext();
             actual.Request.RouteValues.Add("test", "test");
             actual.Request.Path = path;
             Boolean asserted = false;

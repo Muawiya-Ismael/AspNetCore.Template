@@ -7,9 +7,9 @@ using System;
 namespace MvcTemplate.Controllers.Administration
 {
     [Area(nameof(Area.Administration))]
-    public class Roles : ValidatedController<IRoleValidator, IRoleService>
+    public class Roles : ValidatedController<RoleValidator, RoleService>
     {
-        public Roles(IRoleValidator validator, IRoleService service)
+        public Roles(RoleValidator validator, RoleService service)
             : base(validator, service)
         {
         }
@@ -23,22 +23,14 @@ namespace MvcTemplate.Controllers.Administration
         [HttpGet]
         public ViewResult Create()
         {
-            RoleView role = new();
-
-            Service.Seed(role.Permissions);
-
-            return View(role);
+            return View(Service.Seed(new RoleView()));
         }
 
         [HttpPost]
         public ActionResult Create(RoleView role)
         {
             if (!Validator.CanCreate(role))
-            {
-                Service.Seed(role.Permissions);
-
-                return View(role);
-            }
+                return View(Service.Seed(role));
 
             Service.Create(role);
 
@@ -61,11 +53,7 @@ namespace MvcTemplate.Controllers.Administration
         public ActionResult Edit(RoleView role)
         {
             if (!Validator.CanEdit(role))
-            {
-                Service.Seed(role.Permissions);
-
-                return View(role);
-            }
+                return View(Service.Seed(role));
 
             Service.Edit(role);
 

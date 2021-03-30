@@ -11,14 +11,14 @@ namespace MvcTemplate.Data
 {
     public class UnitOfWorkTests : IDisposable
     {
-        private Role model;
+        private Permission model;
         private DbContext context;
         private UnitOfWork unitOfWork;
 
         public UnitOfWorkTests()
         {
             context = TestingContext.Create();
-            model = ObjectsFactory.CreateRole(0);
+            model = ObjectsFactory.CreatePermission(0);
             unitOfWork = new UnitOfWork(context, TestingContext.Mapper);
 
             context.Drop();
@@ -32,7 +32,7 @@ namespace MvcTemplate.Data
         [Fact]
         public void GetAs_Null_ReturnsDestinationDefault()
         {
-            Assert.Null(unitOfWork.GetAs<Role, RoleView>(null));
+            Assert.Null(unitOfWork.GetAs<Permission, PermissionView>(null));
         }
 
         [Fact]
@@ -41,18 +41,20 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            RoleView expected = TestingContext.Mapper.Map<RoleView>(model);
-            RoleView actual = unitOfWork.GetAs<Role, RoleView>(model.Id)!;
+            PermissionView expected = TestingContext.Mapper.Map<PermissionView>(model);
+            PermissionView actual = unitOfWork.GetAs<Permission, PermissionView>(model.Id)!;
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Controller, actual.Controller);
+            Assert.Equal(expected.Action, actual.Action);
+            Assert.Equal(expected.Area, actual.Area);
             Assert.Equal(expected.Id, actual.Id);
         }
 
         [Fact]
         public void Get_Null_ReturnsNull()
         {
-            Assert.Null(unitOfWork.Get<Role>(null));
+            Assert.Null(unitOfWork.Get<Permission>(null));
         }
 
         [Fact]
@@ -61,28 +63,32 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            Role expected = context.Set<Role>().AsNoTracking().Single();
-            Role actual = unitOfWork.Get<Role>(model.Id)!;
+            Permission actual = unitOfWork.Get<Permission>(model.Id)!;
+            Permission expected = context.Set<Permission>().Single();
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Controller, actual.Controller);
+            Assert.Equal(expected.Action, actual.Action);
+            Assert.Equal(expected.Area, actual.Area);
             Assert.Equal(expected.Id, actual.Id);
         }
 
         [Fact]
         public void Get_NotFound_ReturnsNull()
         {
-            Assert.Null(unitOfWork.Get<Role>(0));
+            Assert.Null(unitOfWork.Get<Permission>(0));
         }
 
         [Fact]
         public void To_ConvertsSourceToDestination()
         {
-            RoleView expected = TestingContext.Mapper.Map<RoleView>(model);
-            RoleView actual = unitOfWork.To<RoleView>(model);
+            PermissionView expected = TestingContext.Mapper.Map<PermissionView>(model);
+            PermissionView actual = unitOfWork.To<PermissionView>(model);
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Controller, actual.Controller);
+            Assert.Equal(expected.Action, actual.Action);
+            Assert.Equal(expected.Area, actual.Area);
             Assert.Equal(expected.Id, actual.Id);
         }
 
@@ -92,8 +98,8 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            IEnumerable<Role> actual = unitOfWork.Select<Role>();
-            IEnumerable<Role> expected = context.Set<Role>();
+            IEnumerable<Permission> actual = unitOfWork.Select<Permission>();
+            IEnumerable<Permission> expected = context.Set<Permission>();
 
             Assert.Equal(expected, actual);
         }
@@ -101,16 +107,16 @@ namespace MvcTemplate.Data
         [Fact]
         public void InsertRange_AddsModelsToDbSet()
         {
-            IEnumerable<Role> roles = new[] { ObjectsFactory.CreateRole(2), ObjectsFactory.CreateRole(3) };
+            IEnumerable<Permission> permissions = new[] { ObjectsFactory.CreatePermission(2), ObjectsFactory.CreatePermission(3) };
             DbContext testingContext = Substitute.For<DbContext>();
 
             unitOfWork.Dispose();
 
             unitOfWork = new UnitOfWork(testingContext, TestingContext.Mapper);
-            unitOfWork.InsertRange(roles);
+            unitOfWork.InsertRange(permissions);
 
-            foreach (Role role in roles)
-                testingContext.Received().Add(role);
+            foreach (Permission permission in permissions)
+                testingContext.Received().Add(permission);
         }
 
         [Fact]
@@ -118,7 +124,7 @@ namespace MvcTemplate.Data
         {
             unitOfWork.Insert(model);
 
-            AModel actual = context.ChangeTracker.Entries<Role>().Single().Entity;
+            AModel actual = context.ChangeTracker.Entries<Permission>().Single().Entity;
             AModel expected = model;
 
             Assert.Equal(EntityState.Added, context.Entry(model).State);
@@ -133,12 +139,12 @@ namespace MvcTemplate.Data
         [InlineData(EntityState.Unchanged, EntityState.Unchanged)]
         public void Update_Entry(EntityState initialState, EntityState state)
         {
-            EntityEntry<Role> entry = context.Entry(model);
+            EntityEntry<Permission> entry = context.Entry(model);
             entry.State = initialState;
 
             unitOfWork.Update(model);
 
-            EntityEntry<Role> actual = entry;
+            EntityEntry<Permission> actual = entry;
 
             Assert.Equal(state, actual.State);
             Assert.False(actual.Property(prop => prop.CreationDate).IsModified);
@@ -147,7 +153,7 @@ namespace MvcTemplate.Data
         [Fact]
         public void DeleteRange_Models()
         {
-            IEnumerable<Role> models = new[] { ObjectsFactory.CreateRole(2), ObjectsFactory.CreateRole(3) };
+            IEnumerable<Permission> models = new[] { ObjectsFactory.CreatePermission(2), ObjectsFactory.CreatePermission(3) };
 
             context.AddRange(models);
             context.SaveChanges();
@@ -155,7 +161,7 @@ namespace MvcTemplate.Data
             unitOfWork.DeleteRange(models);
             unitOfWork.Commit();
 
-            Assert.Empty(context.Set<Role>());
+            Assert.Empty(context.Set<Permission>());
         }
 
         [Fact]
@@ -167,7 +173,7 @@ namespace MvcTemplate.Data
             unitOfWork.Delete(model);
             unitOfWork.Commit();
 
-            Assert.Empty(context.Set<Role>());
+            Assert.Empty(context.Set<Permission>());
         }
 
         [Fact]
@@ -176,10 +182,10 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            unitOfWork.Delete<Role>(model.Id);
+            unitOfWork.Delete<Permission>(model.Id);
             unitOfWork.Commit();
 
-            Assert.Empty(context.Set<Role>());
+            Assert.Empty(context.Set<Permission>());
         }
 
         [Fact]

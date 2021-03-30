@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MvcTemplate.Validators
 {
-    public class RoleValidator : AValidator, IRoleValidator
+    public class RoleValidator : AValidator
     {
         public RoleValidator(IUnitOfWork unitOfWork)
             : base(unitOfWork)

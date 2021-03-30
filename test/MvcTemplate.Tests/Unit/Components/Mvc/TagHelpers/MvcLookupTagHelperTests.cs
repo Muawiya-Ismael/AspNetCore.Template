@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -16,11 +17,12 @@ namespace MvcTemplate.Components.Mvc
         [InlineData(null, "~/Lookup/Handling")]
         public void Process_Url(String? url, String newUrl)
         {
+            ViewContext view = new();
             TagHelperContent content = new DefaultTagHelperContent();
-            IUrlHelperFactory factory = MvcHelperFactory.CreateUrlHelperFactory(null);
-            MvcLookupTagHelper helper = new(Substitute.For<IHtmlGenerator>(), factory);
-            TagHelperContext context = new(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
+            IUrlHelperFactory factory = HttpFactory.CreateUrlHelperFactory(view);
+            MvcLookupTagHelper helper = new(Substitute.For<IHtmlGenerator>(), factory) { ViewContext = view };
             TagHelperOutput output = new("div", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
+            TagHelperContext context = new(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
 
             helper.Url = url;
             helper.Handler = "Handling";

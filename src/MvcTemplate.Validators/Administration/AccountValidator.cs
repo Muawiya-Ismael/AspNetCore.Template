@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MvcTemplate.Validators
 {
-    public class AccountValidator : AValidator, IAccountValidator
+    public class AccountValidator : AValidator
     {
         private IHasher Hasher { get; }
 
@@ -88,11 +88,11 @@ namespace MvcTemplate.Validators
         }
         private Boolean IsCorrectPassword(Int64 id, String password)
         {
-            String passhash = UnitOfWork
+            String? passhash = UnitOfWork
                 .Select<Account>()
                 .Where(account => account.Id == id)
                 .Select(account => account.Passhash)
-                .Single();
+                .SingleOrDefault();
 
             Boolean isCorrect = Hasher.VerifyPassword(password, passhash);
 
@@ -128,7 +128,7 @@ namespace MvcTemplate.Validators
             return isUnique;
         }
 
-        private Boolean IsValidResetToken(String token)
+        private Boolean IsValidResetToken(String? token)
         {
             Boolean isValid = UnitOfWork
                 .Select<Account>()

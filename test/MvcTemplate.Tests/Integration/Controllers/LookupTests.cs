@@ -1,3 +1,4 @@
+using System;
 using MvcTemplate.Data;
 using NonFactors.Mvc.Lookup;
 using NSubstitute;
@@ -5,17 +6,17 @@ using Xunit;
 
 namespace MvcTemplate.Controllers
 {
-    public class LookupTests : ControllerTests
+    public class LookupTests : IDisposable
     {
         private Lookup controller;
         private IUnitOfWork unitOfWork;
 
         public LookupTests()
         {
-            unitOfWork = Substitute.For<IUnitOfWork>();
-            controller = Substitute.ForPartsOf<Lookup>(unitOfWork);
+            unitOfWork = new UnitOfWork(TestingContext.Create(), TestingContext.Mapper);
+            controller = new Lookup(unitOfWork);
         }
-        public override void Dispose()
+        public void Dispose()
         {
             controller.Dispose();
             unitOfWork.Dispose();
@@ -32,14 +33,20 @@ namespace MvcTemplate.Controllers
         [Fact]
         public void Dispose_UnitOfWork()
         {
-            controller.Dispose();
+            IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
 
-            unitOfWork.Received().Dispose();
+            new Lookup(dbUnit).Dispose();
+
+            dbUnit.Received().Dispose();
         }
 
         [Fact]
         public void Dispose_MultipleTimes()
         {
+            IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
+
+            new Lookup(dbUnit).Dispose();
+
             controller.Dispose();
             controller.Dispose();
         }

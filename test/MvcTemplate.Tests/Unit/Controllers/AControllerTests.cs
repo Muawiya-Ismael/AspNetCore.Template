@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Notifications;
-using MvcTemplate.Components.Security;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
@@ -16,43 +12,30 @@ using Xunit;
 
 namespace MvcTemplate.Controllers
 {
-    public class AControllerTests : ControllerTests
+    public class AControllerTests : IDisposable
     {
-        private ActionExecutingContext context;
         private AController controller;
-        private String controllerName;
-        private ActionContext action;
-        private String? areaName;
 
         public AControllerTests()
         {
             controller = Substitute.ForPartsOf<AController>();
-
-            controller.Url = Substitute.For<IUrlHelper>();
-            controller.ControllerContext.RouteData = new RouteData();
             controller.TempData = Substitute.For<ITempDataDictionary>();
-            controller.Authorization.Returns(Substitute.For<IAuthorization>());
-            controller.ControllerContext.HttpContext = Substitute.For<HttpContext>();
-            controller.HttpContext.RequestServices.GetService(typeof(IAuthorization)).Returns(Substitute.For<IAuthorization>());
 
-            areaName = controller.RouteData.Values["area"] as String;
-            controllerName = (String)controller.RouteData.Values["controller"]!;
-            action = new ActionContext(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
-            context = new ActionExecutingContext(action, new List<IFilterMetadata>(), new Dictionary<String, Object>(), controller);
+            controller.Initialize();
         }
-        public override void Dispose()
+        public void Dispose()
         {
             controller.Dispose();
         }
 
         [Fact]
-        public void AController_CreatesEmptyAlerts()
+        public void AController_EmptyAlerts()
         {
             Assert.Empty(controller.Alerts);
         }
 
         [Fact]
-        public void NotFoundView_ReturnsNotFoundView()
+        public void NotFoundView_Response()
         {
             ViewResult actual = controller.NotFoundView();
 
@@ -61,49 +44,26 @@ namespace MvcTemplate.Controllers
         }
 
         [Fact]
-        public void NotEmptyView_NullModel_ReturnsNotFoundView()
+        public void NotEmptyView_Null_NotFound()
         {
-            ViewResult expected = NotFoundView(controller);
+            ViewResult expected = controller.StaticNotFoundView();
             ViewResult actual = controller.NotEmptyView(null);
 
             Assert.Same(expected, actual);
         }
 
         [Fact]
-        public void NotEmptyView_ReturnsModelView()
+        public void NotEmptyView_Model()
         {
-            Object expected = new();
-            Object actual = Assert.IsType<ViewResult>(controller.NotEmptyView(expected)).Model;
-
-            Assert.Same(expected, actual);
+            controller.Returns(controller.NotEmptyView, new Object());
         }
 
         [Fact]
-        public void RedirectToLocal_NotLocalUrl_RedirectsToDefault()
+        public void RedirectToLocal_External_Redirect()
         {
-            controller.Url.IsLocalUrl("T").Returns(false);
+            controller.Url.IsLocalUrl("test").Returns(false);
 
-            Object expected = RedirectToDefault(controller);
-            Object actual = controller.RedirectToLocal("T");
-
-            Assert.Same(expected, actual);
-        }
-
-        [Fact]
-        public void RedirectToLocal_IsLocalUrl_RedirectsToLocal()
-        {
-            controller.Url.IsLocalUrl("/").Returns(true);
-
-            String actual = Assert.IsType<RedirectResult>(controller.RedirectToLocal("/")).Url;
-            String expected = "/";
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void RedirectToDefault_Route()
-        {
-            RedirectToActionResult actual = controller.RedirectToDefault();
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToLocal("test"));
 
             Assert.Equal(nameof(Home.Index), actual.ActionName);
             Assert.Equal(nameof(Home), actual.ControllerName);
@@ -112,7 +72,15 @@ namespace MvcTemplate.Controllers
         }
 
         [Fact]
-        public void IsAuthorizedFor_ReturnsAuthorizationResult()
+        public void RedirectToLocal_Url_Redirect()
+        {
+            controller.Url.IsLocalUrl("/test/action").Returns(true);
+
+            Assert.Equal("/test/action", Assert.IsType<RedirectResult>(controller.RedirectToLocal("/test/action")).Url);
+        }
+
+        [Fact]
+        public void IsAuthorizedFor_CurrentUser()
         {
             controller.Authorization.IsGrantedFor(controller.User.Id(), "Area/Controller/Action").Returns(true);
 
@@ -120,88 +88,126 @@ namespace MvcTemplate.Controllers
         }
 
         [Fact]
-        public void RedirectToAction_Action_Controller_Route_NotAuthorized_RedirectsToDefault()
+        public void RedirectToAction_Unauthorized_RouteData()
         {
-            controller.IsAuthorizedFor($"{areaName}/Controller/Action").Returns(false);
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor(Arg.Any<String>()).Returns(true);
+            controller.IsAuthorizedFor("administration/roles/index").Returns(false);
 
-            Object expected = RedirectToDefault(controller);
-            Object actual = controller.RedirectToAction("Action", "Controller", new { id = 1 });
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction(null, null, new { }));
 
-            Assert.Same(expected, actual);
+            Assert.Equal(nameof(Home.Index), actual.ActionName);
+            Assert.Equal(nameof(Home), actual.ControllerName);
+            Assert.Equal("", actual.RouteValues["area"]);
+            Assert.Single(actual.RouteValues);
         }
 
         [Fact]
-        public void RedirectToAction_Action_NullController_NullRoute_RedirectsToAction()
+        public void RedirectToAction_Authorized_RouteData()
         {
-            controller.IsAuthorizedFor($"{areaName}/{controllerName}/Action").Returns(true);
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor("administration/roles/index").Returns(true);
 
-            RedirectToActionResult actual = controller.RedirectToAction("Action", null, null);
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction(null, null, new { }));
 
-            Assert.Equal(controllerName, actual.ControllerName);
-            Assert.Equal("Action", actual.ActionName);
-            Assert.Null(actual.RouteValues);
+            Assert.Equal("roles", actual.ControllerName);
+            Assert.Equal("index", actual.ActionName);
+            Assert.Null(actual.RouteValues["area"]);
+            Assert.Empty(actual.RouteValues);
         }
 
         [Fact]
-        public void RedirectToAction_Action_Controller_NullRoute_RedirectsToAction()
+        public void RedirectToAction_Unauthorized_RouteValues()
         {
-            controller.IsAuthorizedFor($"{areaName}/Controller/Action").Returns(true);
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor(Arg.Any<String>()).Returns(true);
+            controller.IsAuthorizedFor("reports/daily/create").Returns(false);
 
-            RedirectToActionResult actual = controller.RedirectToAction("Action", "Controller", null);
+            Object values = new { area = "reports", controller = "daily", action = "create" };
 
-            Assert.Equal("Controller", actual.ControllerName);
-            Assert.Equal("Action", actual.ActionName);
-            Assert.Null(actual.RouteValues);
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction(null, null, values));
+
+            Assert.Equal(nameof(Home.Index), actual.ActionName);
+            Assert.Equal(nameof(Home), actual.ControllerName);
+            Assert.Equal("", actual.RouteValues["area"]);
+            Assert.Single(actual.RouteValues);
         }
 
         [Fact]
-        public void RedirectToAction_Action_Controller_Route_RedirectsToAction()
+        public void RedirectToAction_Authorized_RouteValues()
         {
-            controller.IsAuthorizedFor("Area/Controller/Action").Returns(true);
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor("reports/daily/create").Returns(true);
 
-            RedirectToActionResult actual = controller.RedirectToAction("Action", "Controller", new { area = "Area", id = 1 });
+            Object values = new { area = "reports", controller = "daily", action = "create" };
 
-            Assert.Equal("Controller", actual.ControllerName);
-            Assert.Equal("Area", actual.RouteValues["area"]);
-            Assert.Equal("Action", actual.ActionName);
-            Assert.Equal(1, actual.RouteValues["id"]);
-            Assert.Equal(2, actual.RouteValues.Count);
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction(null, null, values));
+
+            Assert.Equal("reports", actual.RouteValues["area"]);
+            Assert.Equal("daily", actual.ControllerName);
+            Assert.Equal("create", actual.ActionName);
+            Assert.Equal(3, actual.RouteValues.Count);
         }
 
         [Fact]
-        public void OnActionExecuting_SetsAuthorization()
+        public void RedirectToAction_Unauthorized_Route()
         {
-            controller = Substitute.ForPartsOf<AController>();
-            controller.ControllerContext.HttpContext = Substitute.For<HttpContext>();
-            controller.HttpContext.RequestServices.GetService(typeof(IAuthorization)).Returns(Substitute.For<IAuthorization>());
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor(Arg.Any<String>()).Returns(true);
+            controller.IsAuthorizedFor("administration/daily/create").Returns(false);
 
-            controller.OnActionExecuting(context);
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction("create", "daily", new { }));
 
-            Object expected = controller.HttpContext.RequestServices.GetRequiredService<IAuthorization>();
-            Object actual = controller.Authorization;
-
-            Assert.Same(expected, actual);
+            Assert.Equal(nameof(Home.Index), actual.ActionName);
+            Assert.Equal(nameof(Home), actual.ControllerName);
+            Assert.Equal("", actual.RouteValues["area"]);
+            Assert.Single(actual.RouteValues);
         }
 
         [Fact]
-        public void OnActionExecuted_JsonResult_NoAlerts()
+        public void RedirectToAction_Authorized_Route()
+        {
+            controller.RouteData.Values["action"] = "index";
+            controller.RouteData.Values["controller"] = "roles";
+            controller.RouteData.Values["area"] = "administration";
+            controller.IsAuthorizedFor("administration/daily/create").Returns(true);
+
+            RedirectToActionResult actual = Assert.IsType<RedirectToActionResult>(controller.RedirectToAction("create", "daily", new { }));
+
+            Assert.Equal("daily", actual.ControllerName);
+            Assert.Equal("create", actual.ActionName);
+            Assert.Null(actual.RouteValues["area"]);
+            Assert.Empty(actual.RouteValues);
+        }
+
+        [Fact]
+        public void OnActionExecuted_Json_NoTempData()
         {
             JsonResult result = new("Value");
             controller.Alerts.AddError("Test");
-            controller.TempData["Alerts"] = null;
 
-            controller.OnActionExecuted(new ActionExecutedContext(action, new List<IFilterMetadata>(), controller) { Result = result });
+            controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller) { Result = result });
 
-            Assert.Null(controller.TempData["Alerts"]);
+            Assert.Empty(controller.TempData);
         }
 
         [Fact]
-        public void OnActionExecuted_NullTempDataAlerts_SetsTempDataAlerts()
+        public void OnActionExecuted_TempDataAlerts()
         {
             controller.Alerts.AddError("Test");
             controller.TempData["Alerts"] = null;
 
-            controller.OnActionExecuted(new ActionExecutedContext(action, new List<IFilterMetadata>(), controller));
+            controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller));
 
             Object expected = JsonSerializer.Serialize(controller.Alerts);
             Object actual = controller.TempData["Alerts"];
@@ -210,7 +216,7 @@ namespace MvcTemplate.Controllers
         }
 
         [Fact]
-        public void OnActionExecuted_MergesTempDataAlerts()
+        public void OnActionExecuted_Alerts_Merge()
         {
             Alerts alerts = new();
             alerts.AddError("Test1");
@@ -220,7 +226,7 @@ namespace MvcTemplate.Controllers
             controller.Alerts.AddError("Test2");
             alerts.AddError("Test2");
 
-            controller.OnActionExecuted(new ActionExecutedContext(action, new List<IFilterMetadata>(), controller));
+            controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller));
 
             Object expected = JsonSerializer.Serialize(alerts);
             Object actual = controller.TempData["Alerts"];
@@ -233,7 +239,7 @@ namespace MvcTemplate.Controllers
         {
             controller.Alerts.Clear();
 
-            controller.OnActionExecuted(new ActionExecutedContext(action, new List<IFilterMetadata>(), controller));
+            controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller));
 
             Assert.Null(controller.TempData["Alerts"]);
         }

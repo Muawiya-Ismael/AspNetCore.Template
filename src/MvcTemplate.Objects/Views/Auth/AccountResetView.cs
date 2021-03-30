@@ -7,7 +7,7 @@ namespace MvcTemplate.Objects
     public class AccountResetView : AView
     {
         [StringLength(36)]
-        public String Token { get; set; }
+        public String? Token { get; set; }
 
         [NotTrimmed]
         [StringLength(32)]

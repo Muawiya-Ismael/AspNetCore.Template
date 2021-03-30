@@ -56,13 +56,12 @@ namespace MvcTemplate.Components.Mvc
             ResourceExecutedContext context = new(action, Array.Empty<IFilterMetadata>());
             using DbContext currentContext = TestingContext.Create();
             using DbContext testingContext = TestingContext.Create();
-            Role role = ObjectsFactory.CreateRole(0);
 
             testingContext.Drop();
 
             TransactionFilter filter = new(testingContext);
 
-            testingContext.Add(role);
+            testingContext.Add(ObjectsFactory.CreateRole(0));
             testingContext.SaveChanges();
 
             Assert.Empty(currentContext.Set<Role>());

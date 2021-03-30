@@ -3,6 +3,7 @@ using MvcTemplate.Components.Security;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace MvcTemplate.Components.Mvc
         {
             authorization = Substitute.For<IAuthorization>();
             TagHelperContent content = new DefaultTagHelperContent();
-            helper = new AuthorizeTagHelper(authorization) { ViewContext = MvcHelperFactory.CreateViewContext() };
+            helper = new AuthorizeTagHelper(authorization) { ViewContext = HttpFactory.CreateViewContext() };
             context = new TagHelperContext(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
             output = new TagHelperOutput("authorize", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
         }
@@ -35,7 +36,8 @@ namespace MvcTemplate.Components.Mvc
             authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
             authorization.IsGrantedFor(1, permission).Returns(false);
 
-            helper.ViewContext!.RouteData.Values["controller"] = routeController;
+            (helper.ViewContext!.HttpContext.User.Identity as ClaimsIdentity)!.AddClaim(new Claim(ClaimTypes.NameIdentifier, "1"));
+            helper.ViewContext.RouteData.Values["controller"] = routeController;
             helper.ViewContext.RouteData.Values["action"] = routeAction;
             helper.ViewContext.RouteData.Values["area"] = routeArea;
 
@@ -71,7 +73,8 @@ namespace MvcTemplate.Components.Mvc
             authorization.IsGrantedFor(1, Arg.Any<String>()).Returns(false);
             authorization.IsGrantedFor(1, permission).Returns(true);
 
-            helper.ViewContext!.RouteData.Values["controller"] = routeController;
+            (helper.ViewContext!.HttpContext.User.Identity as ClaimsIdentity)!.AddClaim(new Claim(ClaimTypes.NameIdentifier, "1"));
+            helper.ViewContext.RouteData.Values["controller"] = routeController;
             helper.ViewContext.RouteData.Values["action"] = routeAction;
             helper.ViewContext.RouteData.Values["area"] = routeArea;
 

@@ -12,5 +12,7 @@ namespace MvcTemplate.Objects
         [NotTrimmed]
         [StringLength(32)]
         public String Password { get; set; }
+
+        public String? ReturnUrl { get; set; }
     }
 }

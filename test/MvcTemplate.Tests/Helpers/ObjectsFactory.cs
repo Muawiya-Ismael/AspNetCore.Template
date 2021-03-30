@@ -1,3 +1,5 @@
+using MvcTemplate.Controllers;
+using MvcTemplate.Controllers.Administration;
 using MvcTemplate.Objects;
 using System;
 using System.Collections.Generic;
@@ -11,11 +13,11 @@ namespace MvcTemplate
             return new()
             {
                 Username = $"Username{id}",
-                Passhash = $"Passhash{id}",
+                Passhash = $"Password{id}Hashed",
                 Email = $"{id}@tests.com",
                 IsLocked = false,
-                RecoveryToken = $"Token{id}",
-                RecoveryTokenExpiration = DateTime.Now.AddMinutes(5),
+                RecoveryToken = Guid.NewGuid().ToString(),
+                RecoveryTokenExpiration = DateTime.Now.AddMinutes(-5),
                 Role = CreateRole(id)
             };
         }
@@ -27,8 +29,7 @@ namespace MvcTemplate
                 Id = id,
                 Username = $"Username{id}",
                 Password = $"Password{id}",
-                Email = $"{id}@tests.com",
-                RoleId = id
+                Email = $"{id}@tests.com"
             };
         }
 
@@ -39,8 +40,7 @@ namespace MvcTemplate
                 Id = id,
                 Username = $"Username{id}",
                 Email = $"{id}@tests.com",
-                IsLocked = true,
-                RoleId = id
+                IsLocked = true
             };
         }
 
@@ -50,38 +50,8 @@ namespace MvcTemplate
             {
                 Id = id,
                 Username = $"Username{id}",
-                Password = $"Password{id}"
-            };
-        }
-
-        public static AccountRecoveryView CreateAccountRecoveryView(Int64 id)
-        {
-            return new()
-            {
-                Id = id,
-                Email = $"{id}@tests.com"
-            };
-        }
-
-        public static AccountResetView CreateAccountResetView(Int64 id)
-        {
-            return new()
-            {
-                Id = id,
-                Token = $"Token{id}",
-                NewPassword = $"NewPassword{id}"
-            };
-        }
-
-        public static AccountView CreateAccountView(Int64 id)
-        {
-            return new()
-            {
-                Id = id,
-                Username = $"Username{id}",
-                Email = $"{id}@tests.com",
-                IsLocked = true,
-                RoleTitle = $"Title{id}"
+                Password = $"Password{id}",
+                ReturnUrl = $"ReturnUrl{id}"
             };
         }
 
@@ -122,7 +92,14 @@ namespace MvcTemplate
             {
                 Title = $"Title{id}",
                 Accounts = new List<Account>(),
-                Permissions = new List<RolePermission>()
+                Permissions = new List<RolePermission>
+                {
+                    new() { Permission = new Permission { Area = "", Controller = nameof(Home), Action = nameof(Home.Index) } },
+                    new() { Permission = new Permission { Area = "", Controller = nameof(Profile), Action = nameof(Profile.Delete) } },
+                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Create) } },
+                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Delete) } },
+                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Accounts), Action = nameof(Accounts.Edit) } }
+                }
             };
         }
 

@@ -4,6 +4,7 @@ using NonFactors.Mvc.Lookup;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace MvcTemplate.Objects
 {
@@ -22,8 +23,10 @@ namespace MvcTemplate.Objects
 
         internal override void Map(Profile profile)
         {
-            profile.CreateMap<Role, RoleView>().ForMember(role => role.Permissions, member => member.Ignore());
-            profile.CreateMap<RoleView, Role>().ForMember(role => role.Permissions, member => member.MapFrom(_ => new List<RolePermission>()));
+            profile.CreateMap<Role, RoleView>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
+                new MvcTree { SelectedIds = new HashSet<Int64>(role.Permissions.Select(role => role.PermissionId)) }));
+            profile.CreateMap<RoleView, Role>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
+                role.Permissions.SelectedIds.Select(permission => new RolePermission { PermissionId = permission }).ToList()));
         }
     }
 }

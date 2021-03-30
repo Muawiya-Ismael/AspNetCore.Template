@@ -18,7 +18,7 @@ namespace MvcTemplate.Components.Mvc
         public SiteMapNodeTests()
         {
             helper = Substitute.For<IUrlHelper>();
-            ViewContext context = MvcHelperFactory.CreateViewContext();
+            ViewContext context = HttpFactory.CreateViewContext();
 
             helper.ActionContext.Returns(context);
             helper.Action(Arg.Any<UrlActionContext>()).Returns(info =>

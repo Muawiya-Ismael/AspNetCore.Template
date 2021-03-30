@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Security;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MvcTemplate.Services
 {
-    public class AccountService : AService, IAccountService
+    public class AccountService : AService
     {
         private IHasher Hasher { get; }
 
@@ -87,8 +86,7 @@ namespace MvcTemplate.Services
             UnitOfWork.Update(account);
             UnitOfWork.Commit();
         }
-
-        public void Edit(ClaimsPrincipal user, ProfileEditView view)
+        public void Edit(ProfileEditView view)
         {
             Account account = UnitOfWork.Get<Account>(view.Id)!;
             account.Email = view.Email.ToLower();
@@ -99,9 +97,6 @@ namespace MvcTemplate.Services
 
             UnitOfWork.Update(account);
             UnitOfWork.Commit();
-
-            user.UpdateClaim(ClaimTypes.Name, account.Username);
-            user.UpdateClaim(ClaimTypes.Email, account.Email);
         }
         public void Delete(Int64 id)
         {

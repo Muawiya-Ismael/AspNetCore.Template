@@ -24,7 +24,7 @@ namespace MvcTemplate.Components.Extensions
         public MvcGridExtensionsTests()
         {
             Grid<AllTypesView> grid = new(Array.Empty<AllTypesView>());
-            IHtmlHelper helper = MvcHelperFactory.CreateHtmlHelper();
+            IHtmlHelper helper = HttpFactory.CreateHtmlHelper();
             html = new HtmlGrid<AllTypesView>(helper, grid);
             columns = new GridColumns<AllTypesView>(grid);
             context = html.Grid.ViewContext!;

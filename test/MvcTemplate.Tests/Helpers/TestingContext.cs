@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MvcTemplate.Data;
@@ -39,6 +40,10 @@ namespace MvcTemplate
             context.SaveChanges();
 
             return context;
+        }
+        public static IQueryable<T> Db<T>(this DbContext context) where T : class
+        {
+            return context.Set<T>().AsNoTracking();
         }
     }
 }

@@ -10,9 +10,9 @@ using MvcTemplate.Services;
 namespace MvcTemplate.Controllers
 {
     [AllowUnauthorized]
-    public class Home : ServicedController<IAccountService>
+    public class Home : ServicedController<AccountService>
     {
-        public Home(IAccountService service)
+        public Home(AccountService service)
             : base(service)
         {
         }

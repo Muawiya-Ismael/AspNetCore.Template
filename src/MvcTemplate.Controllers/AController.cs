@@ -17,13 +17,21 @@ namespace MvcTemplate.Controllers
     [AutoValidateAntiforgeryToken]
     public abstract class AController : Controller
     {
-        public virtual IAuthorization Authorization { get; protected set; }
-        public Alerts Alerts { get; protected set; }
+        public Alerts Alerts
+        {
+            get;
+        }
+        public IAuthorization Authorization
+        {
+            get
+            {
+                return HttpContext.RequestServices.GetRequiredService<IAuthorization>();
+            }
+        }
 
         protected AController()
         {
             Alerts = new Alerts();
-            Authorization = null!;
         }
 
         public virtual ViewResult NotFoundView()
@@ -39,13 +47,9 @@ namespace MvcTemplate.Controllers
         public virtual ActionResult RedirectToLocal(String? url)
         {
             if (!Url.IsLocalUrl(url))
-                return RedirectToDefault();
+                return RedirectToAction(nameof(Home.Index), nameof(Home), new { area = "" });
 
             return Redirect(url);
-        }
-        public virtual RedirectToActionResult RedirectToDefault()
-        {
-            return base.RedirectToAction(nameof(Home.Index), nameof(Home), new { area = "" });
         }
 
         public virtual Boolean IsAuthorizedFor(String permission)
@@ -57,21 +61,18 @@ namespace MvcTemplate.Controllers
         {
             IDictionary<String, Object> values = HtmlHelper.AnonymousObjectToHtmlAttributes(routeValues);
             controllerName ??= values.ContainsKey("controller") ? values["controller"] as String : null;
-            String? area = values.ContainsKey("area") ? values["area"] as String : null;
+            actionName ??= values.ContainsKey("action") ? values["action"] as String : null;
+            Object? area = values.ContainsKey("area") ? values["area"] : null;
             controllerName ??= RouteData.Values["controller"] as String;
             actionName ??= RouteData.Values["action"] as String;
-            area ??= RouteData.Values["area"] as String;
+            area ??= RouteData.Values["area"];
 
             if (!IsAuthorizedFor($"{area}/{controllerName}/{actionName}".Trim('/')))
-                return RedirectToDefault();
+                return base.RedirectToAction(nameof(Home.Index), nameof(Home), new { area = "" });
 
-            return base.RedirectToAction(actionName, controllerName, routeValues);
+            return base.RedirectToAction(actionName, controllerName, values);
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            Authorization = HttpContext.RequestServices.GetRequiredService<IAuthorization>();
-        }
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             if (context.Result is JsonResult)

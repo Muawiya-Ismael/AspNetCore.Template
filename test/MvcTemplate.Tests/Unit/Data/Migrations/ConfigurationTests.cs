@@ -31,7 +31,7 @@ namespace MvcTemplate.Data.Migrations
         {
             configuration.Seed();
 
-            Assert.Single(context.Set<Role>(), role => role.Title == "Sys_Admin");
+            Assert.Single(context.Db<Role>(), role => role.Title == "Sys_Admin");
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace MvcTemplate.Data.Migrations
         {
             configuration.Seed();
 
-            Assert.Single(context.Set<Account>(), account => account.Username == "admin" && account.Role?.Title == "Sys_Admin");
+            Assert.NotNull(context.Db<Account>().Single(account => account.Username == "admin" && account.Role!.Title == "Sys_Admin"));
         }
 
         [Theory]
@@ -56,7 +56,7 @@ namespace MvcTemplate.Data.Migrations
         {
             configuration.Seed();
 
-            Assert.Single(context.Set<Permission>(), permission =>
+            Assert.Single(context.Db<Permission>(), permission =>
                 permission.Controller == controller &&
                 permission.Action == action &&
                 permission.Area == area);

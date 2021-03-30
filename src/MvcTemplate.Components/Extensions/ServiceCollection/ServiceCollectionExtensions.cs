@@ -10,12 +10,11 @@ namespace MvcTemplate.Components.Extensions
         public static void AddScopedImplementations<T>(this IServiceCollection services)
         {
             foreach (Type type in typeof(T).Assembly.GetTypes().Where(Implements<T>))
-                if (type.GetInterface($"I{type.Name}") is Type typeInterface)
-                    services.TryAddScoped(typeInterface, type);
+                services.TryAddScoped(type);
         }
         private static Boolean Implements<T>(Type type)
         {
-            return !type.IsAbstract && typeof(T).IsAssignableFrom(type);
+            return !type.IsAbstract && type.IsClass && typeof(T).IsAssignableFrom(type);
         }
     }
 }
