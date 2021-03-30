@@ -35,19 +35,13 @@ namespace MvcTemplate.Data
         {
             entry.State = EntityState.Deleted;
 
-            String expected = nameof(EntityState.Deleted);
-            String actual = new LoggableEntity(entry).Action;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(nameof(EntityState.Deleted), new LoggableEntity(entry).Action);
         }
 
         [Fact]
         public void LoggableEntity_SetsName()
         {
-            String actual = new LoggableEntity(entry).Name;
-            String expected = nameof(Role);
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
         }
 
         [Fact]
@@ -56,20 +50,14 @@ namespace MvcTemplate.Data
             model = context.Set<Role>().Single();
             entry = context.ChangeTracker.Entries<AModel>().Single();
 
-            String actual = new LoggableEntity(entry).Name;
-            String expected = nameof(Role);
-
             Assert.IsAssignableFrom<IProxyTargetAccessor>(model);
-            Assert.Equal(expected, actual);
+            Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
         }
 
         [Fact]
         public void LoggableEntity_SetsId()
         {
-            Int64 expected = model.Id;
-            Int64 actual = new LoggableEntity(entry).Id();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(model.Id, new LoggableEntity(entry).Id());
         }
 
         [Fact]
@@ -110,8 +98,8 @@ namespace MvcTemplate.Data
         {
             entry.State = EntityState.Added;
 
-            String actual = new LoggableEntity(entry).ToString();
             String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
+            String actual = new LoggableEntity(entry).ToString();
 
             Assert.Equal(expected, actual);
         }
@@ -122,8 +110,8 @@ namespace MvcTemplate.Data
             model.Title += "Test";
             entry.State = EntityState.Modified;
 
-            String actual = new LoggableEntity(entry).ToString();
             String expected = $"Title: \"{model.Title[..^4]}\" => \"{model.Title}\"\n";
+            String actual = new LoggableEntity(entry).ToString();
 
             Assert.Equal(expected, actual);
         }
@@ -133,8 +121,8 @@ namespace MvcTemplate.Data
         {
             entry.State = EntityState.Deleted;
 
-            String actual = new LoggableEntity(entry).ToString();
             String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
+            String actual = new LoggableEntity(entry).ToString();
 
             Assert.Equal(expected, actual);
         }

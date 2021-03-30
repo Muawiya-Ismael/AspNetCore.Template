@@ -8,10 +8,7 @@ namespace MvcTemplate.Components.Security
         [Fact]
         public void AuthorizeAsAttribute_SetsAction()
         {
-            String actual = new AuthorizeAsAttribute("Action").Action;
-            String expected = "Action";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("Action", new AuthorizeAsAttribute("Action").Action);
         }
     }
 }

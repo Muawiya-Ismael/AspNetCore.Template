@@ -18,10 +18,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void AcceptFilesAttribute_SetsExtensions()
         {
-            String actual = new AcceptFilesAttribute(".docx,.xlsx").Extensions;
-            String expected = ".docx,.xlsx";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(".docx,.xlsx", new AcceptFilesAttribute(".docx,.xlsx").Extensions);
         }
 
         [Fact]
@@ -55,8 +52,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData(".docx.doc")]
         public void IsValid_DifferentExtensionReturnsFalse(String fileName)
         {
-            using MemoryStream stream = new();
-            IFormFile file = new FormFile(stream, 0, 1, "File", fileName);
+            IFormFile file = new FormFile(new MemoryStream(), 0, 1, "File", fileName);
 
             Assert.False(attribute.IsValid(file));
         }
@@ -67,13 +63,12 @@ namespace MvcTemplate.Components.Mvc
         [InlineData(".doc")]
         [InlineData("docx")]
         [InlineData(".docx.doc")]
-        public void IsValid_DifferentExtensionsReturnsFalse(String fileName)
+        public void IsValid_DifferentExtensionsReturnsFalse(String file)
         {
-            using MemoryStream stream = new();
             IFormFile[] files =
             {
-                new FormFile(stream, 0, 1, "FirstFile", fileName),
-                new FormFile(stream, 0, 1, "SecondFile", "File.docx")
+                new FormFile(new MemoryStream(), 0, 1, "FirstFile", file),
+                new FormFile(new MemoryStream(), 0, 1, "SecondFile", "File.docx")
             };
 
             Assert.False(attribute.IsValid(files));
@@ -87,8 +82,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("xlsx.doc.xlsx")]
         public void IsValid_Extension(String fileName)
         {
-            using MemoryStream stream = new();
-            IFormFile file = new FormFile(stream, 0, 1, "File", fileName);
+            IFormFile file = new FormFile(new MemoryStream(), 0, 1, "File", fileName);
 
             Assert.True(attribute.IsValid(file));
         }
@@ -99,13 +93,12 @@ namespace MvcTemplate.Components.Mvc
         [InlineData(".xlsx", "docx..docx")]
         [InlineData(".docx", "xlsx.doc.xlsx")]
         [InlineData("xlsx.doc.xlsx", ".docx.docx")]
-        public void IsValid_Extensions(String firstFileName, String secondFileName)
+        public void IsValid_Extensions(String fileOne, String fileTwo)
         {
-            using MemoryStream stream = new();
             IFormFile[] files =
             {
-                new FormFile(stream, 0, 1, "FirstFile", firstFileName),
-                new FormFile(stream, 0, 1, "SecondFile", secondFileName)
+                new FormFile(new MemoryStream(), 0, 1, "FirstFile", fileOne),
+                new FormFile(new MemoryStream(), 0, 1, "SecondFile", fileTwo)
             };
 
             Assert.True(attribute.IsValid(files));

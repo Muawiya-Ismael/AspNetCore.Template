@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc
@@ -20,8 +21,10 @@ namespace MvcTemplate.Components.Mvc
 
             new NumberValidator().AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal(Validation.For("Number", "Int64"), attributes["data-val-number"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-number", Validation.For("Number", "Int64"));
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -34,8 +37,10 @@ namespace MvcTemplate.Components.Mvc
 
             new NumberValidator().AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal("Test", attributes["data-val-number"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-number", "Test");
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
     }
 }

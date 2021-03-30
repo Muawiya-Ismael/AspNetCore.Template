@@ -32,10 +32,7 @@ namespace MvcTemplate.Components.Mvc
         {
             CultureInfo.CurrentUICulture = languages["us"].Culture!;
 
-            Language actual = languages.Default;
-            Language expected = languages["en"];
-
-            Assert.Same(expected, actual);
+            Assert.Same(languages["en"], languages.Default);
         }
 
         [Fact]
@@ -43,10 +40,7 @@ namespace MvcTemplate.Components.Mvc
         {
             CultureInfo.CurrentUICulture = languages["en"].Culture!;
 
-            Language actual = languages.Current;
-            Language expected = languages["en"];
-
-            Assert.Same(expected, actual);
+            Assert.Same(languages["en"], languages.Current);
         }
 
         [Fact]
@@ -54,12 +48,8 @@ namespace MvcTemplate.Components.Mvc
         {
             languages.Current = languages.Supported.Last();
 
-            CultureInfo expectedCulture = languages.Supported.Last().Culture!;
-            CultureInfo actualUICulture = CultureInfo.CurrentUICulture;
-            CultureInfo actualCulture = CultureInfo.CurrentCulture;
-
-            Assert.Same(expectedCulture, actualUICulture);
-            Assert.Same(expectedCulture, actualCulture);
+            Assert.Same(languages.Supported.Last().Culture, CultureInfo.CurrentCulture);
+            Assert.Same(languages.Supported.Last().Culture, CultureInfo.CurrentUICulture);
         }
 
         [Fact]

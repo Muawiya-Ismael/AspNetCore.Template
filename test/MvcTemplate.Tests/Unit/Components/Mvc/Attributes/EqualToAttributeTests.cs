@@ -22,10 +22,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void EqualToAttribute_SetsOtherPropertyName()
         {
-            String actual = new EqualToAttribute("OtherProperty").OtherPropertyName;
-            String expected = "OtherProperty";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("OtherProperty", new EqualToAttribute("OtherProperty").OtherPropertyName);
         }
 
         [Fact]
@@ -33,8 +30,8 @@ namespace MvcTemplate.Components.Mvc
         {
             attribute.OtherPropertyDisplayName = "Other";
 
-            String actual = attribute.FormatErrorMessage("EqualTo");
             String expected = Validation.For("EqualTo", "EqualTo", attribute.OtherPropertyDisplayName);
+            String actual = attribute.FormatErrorMessage("EqualTo");
 
             Assert.Equal(expected, actual);
         }

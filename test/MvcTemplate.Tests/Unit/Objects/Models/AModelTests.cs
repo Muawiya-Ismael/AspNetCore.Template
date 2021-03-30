@@ -1,25 +1,16 @@
 using NSubstitute;
-using System;
 using Xunit;
 
 namespace MvcTemplate.Objects
 {
     public class AModelTests
     {
-        private AModel model;
-
-        public AModelTests()
-        {
-            model = Substitute.For<AModel>();
-        }
-
         [Fact]
         public void CreationDate_ReturnsSameValue()
         {
-            DateTime expected = model.CreationDate;
-            DateTime actual = model.CreationDate;
+            AModel model = Substitute.For<AModel>();
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(model.CreationDate, model.CreationDate);
         }
     }
 }

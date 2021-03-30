@@ -29,7 +29,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("on", "on")]
         [InlineData(null, null)]
         [InlineData("off", "off")]
-        public void Process_Autocomplete(String? value, String? expectedValue)
+        public void Process_Autocomplete(String? value, String? autocomplete)
         {
             output.Attributes.Add("autocomplete", value);
 
@@ -38,14 +38,14 @@ namespace MvcTemplate.Components.Mvc
             Assert.Equal(2, output.Attributes.Count);
             Assert.Empty(output.Content.GetContent());
             Assert.Equal("form-control", output.Attributes["class"].Value);
-            Assert.Equal(expectedValue, output.Attributes["autocomplete"].Value);
+            Assert.Equal(autocomplete, output.Attributes["autocomplete"].Value);
         }
 
         [Theory]
         [InlineData("", "form-control ")]
         [InlineData(null, "form-control ")]
         [InlineData("test", "form-control test")]
-        public void Process_Class(String? value, String expectedValue)
+        public void Process_Class(String? value, String classes)
         {
             output.Attributes.Add("class", value);
 
@@ -53,8 +53,8 @@ namespace MvcTemplate.Components.Mvc
 
             Assert.Equal(2, output.Attributes.Count);
             Assert.Empty(output.Content.GetContent());
+            Assert.Equal(classes, output.Attributes["class"].Value);
             Assert.Equal("off", output.Attributes["autocomplete"].Value);
-            Assert.Equal(expectedValue, output.Attributes["class"].Value);
         }
 
         [Fact]

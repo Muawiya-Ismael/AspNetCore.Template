@@ -21,10 +21,7 @@ namespace MvcTemplate.Components.Notifications
 
             alerts.Merge(alerts);
 
-            IEnumerable<Alert> expected = alerts;
-            IEnumerable<Alert> actual = original;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(alerts, original);
         }
 
         [Fact]

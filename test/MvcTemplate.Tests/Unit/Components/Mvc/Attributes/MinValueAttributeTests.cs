@@ -17,10 +17,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void MinValueAttribute_SetsMinimum()
         {
-            Decimal actual = new MinValueAttribute(12.56).Minimum;
-            Decimal expected = 12.56M;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(12.56M, new MinValueAttribute(12.56).Minimum);
         }
 
         [Fact]
@@ -28,8 +25,8 @@ namespace MvcTemplate.Components.Mvc
         {
             attribute = new MinValueAttribute(12.56);
 
-            String actual = attribute.FormatErrorMessage("Sum");
             String expected = Validation.For("MinValue", "Sum", attribute.Minimum);
+            String actual = attribute.FormatErrorMessage("Sum");
 
             Assert.Equal(expected, actual);
         }

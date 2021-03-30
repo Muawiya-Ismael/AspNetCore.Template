@@ -31,10 +31,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("TestWEEKMulti", "Test-WEEK-Multi")]
         public void TransformOutbound_Value(Object? value, String slug)
         {
-            String? expected = slug;
-            String? actual = new SlugifyTransformer().TransformOutbound(value);
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(slug, new SlugifyTransformer().TransformOutbound(value));
         }
     }
 }

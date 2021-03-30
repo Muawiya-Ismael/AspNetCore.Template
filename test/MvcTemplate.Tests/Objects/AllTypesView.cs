@@ -42,9 +42,6 @@ namespace MvcTemplate
 
         public IFormFile? FileField { get; set; }
 
-        [Truncated]
-        public DateTime TruncatedDateTimeField { get; set; }
-
         public AllTypesView? Child { get; set; }
     }
 }

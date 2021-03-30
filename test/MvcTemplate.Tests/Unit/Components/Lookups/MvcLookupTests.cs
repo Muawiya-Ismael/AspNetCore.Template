@@ -74,14 +74,11 @@ namespace MvcTemplate.Components.Lookups
 
         [InlineData(nameof(AllTypesView.StringField), "text-left")]
         [InlineData(nameof(AllTypesView.Child), "text-left")]
-        public void GetColumnCssClass_ReturnsCssClassForPropertyType(String propertyName, String cssClass)
+        public void GetColumnCssClass_ReturnsCssClassForPropertyType(String name, String classes)
         {
-            PropertyInfo property = typeof(AllTypesView).GetProperty(propertyName)!;
+            PropertyInfo property = typeof(AllTypesView).GetProperty(name)!;
 
-            String actual = lookup.GetColumnCssClass(property);
-            String expected = cssClass;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(classes, lookup.GetColumnCssClass(property));
         }
 
         [Fact]

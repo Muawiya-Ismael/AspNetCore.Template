@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc
@@ -29,8 +30,10 @@ namespace MvcTemplate.Components.Mvc
         {
             adapter.AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal(Validation.For("Digits", context.ModelMetadata.PropertyName), attributes["data-val-digits"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-digits", Validation.For("Digits", context.ModelMetadata.PropertyName));
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

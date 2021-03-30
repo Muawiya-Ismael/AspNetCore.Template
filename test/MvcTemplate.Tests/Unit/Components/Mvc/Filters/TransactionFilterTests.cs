@@ -40,13 +40,13 @@ namespace MvcTemplate.Components.Mvc
             testingContext.Add(role);
             testingContext.SaveChanges();
 
-            Assert.Empty(currentContext.Set<Role>());
-            Assert.Single(testingContext.Set<Role>());
+            Assert.Empty(currentContext.Db<Role>());
+            Assert.Single(testingContext.Db<Role>());
 
             filter.OnResourceExecuted(context);
 
-            Assert.Empty(currentContext.Set<Role>());
-            Assert.Empty(testingContext.Set<Role>());
+            Assert.Empty(currentContext.Db<Role>());
+            Assert.Empty(testingContext.Db<Role>());
         }
 
         [Fact]

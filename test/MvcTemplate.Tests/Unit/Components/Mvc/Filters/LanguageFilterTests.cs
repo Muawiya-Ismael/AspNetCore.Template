@@ -22,10 +22,7 @@ namespace MvcTemplate.Components.Mvc
             context.RouteData.Values["language"] = "us";
             new LanguageFilter(languages).OnResourceExecuting(context);
 
-            Language expected = languages["us"];
-            Language actual = languages.Current;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(languages["us"], languages.Current);
         }
 
         [Fact]
@@ -37,10 +34,7 @@ namespace MvcTemplate.Components.Mvc
 
             new LanguageFilter(languages).OnResourceExecuting(context);
 
-            Language expected = languages.Default;
-            Language actual = languages.Current;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(languages.Default, languages.Current);
         }
 
         [Fact]

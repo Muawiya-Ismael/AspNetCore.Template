@@ -11,10 +11,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void NotTrimmedAttribute_SetsBinderType()
         {
-            Type actual = new NotTrimmedAttribute().BinderType;
-            Type expected = typeof(NotTrimmedAttribute);
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(typeof(NotTrimmedAttribute), new NotTrimmedAttribute().BinderType);
         }
 
         [Fact]

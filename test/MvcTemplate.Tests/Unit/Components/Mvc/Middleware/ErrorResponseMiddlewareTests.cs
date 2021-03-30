@@ -12,7 +12,7 @@ namespace MvcTemplate.Components.Mvc
         [Theory]
         [InlineData("/sales/order", "/home/not-found")]
         [InlineData("/en/sales/order", "/en-GB/home/not-found")]
-        public async Task Invoke_NotFound(String path, String renderedPath)
+        public async Task Invoke_NotFound(String path, String requestPath)
         {
             ILanguages languages = new Languages("en-GB", new[] { new Language { Abbreviation = "en-GB" } });
             ILogger<ErrorResponseMiddleware> logger = Substitute.For<ILogger<ErrorResponseMiddleware>>();
@@ -33,14 +33,14 @@ namespace MvcTemplate.Components.Mvc
 
             Assert.True(asserted);
             Assert.Empty(actual.Request.RouteValues);
-            Assert.Equal(renderedPath, actual.Request.Path);
+            Assert.Equal(requestPath, actual.Request.Path);
             Assert.Equal(HttpMethods.Get, actual.Request.Method);
         }
 
         [Theory]
         [InlineData("/sales/order", "/home/error")]
         [InlineData("/en/sales/order", "/en-GB/home/error")]
-        public async Task Invoke_Error(String path, String renderedPath)
+        public async Task Invoke_Error(String path, String requestPath)
         {
             ILanguages languages = new Languages("en-GB", new[] { new Language { Abbreviation = "en-GB" } });
             ILogger<ErrorResponseMiddleware> logger = Substitute.For<ILogger<ErrorResponseMiddleware>>();
@@ -51,8 +51,7 @@ namespace MvcTemplate.Components.Mvc
 
             await new ErrorResponseMiddleware(actual =>
             {
-                if (actual.Request.Path != renderedPath)
-                    throw new Exception();
+                Assert.Equal(requestPath, actual.Request.Path);
 
                 asserted = true;
 
@@ -61,7 +60,7 @@ namespace MvcTemplate.Components.Mvc
 
             Assert.True(asserted);
             Assert.Empty(actual.Request.RouteValues);
-            Assert.Equal(renderedPath, actual.Request.Path);
+            Assert.Equal(requestPath, actual.Request.Path);
             Assert.Equal(HttpMethods.Get, actual.Request.Method);
         }
     }

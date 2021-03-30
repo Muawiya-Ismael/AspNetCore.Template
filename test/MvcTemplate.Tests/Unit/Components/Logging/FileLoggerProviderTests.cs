@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace MvcTemplate.Components.Logging
@@ -10,10 +9,7 @@ namespace MvcTemplate.Components.Logging
         {
             using FileLoggerProvider provider = new("log.txt", 10);
 
-            ILogger expected = provider.CreateLogger("1");
-            ILogger actual = provider.CreateLogger("2");
-
-            Assert.Same(expected, actual);
+            Assert.Same(provider.CreateLogger("1"), provider.CreateLogger("2"));
         }
     }
 }

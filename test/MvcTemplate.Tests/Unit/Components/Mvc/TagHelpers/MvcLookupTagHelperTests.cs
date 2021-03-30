@@ -15,7 +15,7 @@ namespace MvcTemplate.Components.Mvc
         [Theory]
         [InlineData("Test", "Test")]
         [InlineData(null, "~/Lookup/Handling")]
-        public void Process_Url(String? url, String newUrl)
+        public void Process_Url(String? url, String fullUrl)
         {
             ViewContext view = new();
             TagHelperContent content = new DefaultTagHelperContent();
@@ -29,10 +29,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            String? expected = newUrl;
-            String? actual = helper.Url;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(fullUrl, helper.Url);
         }
 
         [Theory]
@@ -50,10 +47,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            String? expected = newTitle;
-            String? actual = helper.Title;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(newTitle, helper.Title);
         }
     }
 }

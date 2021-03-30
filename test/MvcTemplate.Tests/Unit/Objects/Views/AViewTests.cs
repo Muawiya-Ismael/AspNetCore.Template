@@ -6,20 +6,12 @@ namespace MvcTemplate.Objects
 {
     public class AViewTests
     {
-        private AView view;
-
-        public AViewTests()
-        {
-            view = Substitute.For<AView>();
-        }
-
         [Fact]
         public void CreationDate_ReturnsSameValue()
         {
-            DateTime expected = view.CreationDate;
-            DateTime actual = view.CreationDate;
+            AView view = Substitute.For<AView>();
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(view.CreationDate, view.CreationDate);
         }
     }
 }

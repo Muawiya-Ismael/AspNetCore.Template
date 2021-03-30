@@ -38,12 +38,9 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("", "B", "C", "/B/C?")]
         [InlineData("A", "B", "C", "A/B/C?")]
         [InlineData(null, "B", "C", "/B/C?")]
-        public void Form_Url(String area, String controller, String action, String url)
+        public void Form_Url(String area, String controller, String action, String expected)
         {
-            SiteMapNode node = new() { Area = area, Controller = controller, Action = action };
-
-            String actual = node.Form(helper);
-            String expected = url;
+            String actual = new SiteMapNode { Area = area, Controller = controller, Action = action }.Form(helper);
 
             Assert.Equal(expected, actual);
         }
@@ -61,10 +58,7 @@ namespace MvcTemplate.Components.Mvc
             node.Route["test"] = "id";
             node.Route["id"] = "one";
 
-            String expected = "D/B/C?value=5&test=1000&id=lamp";
-            String actual = node.Form(helper);
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("D/B/C?value=5&test=1000&id=lamp", node.Form(helper));
         }
 
         [Fact]
@@ -76,10 +70,7 @@ namespace MvcTemplate.Components.Mvc
             SiteMapNode secondFiller = new() { Parent = second };
             SiteMapNode third = new() { Action = "E", Parent = secondFiller };
 
-            SiteMapNode[] expected = { first, second, third };
-            SiteMapNode[] actual = third.ToBreadcrumb();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(new[] { first, second, third }, third.ToBreadcrumb());
         }
     }
 }

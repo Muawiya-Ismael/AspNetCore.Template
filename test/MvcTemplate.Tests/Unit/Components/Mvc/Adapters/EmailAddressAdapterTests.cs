@@ -5,6 +5,7 @@ using MvcTemplate.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc
@@ -30,8 +31,10 @@ namespace MvcTemplate.Components.Mvc
         {
             adapter.AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal(Validation.For("EmailAddress", context.ModelMetadata.PropertyName), attributes["data-val-email"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-email", Validation.For("EmailAddress", context.ModelMetadata.PropertyName));
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

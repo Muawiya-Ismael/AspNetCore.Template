@@ -15,10 +15,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void Set_Same()
         {
-            Object expected = Resource.Set("Test");
-            Object actual = Resource.Set("Test");
-
-            Assert.Same(expected, actual);
+            Assert.Same(Resource.Set("Test"), Resource.Set("Test"));
         }
 
         [Fact]

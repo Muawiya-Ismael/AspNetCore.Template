@@ -17,10 +17,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void MaxValueAttribute_SetsMaximum()
         {
-            Decimal actual = new MaxValueAttribute(12.56).Maximum;
-            Decimal expected = 12.56M;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(12.56M, new MaxValueAttribute(12.56).Maximum);
         }
 
         [Fact]
@@ -28,8 +25,8 @@ namespace MvcTemplate.Components.Mvc
         {
             attribute = new MaxValueAttribute(13.44);
 
-            String actual = attribute.FormatErrorMessage("Sum");
             String expected = Validation.For("MaxValue", "Sum", attribute.Maximum);
+            String actual = attribute.FormatErrorMessage("Sum");
 
             Assert.Equal(expected, actual);
         }

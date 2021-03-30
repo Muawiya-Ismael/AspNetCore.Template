@@ -16,10 +16,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void LessThanAttribute_SetsMaximum()
         {
-            Decimal actual = new LessThanAttribute(12.56).Maximum;
-            Decimal expected = 12.56M;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(12.56M, new LessThanAttribute(12.56).Maximum);
         }
 
         [Fact]
@@ -27,8 +24,8 @@ namespace MvcTemplate.Components.Mvc
         {
             attribute = new LessThanAttribute(12.56);
 
-            String actual = attribute.FormatErrorMessage("Sum");
             String expected = Validation.For("LessThan", "Sum", attribute.Maximum);
+            String actual = attribute.FormatErrorMessage("Sum");
 
             Assert.Equal(expected, actual);
         }

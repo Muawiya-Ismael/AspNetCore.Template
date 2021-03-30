@@ -31,10 +31,7 @@ namespace MvcTemplate.Components.Mvc
 
             await binder.BindModelAsync(context);
 
-            ModelBindingResult actual = context.Result;
-            ModelBindingResult expected = new();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(new ModelBindingResult(), context.Result);
         }
 
         [Theory]
@@ -49,22 +46,18 @@ namespace MvcTemplate.Components.Mvc
 
             await binder.BindModelAsync(context);
 
-            ModelBindingResult expected = ModelBindingResult.Success(null);
-            ModelBindingResult actual = context.Result;
-
-            Assert.Equal(expected.IsModelSet, actual.IsModelSet);
-            Assert.Equal(expected.Model, actual.Model);
+            Assert.Equal(ModelBindingResult.Success(null), context.Result);
         }
 
         [Theory]
         [InlineData(true, true, "")]
         [InlineData(false, true, "  ")]
         [InlineData(false, false, "  ")]
-        public async Task BindModelAsync_Empty(Boolean convertToNull, Boolean isRequired, String value)
+        public async Task BindModelAsync_Empty(Boolean convertToNull, Boolean required, String value)
         {
             context.ModelMetadata.ConvertEmptyStringToNull.Returns(convertToNull);
-            context.ModelMetadata.IsRequired.Returns(isRequired);
             context.ModelName = nameof(AllTypesView.StringField);
+            context.ModelMetadata.IsRequired.Returns(required);
             values[nameof(AllTypesView.StringField)] = value;
 
             await binder.BindModelAsync(context);

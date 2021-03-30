@@ -27,10 +27,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void TruncatedAttribute_SetsBinderType()
         {
-            Type expected = typeof(TruncatedAttribute);
-            Type actual = attribute.BinderType;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(typeof(TruncatedAttribute), attribute.BinderType);
         }
 
         [Fact]
@@ -38,10 +35,7 @@ namespace MvcTemplate.Components.Mvc
         {
             await attribute.BindModelAsync(context);
 
-            ModelBindingResult actual = context.Result;
-            ModelBindingResult expected = new();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(new ModelBindingResult(), context.Result);
         }
 
         [Fact]

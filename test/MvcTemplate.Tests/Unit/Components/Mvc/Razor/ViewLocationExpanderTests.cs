@@ -27,11 +27,12 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void ExpandViewLocations_ReturnsViewLocations()
         {
-            ActionContext context = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
-            ViewLocationExpanderContext expander = new(context, "Index", null, null, null, true);
+            ActionContext action = new(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
+            ViewLocationExpanderContext context = new(action, "Index", null, null, null, true);
+            ViewLocationExpander expander = new();
 
-            IEnumerable<String> actual = new ViewLocationExpander().ExpandViewLocations(expander, Array.Empty<String>());
             IEnumerable<String> expected = new[] { "/Views/{1}/{0}.cshtml", "/Views/Shared/{0}.cshtml" };
+            IEnumerable<String> actual = expander.ExpandViewLocations(context, Array.Empty<String>());
 
             Assert.Equal(expected, actual);
         }

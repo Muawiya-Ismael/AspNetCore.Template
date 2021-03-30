@@ -9,10 +9,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void Id_NoClaim_Zero()
         {
-            Int64 expected = 0;
-            Int64 actual = new ClaimsPrincipal().Id();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(0, new ClaimsPrincipal().Id());
         }
 
         [Theory]
@@ -20,14 +17,9 @@ namespace MvcTemplate.Components.Extensions
         [InlineData("1", 1)]
         public void Id_ReturnsNameIdentifierClaim(String identifier, Int64 id)
         {
-            ClaimsIdentity identity = new();
-            ClaimsPrincipal principal = new(identity);
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier));
+            ClaimsIdentity identity = new(new[] { new Claim(ClaimTypes.NameIdentifier, identifier) });
 
-            Int64 actual = principal.Id();
-            Int64 expected = id;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(id, new ClaimsPrincipal(identity).Id());
         }
 
         [Fact]
@@ -36,12 +28,9 @@ namespace MvcTemplate.Components.Extensions
             ClaimsIdentity identity = new();
             ClaimsPrincipal principal = new(identity);
 
-            principal.UpdateClaim(ClaimTypes.Name, "Test");
+            principal.UpdateClaim(ClaimTypes.Name, "Testing name");
 
-            String? actual = principal.FindFirstValue(ClaimTypes.Name);
-            String? expected = "Test";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("Testing name", principal.FindFirstValue(ClaimTypes.Name));
         }
 
         [Fact]
@@ -51,12 +40,9 @@ namespace MvcTemplate.Components.Extensions
             ClaimsPrincipal principal = new(identity);
             identity.AddClaim(new Claim(ClaimTypes.Name, "ClaimTypeName"));
 
-            principal.UpdateClaim(ClaimTypes.Name, "Test");
+            principal.UpdateClaim(ClaimTypes.Name, "Testing name");
 
-            String? actual = principal.FindFirstValue(ClaimTypes.Name);
-            String? expected = "Test";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("Testing name", principal.FindFirstValue(ClaimTypes.Name));
         }
     }
 }

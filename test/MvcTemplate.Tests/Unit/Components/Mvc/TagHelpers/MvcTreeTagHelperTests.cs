@@ -36,10 +36,7 @@ namespace MvcTemplate.Components.Mvc
         {
             helper.Process(context, output);
 
-            Object expected = "Test.SelectedIds";
-            Object actual = output.Attributes["data-for"].Value;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("Test.SelectedIds", output.Attributes["data-for"].Value);
         }
 
         [Theory]
@@ -51,10 +48,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            Object expected = classes;
-            Object actual = output.Attributes["class"].Value;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(classes, output.Attributes["class"].Value);
         }
 
         [Theory]
@@ -68,10 +62,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            Object expected = classes;
-            Object actual = output.Attributes["class"].Value;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(classes, output.Attributes["class"].Value);
         }
 
         [Fact]
@@ -79,7 +70,6 @@ namespace MvcTemplate.Components.Mvc
         {
             helper.Process(context, output);
 
-            String actual = output.Content.GetContent();
             String expected =
                 "<div class=\"mvc-tree-ids\">" +
                     "<input name=\"Test.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
@@ -97,6 +87,7 @@ namespace MvcTemplate.Components.Mvc
                         "</ul>" +
                     "</li>" +
                 "</ul>";
+            String actual = output.Content.GetContent();
 
             Assert.Equal(expected, actual);
         }
@@ -108,7 +99,6 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            String actual = output.Content.GetContent();
             String expected =
                 "<div class=\"mvc-tree-ids\">" +
                     "<input name=\"Test.SelectedIds\" type=\"hidden\" value=\"123456\" />" +
@@ -126,6 +116,7 @@ namespace MvcTemplate.Components.Mvc
                         "</ul>" +
                     "</li>" +
                 "</ul>";
+            String actual = output.Content.GetContent();
 
             Assert.Equal(expected, actual);
         }

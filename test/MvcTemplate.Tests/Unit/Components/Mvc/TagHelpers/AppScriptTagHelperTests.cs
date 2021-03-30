@@ -65,10 +65,7 @@ namespace MvcTemplate.Components.Mvc
             File.Delete("js/application/admins/users/test.js");
             helper.Process(context, output);
 
-            String? expected = "~/js/application/admins/users/test.js";
-            String? actual = output.Attributes["src"].Value as String;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("~/js/application/admins/users/test.js", output.Attributes["src"].Value);
         }
 
         [Theory]
@@ -85,10 +82,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            String? expected = $"~/js/application/admins/users/{file}";
-            String? actual = output.Attributes["src"].Value as String;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal($"~/js/application/admins/users/{file}", output.Attributes["src"].Value);
         }
     }
 }

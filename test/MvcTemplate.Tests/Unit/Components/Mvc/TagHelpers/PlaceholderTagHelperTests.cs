@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -24,9 +25,11 @@ namespace MvcTemplate.Components.Mvc
             metadata.DisplayName.Returns("Test");
             helper.Process(context, output);
 
-            Assert.Single(output.Attributes);
+            TagHelperAttribute actual = output.Attributes.Single();
+
             Assert.Empty(output.Content.GetContent());
-            Assert.Equal("Test", output.Attributes["placeholder"].Value);
+            Assert.Equal("placeholder", actual.Name);
+            Assert.Equal("Test", actual.Value);
         }
     }
 }

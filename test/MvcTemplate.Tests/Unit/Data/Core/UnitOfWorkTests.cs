@@ -63,8 +63,8 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            Permission actual = unitOfWork.Get<Permission>(model.Id)!;
             Permission expected = context.Set<Permission>().Single();
+            Permission actual = unitOfWork.Get<Permission>(model.Id)!;
 
             Assert.Equal(expected.CreationDate, actual.CreationDate);
             Assert.Equal(expected.Controller, actual.Controller);
@@ -98,10 +98,7 @@ namespace MvcTemplate.Data
             context.Add(model);
             context.SaveChanges();
 
-            IEnumerable<Permission> actual = unitOfWork.Select<Permission>();
-            IEnumerable<Permission> expected = context.Set<Permission>();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(context.Set<Permission>(), unitOfWork.Select<Permission>());
         }
 
         [Fact]
@@ -124,11 +121,8 @@ namespace MvcTemplate.Data
         {
             unitOfWork.Insert(model);
 
-            AModel actual = context.ChangeTracker.Entries<Permission>().Single().Entity;
-            AModel expected = model;
-
             Assert.Equal(EntityState.Added, context.Entry(model).State);
-            Assert.Same(expected, actual);
+            Assert.Same(model, context.ChangeTracker.Entries<Permission>().Single().Entity);
         }
 
         [Theory]
@@ -144,10 +138,8 @@ namespace MvcTemplate.Data
 
             unitOfWork.Update(model);
 
-            EntityEntry<Permission> actual = entry;
-
-            Assert.Equal(state, actual.State);
-            Assert.False(actual.Property(prop => prop.CreationDate).IsModified);
+            Assert.Equal(state, entry.State);
+            Assert.False(entry.Property(prop => prop.CreationDate).IsModified);
         }
 
         [Fact]

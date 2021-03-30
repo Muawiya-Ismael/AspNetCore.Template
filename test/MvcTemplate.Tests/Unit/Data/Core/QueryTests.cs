@@ -31,10 +31,7 @@ namespace MvcTemplate.Data
         [Fact]
         public void ElementType_IsModelType()
         {
-            Object expected = typeof(Role);
-            Object actual = select.ElementType;
-
-            Assert.Same(expected, actual);
+            Assert.Same(typeof(Role), select.ElementType);
         }
 
         [Fact]
@@ -94,19 +91,13 @@ namespace MvcTemplate.Data
         [Fact]
         public void GetEnumerator_ReturnsSetEnumerator()
         {
-            IEnumerable<Role> expected = context.Set<Role>();
-            IEnumerable<Role> actual = select.ToArray();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(context.Set<Role>(), select.ToArray());
         }
 
         [Fact]
         public void GetEnumerator_ReturnsSameEnumerator()
         {
-            IEnumerable<Role> expected = context.Set<Role>();
-            IEnumerable<Role> actual = select;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(context.Set<Role>(), select);
         }
     }
 }

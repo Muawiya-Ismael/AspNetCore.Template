@@ -23,7 +23,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData(typeof(Boolean?), null, "")]
         [InlineData(typeof(Boolean?), true, "*")]
         [InlineData(typeof(Boolean?), false, "")]
-        public void Process_Label(Type type, Boolean? required, String require)
+        public void Process_Label(Type type, Boolean? required, String symbol)
         {
             FormLabelTagHelper helper = new();
             TagHelperContent content = new DefaultTagHelperContent();
@@ -38,7 +38,7 @@ namespace MvcTemplate.Components.Mvc
             helper.Process(context, output);
 
             Assert.Equal("Test", output.Attributes["for"].Value);
-            Assert.Equal($"<span class=\"require\">{require}</span>", output.Content.GetContent());
+            Assert.Equal($"<span class=\"require\">{symbol}</span>", output.Content.GetContent());
         }
     }
 }

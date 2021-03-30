@@ -41,7 +41,7 @@ namespace MvcTemplate.Data
 
             unitOfWork.Commit();
 
-            AuditLog actual = Assert.Single(unitOfWork.Select<AuditLog>());
+            AuditLog actual = unitOfWork.Select<AuditLog>().Single();
 
             Assert.Equal(expected.ToString(), actual.Changes);
             Assert.Equal(expected.Name, actual.EntityName);
@@ -61,7 +61,7 @@ namespace MvcTemplate.Data
 
             unitOfWork.Commit();
 
-            AuditLog actual = Assert.Single(unitOfWork.Select<AuditLog>());
+            AuditLog actual = unitOfWork.Select<AuditLog>().Single();
 
             Assert.Equal(expected.ToString(), actual.Changes);
             Assert.Equal(expected.Name, actual.EntityName);
@@ -88,7 +88,7 @@ namespace MvcTemplate.Data
 
             unitOfWork.Commit();
 
-            AuditLog actual = Assert.Single(unitOfWork.Select<AuditLog>());
+            AuditLog actual = unitOfWork.Select<AuditLog>().Single();
 
             Assert.Equal(expected.ToString(), actual.Changes);
             Assert.Equal(expected.Name, actual.EntityName);
@@ -128,10 +128,7 @@ namespace MvcTemplate.Data
             unitOfWork.Insert(ObjectsFactory.CreatePermission(1));
             unitOfWork.Commit();
 
-            Boolean actual = context.ChangeTracker.AutoDetectChangesEnabled;
-            Boolean expected = detectChanges;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(detectChanges, context.ChangeTracker.AutoDetectChangesEnabled);
         }
     }
 }

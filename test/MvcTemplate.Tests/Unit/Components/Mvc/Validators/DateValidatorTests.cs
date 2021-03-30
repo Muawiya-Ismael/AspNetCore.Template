@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc
@@ -20,8 +21,10 @@ namespace MvcTemplate.Components.Mvc
 
             new DateValidator().AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal(Validation.For("Date", "DateTime"), attributes["data-val-date"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-date", Validation.For("Date", "DateTime"));
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
     }
 }

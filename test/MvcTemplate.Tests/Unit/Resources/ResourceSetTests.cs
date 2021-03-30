@@ -26,12 +26,9 @@ namespace MvcTemplate.Resources
         [Fact]
         public void Indexer_Key_IsCaseInsensitive()
         {
-            resource["A", "B", "C"] = "test resource";
+            resource["A", "B", "C"] = "test";
 
-            String? actual = resource["A", "B", "c"];
-            String? expected = "test resource";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("test", resource["A", "B", "c"]);
         }
 
         [Theory]
@@ -41,12 +38,9 @@ namespace MvcTemplate.Resources
         public void Indexer_SetsResource(String language, String group, String key)
         {
             resource["Language", "Group", "Key"] = "existing resource";
-            resource[language, group, key] = "test resource";
+            resource[language, group, key] = "new testing resource for override";
 
-            String? actual = resource[language, group, key];
-            String? expected = "test resource";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("new testing resource for override", resource[language, group, key]);
         }
 
         [Fact]

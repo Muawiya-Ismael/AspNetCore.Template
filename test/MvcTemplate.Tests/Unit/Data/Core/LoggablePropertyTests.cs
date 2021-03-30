@@ -61,11 +61,11 @@ namespace MvcTemplate.Data
         [Fact]
         public void ToString_Modified_CurrentValueNull()
         {
-            textProperty.CurrentValue = null;
             textProperty.IsModified = true;
+            textProperty.CurrentValue = null;
 
-            String actual = new LoggableProperty(textProperty, "Original").ToString();
             String expected = $"{textProperty.Metadata.Name}: \"Original\" => null";
+            String actual = new LoggableProperty(textProperty, "Original").ToString();
 
             Assert.Equal(expected, actual);
         }
@@ -111,8 +111,8 @@ namespace MvcTemplate.Data
         {
             textProperty.IsModified = false;
 
-            String actual = new LoggableProperty(textProperty, "Originalê").ToString();
             String expected = $"{textProperty.Metadata.Name}: \"Originalê\"";
+            String actual = new LoggableProperty(textProperty, "Originalê").ToString();
 
             Assert.Equal(expected, actual);
         }
@@ -132,11 +132,11 @@ namespace MvcTemplate.Data
         [Fact]
         public void ToString_NotModified_Date()
         {
-            dateProperty.CurrentValue = new DateTime(2014, 6, 8, 14, 16, 19);
             dateProperty.IsModified = false;
+            dateProperty.CurrentValue = new DateTime(2014, 6, 8, 14, 16, 19);
 
-            String actual = new LoggableProperty(dateProperty, new DateTime(2014, 6, 8, 14, 16, 19)).ToString();
             String expected = $"{dateProperty.Metadata.Name}: \"2014-06-08 14:16:19\"";
+            String actual = new LoggableProperty(dateProperty, new DateTime(2014, 6, 8, 14, 16, 19)).ToString();
 
             Assert.Equal(expected, actual);
         }
@@ -147,8 +147,8 @@ namespace MvcTemplate.Data
             textProperty.CurrentValue = "Current\r\nValue";
             textProperty.IsModified = false;
 
-            String actual = new LoggableProperty(textProperty, "Original\r\nValue").ToString();
             String expected = $"{textProperty.Metadata.Name}: \"Original\\r\\nValue\"";
+            String actual = new LoggableProperty(textProperty, "Original\r\nValue").ToString();
 
             Assert.Equal(expected, actual);
         }

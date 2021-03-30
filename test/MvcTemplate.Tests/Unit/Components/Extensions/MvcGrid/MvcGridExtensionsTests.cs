@@ -84,8 +84,8 @@ namespace MvcTemplate.Components.Extensions
             Assert.Equal("text-center", actual.CssClasses);
             Assert.Equal("date-time-field", actual.Name);
             Assert.Equal(expression, actual.Expression);
-            Assert.Equal("{0:d}", actual.Format);
             Assert.Empty(actual.Title.ToString());
+            Assert.Equal("{0:d}", actual.Format);
             Assert.Single(columns);
         }
 
@@ -238,184 +238,181 @@ namespace MvcTemplate.Components.Extensions
         {
             Expression<Func<AllTypesView, SByte?>> expression = (model) => model.NullableSByteField;
 
-            String actual = columns.AddProperty(expression).Name;
-            String expected = "nullable-s-byte-field";
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("nullable-s-byte-field", columns.AddProperty(expression).Name);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForEnum()
         {
-            AssertCssClassFor(model => model.EnumField, "text-left");
+            Assert.Equal("text-left", columns.AddProperty(model => model.EnumField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForSByte()
         {
-            AssertCssClassFor(model => model.SByteField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.SByteField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForByte()
         {
-            AssertCssClassFor(model => model.ByteField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.ByteField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForInt16()
         {
-            AssertCssClassFor(model => model.Int16Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.Int16Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForUInt16()
         {
-            AssertCssClassFor(model => model.UInt16Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.UInt16Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForInt32()
         {
-            AssertCssClassFor(model => model.Int32Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.Int32Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForUInt32()
         {
-            AssertCssClassFor(model => model.UInt32Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.UInt32Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForInt64()
         {
-            AssertCssClassFor(model => model.Int64Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.Int64Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForUInt64()
         {
-            AssertCssClassFor(model => model.UInt64Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.UInt64Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForSingle()
         {
-            AssertCssClassFor(model => model.SingleField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.SingleField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForDouble()
         {
-            AssertCssClassFor(model => model.DoubleField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.DoubleField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForDecimal()
         {
-            AssertCssClassFor(model => model.DecimalField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.DecimalField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForBoolean()
         {
-            AssertCssClassFor(model => model.BooleanField, "text-center");
+            Assert.Equal("text-center", columns.AddProperty(model => model.BooleanField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForDateTime()
         {
-            AssertCssClassFor(model => model.DateTimeField, "text-center");
+            Assert.Equal("text-center", columns.AddProperty(model => model.DateTimeField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableEnum()
         {
-            AssertCssClassFor(model => model.NullableEnumField, "text-left");
+            Assert.Equal("text-left", columns.AddProperty(model => model.NullableEnumField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableSByte()
         {
-            AssertCssClassFor(model => model.NullableSByteField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableSByteField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableByte()
         {
-            AssertCssClassFor(model => model.NullableByteField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableByteField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableInt16()
         {
-            AssertCssClassFor(model => model.NullableInt16Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableInt16Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableUInt16()
         {
-            AssertCssClassFor(model => model.NullableUInt16Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableUInt16Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableInt32()
         {
-            AssertCssClassFor(model => model.NullableInt32Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableInt32Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableUInt32()
         {
-            AssertCssClassFor(model => model.NullableUInt32Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableUInt32Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableInt64()
         {
-            AssertCssClassFor(model => model.NullableInt64Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableInt64Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableUInt64()
         {
-            AssertCssClassFor(model => model.NullableUInt64Field, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableUInt64Field).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableSingle()
         {
-            AssertCssClassFor(model => model.NullableSingleField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableSingleField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableDouble()
         {
-            AssertCssClassFor(model => model.NullableDoubleField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableDoubleField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableDecimal()
         {
-            AssertCssClassFor(model => model.NullableDecimalField, "text-right");
+            Assert.Equal("text-right", columns.AddProperty(model => model.NullableDecimalField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableBoolean()
         {
-            AssertCssClassFor(model => model.NullableBooleanField, "text-center");
+            Assert.Equal("text-center", columns.AddProperty(model => model.NullableBooleanField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableDateTime()
         {
-            AssertCssClassFor(model => model.NullableDateTimeField, "text-center");
+            Assert.Equal("text-center", columns.AddProperty(model => model.NullableDateTimeField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForOtherTypes()
         {
-            AssertCssClassFor(model => model.StringField, "text-left");
+            Assert.Equal("text-left", columns.AddProperty(model => model.StringField).CssClasses);
         }
 
         [Theory]
@@ -426,30 +423,20 @@ namespace MvcTemplate.Components.Extensions
         [InlineData(" test", "test table-hover")]
         [InlineData("test ", "test  table-hover")]
         [InlineData(" test ", "test  table-hover")]
-        public void ApplyDefaults_Values(String? cssClasses, String expectedClasses)
+        public void ApplyDefaults_Values(String? css, String classes)
         {
             IGridColumn column = html.Grid.Columns.Add(model => model.ByteField);
-            html.Grid.Attributes["class"] = cssClasses;
+            html.Grid.Attributes["class"] = css;
             column.Filter.IsEnabled = null;
             column.Sort.IsEnabled = null;
 
             IGrid actual = html.ApplyDefaults().Grid;
 
             Assert.Equal(Resource.ForString("NoDataFound"), actual.EmptyText);
-            Assert.Equal(expectedClasses, html.Grid.Attributes["class"]);
+            Assert.Equal(classes, html.Grid.Attributes["class"]);
             Assert.True(column.Filter.IsEnabled);
             Assert.True(column.Sort.IsEnabled);
             Assert.NotEmpty(actual.Columns);
-        }
-
-        private void AssertCssClassFor<TProperty>(Expression<Func<AllTypesView, TProperty>> property, String cssClasses)
-        {
-            IGridColumn<AllTypesView, TProperty> column = columns.AddProperty(property);
-
-            String actual = column.CssClasses;
-            String expected = cssClasses;
-
-            Assert.Equal(expected, actual);
         }
     }
 }

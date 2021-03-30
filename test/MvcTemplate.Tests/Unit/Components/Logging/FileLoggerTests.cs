@@ -85,6 +85,7 @@ namespace MvcTemplate.Components.Logging
 
             Assert.Contains($"{LogLevel.Trace}: Nested message", File.ReadAllText("FileLogger/InnerPath/log.txt"));
         }
+
         [Fact]
         public void Log_RollsLargeFiles()
         {

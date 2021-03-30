@@ -65,10 +65,7 @@ namespace MvcTemplate.Components.Mvc
             File.Delete("css/application/admins/users/test.css");
             helper.Process(context, output);
 
-            String? expected = "~/css/application/admins/users/test.css";
-            String? actual = output.Attributes["href"].Value as String;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal("~/css/application/admins/users/test.css", output.Attributes["href"].Value);
         }
 
         [Theory]
@@ -85,10 +82,7 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            String? expected = $"~/css/application/admins/users/{file}";
-            String? actual = output.Attributes["href"].Value as String;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal($"~/css/application/admins/users/{file}", output.Attributes["href"].Value);
         }
     }
 }

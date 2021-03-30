@@ -5,6 +5,7 @@ using MvcTemplate.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc
@@ -26,12 +27,23 @@ namespace MvcTemplate.Components.Mvc
         }
 
         [Fact]
+        public void RequiredAdapter_Message()
+        {
+            String? actual = new RequiredAdapter(new RequiredAttribute()).Attribute.ErrorMessage;
+            String? expected = Validation.For("Required");
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void AddValidation_Required()
         {
             adapter.AddValidation(context);
 
-            Assert.Single(attributes);
-            Assert.Equal(Validation.For("Required", context.ModelMetadata.PropertyName), attributes["data-val-required"]);
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-required", Validation.For("Required", context.ModelMetadata.PropertyName));
+            KeyValuePair<String, String> actual = attributes.Single();
+
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -40,7 +52,6 @@ namespace MvcTemplate.Components.Mvc
             String expected = Validation.For("Required", context.ModelMetadata.PropertyName);
             String actual = adapter.GetErrorMessage(context);
 
-            Assert.Equal(Validation.For("Required"), adapter.Attribute.ErrorMessage);
             Assert.Equal(expected, actual);
         }
     }
