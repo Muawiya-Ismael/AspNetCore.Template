@@ -21,9 +21,9 @@ namespace MvcTemplate.Components.Mvc
                 MinValueAttribute minValue => new MinValueAdapter(minValue),
                 LessThanAttribute lessThan => new LessThanAdapter(lessThan),
                 FileSizeAttribute fileSize => new FileSizeAdapter(fileSize),
-                NumericAttribute numeric => new NumericAdapter(numeric),
-                EqualToAttribute equalTo => new EqualToAdapter(equalTo),
+                CompareAttribute compare => new CompareAdapter(compare),
                 IntegerAttribute integer => new IntegerAdapter(integer),
+                NumericAttribute numeric => new NumericAdapter(numeric),
                 DigitsAttribute digits => new DigitsAdapter(digits),
                 RangeAttribute range => new RangeAdapter(range),
                 _ => null

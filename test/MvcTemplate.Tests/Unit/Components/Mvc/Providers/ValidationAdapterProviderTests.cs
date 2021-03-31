@@ -85,9 +85,9 @@ namespace MvcTemplate.Components.Mvc
         }
 
         [Fact]
-        public void GetAttributeAdapter_EqualTo()
+        public void GetAttributeAdapter_Compare()
         {
-            Assert.IsType<EqualToAdapter>(provider.GetAttributeAdapter(new EqualToAttribute("Other"), null));
+            Assert.IsType<CompareAdapter>(provider.GetAttributeAdapter(new CompareAttribute("Other"), null));
         }
 
         [Fact]
