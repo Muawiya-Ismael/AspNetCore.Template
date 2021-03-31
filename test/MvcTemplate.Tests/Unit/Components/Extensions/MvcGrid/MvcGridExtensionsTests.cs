@@ -236,9 +236,9 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddProperty_SetsColumnName()
         {
-            Expression<Func<AllTypesView, SByte?>> expression = (model) => model.NullableSByteField;
+            Expression<Func<AllTypesView, SByte>> expression = (model) => model.NullableSByteField!.Value;
 
-            Assert.Equal("nullable-s-byte-field", columns.AddProperty(expression).Name);
+            Assert.Equal("nullable-s-byte-field-value", columns.AddProperty(expression).Name);
         }
 
         [Fact]

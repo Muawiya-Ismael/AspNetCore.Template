@@ -115,7 +115,7 @@ namespace MvcTemplate.Components.Extensions
         {
             String text = expression.Body is MemberExpression member ? member.ToString() : "";
             text = text.IndexOf('.') > 0 ? text[(text.IndexOf('.') + 1)..] : text;
-            text = text.Replace("_", "-");
+            text = text.Replace(".", "");
 
             return String.Join("-", Regex.Split(text, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).ToLower();
         }
