@@ -15,8 +15,9 @@ namespace MvcTemplate.Components.Mvc
             modelState.AddModelError("WhitespaceErrors", "Whitespace");
             modelState.AddModelError("TwoErrors", "Error1");
             modelState.AddModelError("TwoErrors", "Error2");
-            modelState.AddModelError("EmptyErrors", "");
+            modelState.SetModelValue("Normal", "1", "1");
             modelState.AddModelError("EmptyErrors", "E");
+            modelState.AddModelError("EmptyErrors", "");
             modelState.AddModelError("Error", "Error");
             modelState.AddModelError("Empty", "");
 

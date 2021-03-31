@@ -43,11 +43,13 @@ namespace MvcTemplate.Components.Extensions
         public void AddAction_Authorized_Renders()
         {
             StringWriter writer = new();
+            context.RouteData.Values["area"] = "Testing";
+            context.RouteData.Values["controller"] = "Tests";
             IUrlHelper url = context.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(context);
             IAuthorization authorization = html.Grid.ViewContext!.HttpContext.RequestServices.GetRequiredService<IAuthorization>();
 
             url.Action(Arg.Any<UrlActionContext>()).Returns("/test");
-            authorization.IsGrantedFor(Arg.Any<Int64>(), "Details").Returns(true);
+            authorization.IsGrantedFor(Arg.Any<Int64>(), "Testing/Tests/Details").Returns(true);
 
             IGridColumn<AllTypesView, IHtmlContent> column = columns.AddAction("Details", "fa fa-info");
             column.ValueFor(new GridRow<AllTypesView>(new AllTypesView(), 0)).WriteTo(writer, HtmlEncoder.Default);
@@ -55,6 +57,7 @@ namespace MvcTemplate.Components.Extensions
             String expected = $"<a class=\"fa fa-info\" href=\"/test\" title=\"{Resource.ForAction("Details")}\"></a>";
             String actual = writer.ToString();
 
+            Assert.Equal("action-cell details", column.CssClasses);
             Assert.Equal(expected, actual);
         }
 

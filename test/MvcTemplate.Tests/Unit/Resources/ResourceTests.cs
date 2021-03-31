@@ -97,6 +97,15 @@ namespace MvcTemplate.Resources
         }
 
         [Fact]
+        public void ForString_NoArguments_Format()
+        {
+            String expected = ResourceFor("Shared/Shared", "Strings", "SystemError");
+            String actual = Resource.ForString("SystemError");
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ForString_NotFound_Empty()
         {
             Assert.Empty(Resource.ForString("Null"));
