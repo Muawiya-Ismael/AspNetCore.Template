@@ -113,7 +113,6 @@ namespace @Model.ControllerNamespace
 
             controller.Create(@Model.ModelVarName);
 
-            @Model.View expected = @Model.ModelVarName;
             @Model.Model actual = context.Db<@Model.Model>().Single(@Model.ModelVarName => @(Model.ModelVarName).Id > otherModel.Id);
 
             @if (Model.ModelProperties.Length == 0)
@@ -126,7 +125,7 @@ namespace @Model.ControllerNamespace
                 {
                     if (Model.AllViewProperties.Any(prop => prop.Name == property.Name))
                     {
-            @:Assert.Equal(expected.@property.Name, actual.@property.Name);
+            @:Assert.Equal(@(Model.ModelVarName).@property.Name, actual.@property.Name);
                     }
                     else
                     {
@@ -161,6 +160,7 @@ namespace @Model.ControllerNamespace
         [Fact]
         public void Details_View()
         {
+            @Model.Model expected = model;
             @Model.View actual = controller.Details(model.Id).Returns<@Model.View>();
 
             @if (Model.ViewProperties.Length == 0)
@@ -173,11 +173,11 @@ namespace @Model.ControllerNamespace
                 {
                     if (Model.AllModelProperties.Any(prop => prop.Name == property.Name))
                     {
-            @:Assert.Equal(model.@property.Name, actual.@property.Name);
+            @:Assert.Equal(expected.@property.Name, actual.@property.Name);
                     }
                     else
                     {
-            @:Assert.Equal(model.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
+            @:Assert.Equal(expected.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
                     }
                 }
             }
@@ -199,6 +199,7 @@ namespace @Model.ControllerNamespace
         [Fact]
         public void Edit_View()
         {
+            @Model.Model expected = model;
             @Model.View actual = controller.Edit(model.Id).Returns<@Model.View>();
 
             @if (Model.ViewProperties.Length == 0)
@@ -211,11 +212,11 @@ namespace @Model.ControllerNamespace
                 {
                     if (Model.AllModelProperties.Any(prop => prop.Name == property.Name))
                     {
-            @:Assert.Equal(model.@property.Name, actual.@property.Name);
+            @:Assert.Equal(expected.@property.Name, actual.@property.Name);
                     }
                     else
                     {
-            @:Assert.Equal(model.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
+            @:Assert.Equal(expected.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
                     }
                 }
             }
@@ -325,7 +326,8 @@ namespace @Model.ControllerNamespace
         [Fact]
         public void Delete_View()
         {
-            @Model.View actual = controller.Details(model.Id).Returns<@Model.View>();
+            @Model.Model expected = model;
+            @Model.View actual = controller.Delete(model.Id).Returns<@Model.View>();
 
             @if (Model.ViewProperties.Length == 0)
             {
@@ -337,11 +339,11 @@ namespace @Model.ControllerNamespace
                 {
                     if (Model.AllModelProperties.Any(prop => prop.Name == property.Name))
                     {
-            @:Assert.Equal(model.@property.Name, actual.@property.Name);
+            @:Assert.Equal(expected.@property.Name, actual.@property.Name);
                     }
                     else
                     {
-            @:Assert.Equal(model.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
+            @:Assert.Equal(expected.@(String.Join(".", Regex.Split(property.Name, "(?<=[a-z])(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))), actual.@property.Name);
                     }
                 }
             }

@@ -84,13 +84,14 @@ namespace MvcTemplate.Controllers
 
             accounts.Edit(account);
 
+            Account expected = model;
             ProfileEditView actual = controller.Edit().Returns<ProfileEditView>();
 
-            Assert.Equal(model.CreationDate, actual.CreationDate);
-            Assert.Equal(model.Username, actual.Username);
-            Assert.Equal(model.Email, actual.Email);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Username, actual.Username);
+            Assert.Equal(expected.Email, actual.Email);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
             Assert.Null(actual.NewPassword);
             Assert.Null(actual.Password);

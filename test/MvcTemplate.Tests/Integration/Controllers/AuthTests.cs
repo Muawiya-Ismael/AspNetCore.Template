@@ -85,10 +85,9 @@ namespace MvcTemplate.Controllers
         [Fact]
         public async Task Recover_InvalidModelstate_Error()
         {
-            AccountRecoveryView account = new();
             controller.ModelState.AddModelError("Test", "Error");
 
-            await controller.Returns(controller.Recover, account);
+            await controller.Returns(controller.Recover, new AccountRecoveryView());
 
             controller.ModelState.IsSingle("Test", "Error");
             Assert.Empty(controller.Alerts);
@@ -189,7 +188,6 @@ namespace MvcTemplate.Controllers
             await controller.Recover(new AccountRecoveryView { Email = model.Email });
 
             controller.Alerts.Clear();
-            controller.ModelState.Clear();
             controller.ModelState.AddModelError("Test", "Error");
 
             String? token = context.Db<Account>().Single(account => account.Email == model.Email).RecoveryToken;
@@ -261,7 +259,6 @@ namespace MvcTemplate.Controllers
             await controller.Recover(new AccountRecoveryView { Email = model.Email });
 
             controller.Alerts.Clear();
-            controller.ModelState.Clear();
             controller.ModelState.AddModelError("Test", "Error");
 
             String? token = context.Db<Account>().Single(account => account.Email == model.Email).RecoveryToken;
@@ -301,7 +298,6 @@ namespace MvcTemplate.Controllers
         {
             await controller.Recover(new AccountRecoveryView { Email = model.Email });
 
-            controller.ModelState.Clear();
             controller.Alerts.Clear();
 
             String? token = context.Db<Account>().Single(account => account.Email == model.Email).RecoveryToken;
@@ -326,7 +322,6 @@ namespace MvcTemplate.Controllers
         {
             await controller.Recover(new AccountRecoveryView { Email = model.Email });
 
-            controller.ModelState.Clear();
             controller.Alerts.Clear();
 
             String? token = context.Db<Account>().Single(account => account.Email == model.Email).RecoveryToken;

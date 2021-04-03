@@ -155,15 +155,16 @@ namespace MvcTemplate.Controllers.Administration
         [Fact]
         public void Details_View()
         {
+            Account expected = model;
             AccountView actual = controller.Details(model.Id).Returns<AccountView>();
 
-            Assert.Equal(model.CreationDate, actual.CreationDate);
-            Assert.Equal(model.Role?.Title, actual.RoleTitle);
-            Assert.Equal(model.IsLocked, actual.IsLocked);
-            Assert.Equal(model.Username, actual.Username);
-            Assert.Equal(model.Email, actual.Email);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Role?.Title, actual.RoleTitle);
+            Assert.Equal(expected.IsLocked, actual.IsLocked);
+            Assert.Equal(expected.Username, actual.Username);
+            Assert.Equal(expected.Email, actual.Email);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
         }
 
@@ -181,15 +182,16 @@ namespace MvcTemplate.Controllers.Administration
         [Fact]
         public void Edit_View()
         {
+            Account expected = model;
             AccountEditView actual = controller.Edit(model.Id).Returns<AccountEditView>();
 
-            Assert.Equal(model.CreationDate, actual.CreationDate);
-            Assert.Equal(model.IsLocked, actual.IsLocked);
-            Assert.Equal(model.Username, actual.Username);
-            Assert.Equal(model.RoleId, actual.RoleId);
-            Assert.Equal(model.Email, actual.Email);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.IsLocked, actual.IsLocked);
+            Assert.Equal(expected.Username, actual.Username);
+            Assert.Equal(expected.RoleId, actual.RoleId);
+            Assert.Equal(expected.Email, actual.Email);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
         }
 

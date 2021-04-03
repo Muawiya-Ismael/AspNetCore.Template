@@ -141,14 +141,15 @@ namespace MvcTemplate.Controllers.Administration
         [Fact]
         public void Details_View()
         {
+            Role expected = model;
             RoleView actual = controller.Details(model.Id).Returns<RoleView>();
 
-            Assert.Equal(model.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
-            Assert.Equal(model.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Title, actual.Title);
             AssertPermissionTree(actual.Permissions);
-            Assert.Equal(model.Title, actual.Title);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
         }
 
@@ -166,14 +167,15 @@ namespace MvcTemplate.Controllers.Administration
         [Fact]
         public void Edit_View()
         {
+            Role expected = model;
             RoleView actual = controller.Edit(model.Id).Returns<RoleView>();
 
-            Assert.Equal(model.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
-            Assert.Equal(model.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Title, actual.Title);
             AssertPermissionTree(actual.Permissions);
-            Assert.Equal(model.Title, actual.Title);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
         }
 
@@ -256,14 +258,15 @@ namespace MvcTemplate.Controllers.Administration
         [Fact]
         public void Delete_View()
         {
+            Role expected = model;
             RoleView actual = controller.Delete(model.Id).Returns<RoleView>();
 
-            Assert.Equal(model.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
-            Assert.Equal(model.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Permissions.Select(role => role.PermissionId), actual.Permissions.SelectedIds);
+            Assert.Equal(expected.CreationDate, actual.CreationDate);
+            Assert.Equal(expected.Title, actual.Title);
             AssertPermissionTree(actual.Permissions);
-            Assert.Equal(model.Title, actual.Title);
+            Assert.Equal(expected.Id, actual.Id);
             Assert.Empty(controller.ModelState);
-            Assert.Equal(model.Id, actual.Id);
             Assert.Empty(controller.Alerts);
         }
 

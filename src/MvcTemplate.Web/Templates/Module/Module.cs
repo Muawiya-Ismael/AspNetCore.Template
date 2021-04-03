@@ -154,7 +154,7 @@ namespace MvcTemplate.Web.Templates
             }
             else
             {
-                content = Regex.Replace(content, @"    {\r?\n( +\w+,?\r?\n)+    }", $"    {{\n        {String.Join("\n", newAreas)}\n    }}");
+                content = Regex.Replace(content, @"    {\r?\n( +\w+,?\r?\n)+    }", $"    {{\n        {String.Join(",\n        ", newAreas)}\n    }}");
 
                 File.WriteAllText("../MvcTemplate.Controllers/Area.cs", content);
 
@@ -305,7 +305,6 @@ namespace MvcTemplate.Web.Templates
             String[] newTests = tests
                 .Append($@"        [InlineData(""{Area}"", ""{Controller}"", ""Create"")]")
                 .Append($@"        [InlineData(""{Area}"", ""{Controller}"", ""Delete"")]")
-                .Append($@"        [InlineData(""{Area}"", ""{Controller}"", ""Details"")]")
                 .Append($@"        [InlineData(""{Area}"", ""{Controller}"", ""Edit"")]")
                 .Append($@"        [InlineData(""{Area}"", ""{Controller}"", ""Index"")]")
                 .Distinct()
