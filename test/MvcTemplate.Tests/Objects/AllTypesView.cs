@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using MvcTemplate.Components.Mvc;
 using MvcTemplate.Components.Notifications;
 using MvcTemplate.Objects;
 using System;

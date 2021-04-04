@@ -94,7 +94,7 @@ namespace MvcTemplate
                 Accounts = new List<Account>(),
                 Permissions = new List<RolePermission>
                 {
-                    new() { Permission = new Permission { Area = "", Controller = nameof(Home), Action = nameof(Home.Index) } },
+                    new() { Permission = new Permission { Area = "", Controller = nameof(Auth), Action = nameof(Auth.Recover) } },
                     new() { Permission = new Permission { Area = "", Controller = nameof(Profile), Action = nameof(Profile.Delete) } },
                     new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Create) } },
                     new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Delete) } },

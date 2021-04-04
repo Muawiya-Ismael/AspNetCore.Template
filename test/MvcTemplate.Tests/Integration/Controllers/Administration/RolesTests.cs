@@ -347,11 +347,11 @@ namespace MvcTemplate.Controllers.Administration
 
             Assert.Null(permissions.Nodes[0].Children[1].Id);
             Assert.Single(permissions.Nodes[0].Children[1].Children);
-            Assert.Equal(Resource.ForController(nameof(Home)), permissions.Nodes[0].Children[1].Title);
+            Assert.Equal(Resource.ForController(nameof(Auth)), permissions.Nodes[0].Children[1].Title);
 
             Assert.NotNull(permissions.Nodes[0].Children[1].Children[0].Id);
             Assert.Empty(permissions.Nodes[0].Children[1].Children[0].Children);
-            Assert.Equal(Resource.ForAction(nameof(Home.Index)), permissions.Nodes[0].Children[1].Children[0].Title);
+            Assert.Equal(Resource.ForAction(nameof(Auth.Recover)), permissions.Nodes[0].Children[1].Children[0].Title);
 
             Assert.Null(permissions.Nodes[0].Children[2].Id);
             Assert.Single(permissions.Nodes[0].Children[2].Children);

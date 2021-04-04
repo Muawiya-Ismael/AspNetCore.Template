@@ -1,5 +1,4 @@
 using NSubstitute;
-using System;
 using Xunit;
 
 namespace MvcTemplate.Objects
