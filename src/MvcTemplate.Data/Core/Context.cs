@@ -36,7 +36,7 @@ namespace MvcTemplate.Data
                         if (property.GetCustomAttribute<NumericAttribute>(false) is NumericAttribute numeric)
                             modelBuilder.Entity(entity.ClrType).Property(property.Name).HasPrecision(numeric.Precision, numeric.Scale);
                         else
-                            throw new Exception($"Decimal numbers have to have {nameof(NumericAttribute)} specified. Default [{nameof(NumericAttribute)[..^9]}(18, 2)]");
+                            throw new Exception($"Decimal numbers have to have {nameof(NumericAttribute)} specified. Default [{nameof(NumericAttribute)[..^9]}(15, 2)]");
                 }
 
             foreach (IMutableForeignKey key in modelBuilder.Model.GetEntityTypes().SelectMany(entity => entity.GetForeignKeys()))
