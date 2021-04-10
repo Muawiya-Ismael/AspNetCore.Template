@@ -27,6 +27,7 @@ namespace MvcTemplate.Web.Templates
 
         public String? Area { get; }
 
+        public Type[] EnumTypes { get; set; }
         public PropertyInfo[] Indexes { get; set; }
         public PropertyInfo[] ViewProperties { get; set; }
         public PropertyInfo[] ModelProperties { get; set; }
@@ -59,6 +60,12 @@ namespace MvcTemplate.Web.Templates
             ViewProperties = viewType.GetProperties().Where(property => property.DeclaringType?.Name == View).ToArray();
             ModelProperties = AllModelProperties.Where(property => property.DeclaringType?.Name == Model).ToArray();
             AllViewProperties = viewType.GetProperties();
+            EnumTypes = AllModelProperties
+                .Where(property =>
+                    property.PropertyType.IsEnum ||
+                    Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                .Select(property => Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType)
+                .ToArray();
             Indexes = modelType
                 .GetCustomAttributes<IndexAttribute>()
                 .Where(index => index.IsUnique && ViewProperties.Any(property => property.Name == index.PropertyNames[0]))

@@ -27,7 +27,11 @@
                     <label asp-for="@property.Name"></label>
                 </div>
                 <div class="control-content col-md-9 col-lg-4">
-                    @if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
+                    @if (property.PropertyType == typeof(String))
+                    {
+                    <input asp-for="@property.Name" />
+                    }
+                    else if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
                     {
                     <input asp-for="@property.Name" asp-format="{0:d}" class="datepicker" type="text" />
                     }
@@ -35,13 +39,13 @@
                     {
                     <input asp-for="@property.Name" />
                     }
+                    else if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                    {
+                    <select asp-for="@property.Name" asp-items="Html.GetEnumSelectList<@((Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).Name)>()"></select>
+                    }
                     else if (Model.Relations[property] is String relation)
                     {
                     <div mvc-lookup-for="@property.Name" handler="@@nameof(Lookup.@relation)"></div>
-                    }
-                    else if (property.PropertyType == typeof(String))
-                    {
-                    <input asp-for="@property.Name" />
                     }
                     else
                     {

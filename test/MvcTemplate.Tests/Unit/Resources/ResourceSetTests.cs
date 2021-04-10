@@ -13,6 +13,17 @@ namespace MvcTemplate.Resources
         }
 
         [Theory]
+        [InlineData("Test", "Test")]
+        [InlineData("Test", "Group")]
+        [InlineData("Language", "Test")]
+        public void Indexer_Group_NotFound_ReturnsNull(String language, String group)
+        {
+            resource["Language", "Group", "Key"] = "test";
+
+            Assert.Null(resource[language, group]);
+        }
+
+        [Theory]
         [InlineData("Test", "Group", "Key")]
         [InlineData("Language", "Test", "Key")]
         [InlineData("Language", "Group", "Test")]

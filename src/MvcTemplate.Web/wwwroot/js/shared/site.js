@@ -14,22 +14,18 @@
 // Read only binding
 (function () {
     for (const widget of document.querySelectorAll(".widget-box.readonly")) {
+        for (const input of widget.querySelectorAll("textarea,select,input")) {
+            input.disabled = true;
+            input.readOnly = true;
+            input.tabIndex = -1;
+        }
+
         for (const element of widget.querySelectorAll(".mvc-lookup")) {
             new MvcLookup(element, { readonly: true });
         }
 
         for (const element of widget.querySelectorAll(".mvc-tree")) {
             new MvcTree(element, { readonly: true });
-        }
-
-        for (const textarea of widget.querySelectorAll("textarea")) {
-            textarea.readOnly = true;
-            textarea.tabIndex = -1;
-        }
-
-        for (const input of widget.querySelectorAll("input")) {
-            input.readOnly = true;
-            input.tabIndex = -1;
         }
     }
 

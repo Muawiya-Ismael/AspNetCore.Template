@@ -14,6 +14,19 @@ namespace MvcTemplate.Resources
             Source = new ConcurrentDictionary<String, ConcurrentDictionary<String, ResourceDictionary>>();
         }
 
+        public IDictionary<String, String?>? this[String language, String group]
+        {
+            get
+            {
+                if (!Source.ContainsKey(language))
+                    return null;
+
+                if (!Source[language].ContainsKey(group))
+                    return null;
+
+                return Source[language][group];
+            }
+        }
         public String? this[String language, String group, String key]
         {
             get

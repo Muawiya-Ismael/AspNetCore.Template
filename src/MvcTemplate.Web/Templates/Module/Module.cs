@@ -40,6 +40,7 @@ namespace MvcTemplate.Web.Templates
         {
             String path = $"{Area}/{Controller}".Trim('/');
             String shortPath = Area == null ? "" : $"{Area}/";
+            ModuleModel model = new(Model!, Controller!, Area);
 
             Dictionary<String, GennyScaffoldingResult> results = new()
             {
@@ -66,6 +67,9 @@ namespace MvcTemplate.Web.Templates
                     { $"../MvcTemplate.Objects/Views/{path}/{Model}View.cs", Scaffold("Objects/View") }
                 };
             }
+
+            foreach (Type type in model.EnumTypes)
+                results[$"../MvcTemplate.Web/Resources/Enums/{path}/{type.Name}.json"] = Scaffold("Resources/Enum", Enum.GetNames(type));
 
             if (results.Any(result => result.Value.Errors.Any()))
             {
@@ -377,9 +381,9 @@ namespace MvcTemplate.Web.Templates
             }
         }
 
-        private GennyScaffoldingResult Scaffold(String path)
+        private GennyScaffoldingResult Scaffold(String path, Object? model = null)
         {
-            return Scaffolder.Scaffold($"Templates/Module/{path}", new ModuleModel(Model!, Controller!, Area));
+            return Scaffolder.Scaffold($"Templates/Module/{path}", model ?? new ModuleModel(Model!, Controller!, Area));
         }
         private String FakeObjectCreation(String name, PropertyInfo[] properties)
         {
@@ -403,6 +407,13 @@ namespace MvcTemplate.Web.Templates
 
                     if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
                         return $"{set}DateTime.Now.AddDays(id)";
+
+                    if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                    {
+                        Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                        return $"{type.Name}.{Enum.GetNames(type)[0]}";
+                    }
 
                     return $"{set}id";
                 })) +

@@ -33,6 +33,10 @@
                         {
                     @:columns.AddBoolean(model => model.@property.Name);
                         }
+                        else if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                        {
+                    @:columns.AddEnum(model => model.@property.Name);
+                        }
                         else if (Model.Relations[property] == null)
                         {
                     @:columns.AddProperty(model => model.@property.Name);

@@ -113,6 +113,13 @@ body.private {
     border-color: #ced4da;
 }
 
+select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1rem' height='1rem'%3e%3ctext x='50%' y='50%' opacity='0.7' dominant-baseline='middle' text-anchor='middle'%3e▼%3c/text%3e%3c/svg%3e");
+    background-position: right 0.7em top 0.8em;
+    background-repeat: no-repeat;
+    appearance: none;
+}
+
 .input-validation-error {
     border-color: #dc3545;
 }

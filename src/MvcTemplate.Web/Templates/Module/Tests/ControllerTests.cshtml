@@ -275,6 +275,12 @@ namespace @Model.ControllerNamespace
                 {
                     return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = model.{property.Name}.AddDays(1)";
                 }
+                if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                {
+                    Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = {type.Name}.{Enum.GetNames(type).Skip(1).FirstOrDefault()}";
+                }
 
                 return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} += 1";
             }).OrderByDescending(change => change.Length);
