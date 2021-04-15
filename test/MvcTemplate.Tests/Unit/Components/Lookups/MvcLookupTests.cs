@@ -54,8 +54,8 @@ namespace MvcTemplate.Components.Lookups
         [InlineData(nameof(AllTypesView.SingleField), "text-right")]
         [InlineData(nameof(AllTypesView.DoubleField), "text-right")]
         [InlineData(nameof(AllTypesView.DecimalField), "text-right")]
-        [InlineData(nameof(AllTypesView.BooleanField), "text-center")]
-        [InlineData(nameof(AllTypesView.DateTimeField), "text-center")]
+        [InlineData(nameof(AllTypesView.BooleanField), "text-left")]
+        [InlineData(nameof(AllTypesView.DateTimeField), "text-left")]
 
         [InlineData(nameof(AllTypesView.NullableEnumField), "text-left")]
         [InlineData(nameof(AllTypesView.NullableSByteField), "text-right")]
@@ -69,8 +69,8 @@ namespace MvcTemplate.Components.Lookups
         [InlineData(nameof(AllTypesView.NullableSingleField), "text-right")]
         [InlineData(nameof(AllTypesView.NullableDoubleField), "text-right")]
         [InlineData(nameof(AllTypesView.NullableDecimalField), "text-right")]
-        [InlineData(nameof(AllTypesView.NullableBooleanField), "text-center")]
-        [InlineData(nameof(AllTypesView.NullableDateTimeField), "text-center")]
+        [InlineData(nameof(AllTypesView.NullableBooleanField), "text-left")]
+        [InlineData(nameof(AllTypesView.NullableDateTimeField), "text-left")]
 
         [InlineData(nameof(AllTypesView.StringField), "text-left")]
         [InlineData(nameof(AllTypesView.Child), "text-left")]

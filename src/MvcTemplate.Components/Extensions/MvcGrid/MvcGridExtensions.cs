@@ -153,9 +153,6 @@ namespace MvcTemplate.Components.Extensions
                 case TypeCode.Double:
                 case TypeCode.Decimal:
                     return "text-right";
-                case TypeCode.Boolean:
-                case TypeCode.DateTime:
-                    return "text-center";
                 default:
                     return "text-left";
             }

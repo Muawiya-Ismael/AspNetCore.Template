@@ -84,8 +84,8 @@ namespace MvcTemplate.Components.Extensions
 
             IGridColumn<AllTypesView, DateTime> actual = columns.AddDate(expression);
 
-            Assert.Equal("text-center", actual.CssClasses);
             Assert.Equal("date-time-field", actual.Name);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Empty(actual.Title.ToString());
             Assert.Equal("{0:d}", actual.Format);
@@ -100,7 +100,7 @@ namespace MvcTemplate.Components.Extensions
             IGridColumn<AllTypesView, DateTime?> actual = columns.AddDate(expression);
 
             Assert.Equal("nullable-date-time-field", actual.Name);
-            Assert.Equal("text-center", actual.CssClasses);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Empty(actual.Title.ToString());
             Assert.Equal("{0:d}", actual.Format);
@@ -114,7 +114,7 @@ namespace MvcTemplate.Components.Extensions
 
             IGridColumn<AllTypesView, Boolean> actual = columns.AddBoolean(expression);
 
-            Assert.Equal("text-center", actual.CssClasses);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Equal("boolean-field", actual.Name);
             Assert.Empty(actual.Title.ToString());
@@ -153,7 +153,7 @@ namespace MvcTemplate.Components.Extensions
             IGridColumn<AllTypesView, Boolean?> actual = columns.AddBoolean(expression);
 
             Assert.Equal("nullable-boolean-field", actual.Name);
-            Assert.Equal("text-center", actual.CssClasses);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Empty(actual.Title.ToString());
             Assert.Single(columns);
@@ -199,8 +199,8 @@ namespace MvcTemplate.Components.Extensions
 
             IGridColumn<AllTypesView, DateTime> actual = columns.AddDateTime(expression);
 
-            Assert.Equal("text-center", actual.CssClasses);
             Assert.Equal("date-time-field", actual.Name);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Empty(actual.Title.ToString());
             Assert.Equal("{0:g}", actual.Format);
@@ -215,7 +215,7 @@ namespace MvcTemplate.Components.Extensions
             IGridColumn<AllTypesView, DateTime?> actual = columns.AddDateTime(expression);
 
             Assert.Equal("nullable-date-time-field", actual.Name);
-            Assert.Equal("text-center", actual.CssClasses);
+            Assert.Equal("text-left", actual.CssClasses);
             Assert.Equal(expression, actual.Expression);
             Assert.Empty(actual.Title.ToString());
             Assert.Equal("{0:g}", actual.Format);
@@ -319,13 +319,13 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddProperty_SetsCssClassForBoolean()
         {
-            Assert.Equal("text-center", columns.AddProperty(model => model.BooleanField).CssClasses);
+            Assert.Equal("text-left", columns.AddProperty(model => model.BooleanField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForDateTime()
         {
-            Assert.Equal("text-center", columns.AddProperty(model => model.DateTimeField).CssClasses);
+            Assert.Equal("text-left", columns.AddProperty(model => model.DateTimeField).CssClasses);
         }
 
         [Fact]
@@ -403,13 +403,13 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddProperty_SetsCssClassForNullableBoolean()
         {
-            Assert.Equal("text-center", columns.AddProperty(model => model.NullableBooleanField).CssClasses);
+            Assert.Equal("text-left", columns.AddProperty(model => model.NullableBooleanField).CssClasses);
         }
 
         [Fact]
         public void AddProperty_SetsCssClassForNullableDateTime()
         {
-            Assert.Equal("text-center", columns.AddProperty(model => model.NullableDateTimeField).CssClasses);
+            Assert.Equal("text-left", columns.AddProperty(model => model.NullableDateTimeField).CssClasses);
         }
 
         [Fact]

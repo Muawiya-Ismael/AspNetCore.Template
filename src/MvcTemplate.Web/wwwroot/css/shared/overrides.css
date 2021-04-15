@@ -171,7 +171,7 @@ hr {
 
 /* mvc.lookup */
 .mvc-lookup-dialog th {
-    text-align: center !important;
+    text-align: left !important;
 }
 
 .mvc-lookup-input {
@@ -223,7 +223,7 @@ hr {
 }
 
 .mvc-grid > table > thead > tr > th {
-    text-align: center !important;
+    text-align: left !important;
     vertical-align: middle;
     white-space: nowrap;
     background: none;
@@ -245,6 +245,10 @@ hr {
 .mvc-grid .mvc-grid-headers .mvc-grid-filter,
 .mvc-grid .mvc-grid-filters .mvc-grid-filter {
     border-left: 1px solid #dee2e6;
+}
+
+.mvc-grid-header-mode .mvc-grid-value {
+    padding: 0.5em;
 }
 
 .mvc-grid-filter {
@@ -274,4 +278,10 @@ hr {
 
 .mvc-grid-popup .popup-actions {
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.mvc-grid-popup .mvc-grid-value,
+.mvc-grid-popup .mvc-grid-method,
+.mvc-grid-popup .mvc-grid-operator {
+    padding: 0 0.5em;
 }
