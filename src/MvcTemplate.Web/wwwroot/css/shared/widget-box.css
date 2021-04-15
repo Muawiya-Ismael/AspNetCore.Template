@@ -53,6 +53,10 @@
 }
 
 @media (max-width: 767px) {
+    .widget-header .widget-header-buttons .btn {
+        min-width: 3em;
+    }
+
     .widget-header .widget-header-buttons .btn > span {
         padding: 0;
     }

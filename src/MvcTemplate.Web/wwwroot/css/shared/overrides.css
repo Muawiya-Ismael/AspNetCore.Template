@@ -43,7 +43,7 @@ hr {
 }
 
 @media (max-width: 767px) {
-    .breadcrumb .icon {
+    .breadcrumb a .icon {
         padding-right: 0;
     }
 
