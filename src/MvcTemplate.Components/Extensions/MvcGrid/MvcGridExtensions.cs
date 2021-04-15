@@ -95,6 +95,7 @@ namespace MvcTemplate.Components.Extensions
             return grid
                 .Pageable(pager => pager.RowsPerPage = 16)
                 .Empty(Resource.ForString("NoDataFound"))
+                .Using(GridFilterMode.Header)
                 .AppendCss("table-hover")
                 .Filterable()
                 .Sortable();

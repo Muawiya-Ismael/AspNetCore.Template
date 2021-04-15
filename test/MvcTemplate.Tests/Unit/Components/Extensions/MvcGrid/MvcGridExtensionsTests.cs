@@ -436,6 +436,7 @@ namespace MvcTemplate.Components.Extensions
             IGrid actual = html.ApplyDefaults().Grid;
 
             Assert.Equal(Resource.ForString("NoDataFound"), actual.EmptyText);
+            Assert.Equal(GridFilterMode.Header, actual.FilterMode);
             Assert.Equal(classes, html.Grid.Attributes["class"]);
             Assert.True(column.Filter.IsEnabled);
             Assert.True(column.Sort.IsEnabled);
