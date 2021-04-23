@@ -14,10 +14,14 @@
 // Read only binding
 (function () {
     for (const widget of document.querySelectorAll(".widget-box.readonly")) {
-        for (const input of widget.querySelectorAll("textarea,select,input")) {
-            input.disabled = true;
-            input.readOnly = true;
-            input.tabIndex = -1;
+        for (const element of widget.querySelectorAll("textarea,select,input")) {
+            element.readOnly = true;
+            element.tabIndex = -1;
+
+            if (element.tagName == "SELECT") {
+                element.dataset.originalValue = element.value;
+                element.addEventListener("change", () => element.value = element.dataset.originalValue);
+            }
         }
 
         for (const element of widget.querySelectorAll(".mvc-lookup")) {

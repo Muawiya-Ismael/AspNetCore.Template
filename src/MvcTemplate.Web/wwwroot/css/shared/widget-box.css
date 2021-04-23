@@ -5,6 +5,15 @@
     margin-bottom: 15px;
 }
 
+.widget-box.readonly select {
+    background-color: #e9ecef;
+}
+
+.widget-box.readonly select:focus {
+    box-shadow: 0 0 0 0.2rem rgb(154 149 150 / 0.25);
+    border-color: #ced4da;
+}
+
 .widget-header {
     border-bottom: 1px solid #cdcdcd;
     display: flex;
