@@ -248,6 +248,7 @@ hr {
 }
 
 .mvc-grid-header-mode .mvc-grid-value {
+    font-weight: 500;
     padding: 0.5em;
 }
 
