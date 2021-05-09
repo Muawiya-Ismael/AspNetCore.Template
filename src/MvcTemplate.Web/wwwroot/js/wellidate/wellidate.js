@@ -1,5 +1,5 @@
 /*!
- * Wellidate 2.2.1
+ * Wellidate 2.2.3
  *
  * Copyright © NonFactors
  *
@@ -47,6 +47,8 @@
                     if (!isValid) {
                         validatable.isValid = false;
                         validatable.error(method);
+
+                        break;
                     } else if (typeof isValid !== "boolean") {
                         pending.push(isValid);
                         validatable.pending();
@@ -58,8 +60,6 @@
                             }
                         });
                     }
-
-                    break;
                 }
             }
 
