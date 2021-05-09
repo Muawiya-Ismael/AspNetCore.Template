@@ -138,7 +138,7 @@ namespace MvcTemplate.Components.Extensions
             Type type = Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty);
 
             if (type.IsEnum)
-                return "text-left";
+                return "text-start";
 
             switch (Type.GetTypeCode(type))
             {
@@ -153,9 +153,9 @@ namespace MvcTemplate.Components.Extensions
                 case TypeCode.Single:
                 case TypeCode.Double:
                 case TypeCode.Decimal:
-                    return "text-right";
+                    return "text-end";
                 default:
-                    return "text-left";
+                    return "text-start";
             }
         }
     }

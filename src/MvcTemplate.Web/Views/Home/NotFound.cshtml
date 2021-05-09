@@ -3,7 +3,7 @@
     ViewBag.Title = Resource.ForPage($"{nameof(Home)}/{nameof(Home.NotFound)}");
 }
 
-<div class="title text-right">@Resource.ForPage($"{nameof(Home)}/{nameof(Home.NotFound)}")</div>
+<div class="title text-end">@Resource.ForPage($"{nameof(Home)}/{nameof(Home.NotFound)}")</div>
 
 <hr />
 
@@ -13,6 +13,8 @@
 
 <div class="description">@Resource.ForString("PageNotFound")</div>
 
-<a asp-action="@nameof(Home.Index)" asp-controller="@nameof(Home)" asp-area="" class="btn btn-block btn-primary mt-3">
-    @Resource.ForAction("Home")
-</a>
+<div class="d-grid">
+    <a asp-action="@nameof(Home.Index)" asp-controller="@nameof(Home)" asp-area="" class="btn btn-primary mt-3">
+        @Resource.ForAction("Home")
+    </a>
+</div>

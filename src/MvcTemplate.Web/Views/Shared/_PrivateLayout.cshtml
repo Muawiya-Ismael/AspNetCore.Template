@@ -20,7 +20,6 @@
         <link rel="stylesheet" href="~/css/mvc-lookup/mvc-lookup.css">
         <link rel="stylesheet" href="~/css/mvc-grid/mvc-grid.css">
         <link rel="stylesheet" href="~/css/mvc-tree/mvc-tree.css">
-        <link rel="stylesheet" href="~/css/shared/alerts.css">
         <link rel="stylesheet" href="~/css/shared/content.css">
         <link rel="stylesheet" href="~/css/shared/header.css">
         <link rel="stylesheet" href="~/css/shared/navigation.css">
@@ -51,10 +50,9 @@
         @if (languages.Supported.Length > 1)
         {
             <div class="btn dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <span class="fa fa-flag"></span>
                     <span class="text">@Resource.ForAction("Language")</span>
-                    <span class="caret"></span>
                 </a>
                 <div class="dropdown-menu">
                     @foreach (Language language in languages.Supported)
@@ -78,7 +76,7 @@
     <div class="content">
         <div class="navigation">
             <div class="navigation-search">
-                <input type="search" placeholder="@(Resource.ForAction("Search"))..." />
+                <input type="search" placeholder="@Resource.ForAction("Search")" />
             </div>
             @{ ISiteMap siteMap = Context.RequestServices.GetRequiredService<ISiteMap>(); }
             <partial name="_SiteMap" model="@siteMap.For(ViewContext)" />
@@ -121,9 +119,9 @@
                         {
                             foreach (Alert alert in JsonSerializer.Deserialize<Alerts>(alerts)!)
                             {
-                                <div id="@alert.Id" class="alert alert-@alert.Type.ToString().ToLowerInvariant() fade show" data-timeout="@alert.Timeout">
-                                    <span>@alert.Message</span>
-                                    <span class="close" data-dismiss="alert">×</span>
+                                <div id="@alert.Id" class="alert alert-@alert.Type.ToString().ToLowerInvariant() alert-dismissible fade show" data-timeout="@alert.Timeout">
+                                    @alert.Message
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                 </div>
                             }
                         }
@@ -142,21 +140,22 @@
     <environment names="Development">
         <script src="~/js/moment/moment.js"></script>
         <script src="~/js/moment/cultures/moment.en.js"></script>
+        <script src="~/js/popper/popper.js"></script>
         <script src="~/js/rome/rome.standalone.js"></script>
         <script src="~/js/mvc-lookup/mvc-lookup.js"></script>
         <script src="~/js/mvc-lookup/cultures/mvc-lookup.en.js"></script>
         <script src="~/js/mvc-grid/mvc-grid.js"></script>
         <script src="~/js/mvc-grid/cultures/mvc-grid.en.js"></script>
         <script src="~/js/mvc-tree/mvc-tree.js"></script>
-        <script src="~/js/bootstrap/bootstrap-native.js"></script>
+        <script src="~/js/bootstrap/bootstrap.js"></script>
         <script src="~/js/wellidate/wellidate.js"></script>
         <script src="~/js/shared/widgets/alerts.js"></script>
         <script src="~/js/shared/widgets/datepicker.js"></script>
         <script src="~/js/shared/widgets/grid.js"></script>
-        <script src="~/js/shared/widgets/header.js"></script>
         <script src="~/js/shared/widgets/lookup.js"></script>
         <script src="~/js/shared/widgets/navigation.js"></script>
         <script src="~/js/shared/widgets/number.js"></script>
+        <script src="~/js/shared/widgets/tooltip.js"></script>
         <script src="~/js/shared/widgets/tree.js"></script>
         <script src="~/js/shared/widgets/validator.js"></script>
         <script action="shared"></script>

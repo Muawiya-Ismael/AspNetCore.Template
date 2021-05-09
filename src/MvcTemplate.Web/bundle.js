@@ -10,6 +10,7 @@ glob.sync("./wwwroot/css/**/*.min.css").forEach(fs.unlinkSync);
 const vendorJs = bundle([
     "./wwwroot/js/moment/moment.js",
     "./wwwroot/js/moment/**/*.js",
+    "./wwwroot/js/popper/*.js",
     "./wwwroot/js/rome/*.js",
     "./wwwroot/js/mvc-lookup/mvc-lookup.js",
     "./wwwroot/js/mvc-lookup/**/*.js",
@@ -37,7 +38,6 @@ const vendorCss = bundle([
 ], "./wwwroot/css/site/vendor.min.css");
 
 const siteCss = bundle([
-    "./wwwroot/css/shared/alerts.css",
     "./wwwroot/css/shared/content.css",
     "./wwwroot/css/shared/header.css",
     "./wwwroot/css/shared/navigation.css",

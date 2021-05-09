@@ -4,8 +4,8 @@
     Datepicker.init();
     Navigation.init();
     Validator.init();
+    Tooltip.init();
     Alerts.init();
-    Header.init();
     Lookup.init();
     Grid.init();
     Tree.init();
@@ -17,11 +17,6 @@
         for (const element of widget.querySelectorAll("textarea,select,input")) {
             element.readOnly = true;
             element.tabIndex = -1;
-
-            if (element.tagName == "SELECT") {
-                element.dataset.originalValue = element.value;
-                element.addEventListener("change", () => element.value = element.dataset.originalValue);
-            }
         }
 
         for (const element of widget.querySelectorAll(".mvc-lookup")) {
@@ -31,6 +26,16 @@
         for (const element of widget.querySelectorAll(".mvc-tree")) {
             new MvcTree(element, { readonly: true });
         }
+    }
+
+    window.addEventListener("change", e => {
+        if (e.target && e.target.tagName == "SELECT" && e.target.hasAttribute("readonly")) {
+            e.target.value = e.target.dataset.originalValue;
+        }
+    });
+
+    for (const element of document.querySelectorAll("select")) {
+        element.dataset.originalValue = element.value;
     }
 
     window.addEventListener("click", e => {

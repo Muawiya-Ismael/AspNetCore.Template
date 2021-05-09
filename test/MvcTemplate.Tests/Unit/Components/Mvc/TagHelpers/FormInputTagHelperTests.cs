@@ -42,12 +42,17 @@ namespace MvcTemplate.Components.Mvc
         }
 
         [Theory]
-        [InlineData("", "form-control ")]
-        [InlineData(null, "form-control ")]
-        [InlineData("test", "form-control test")]
-        public void Process_Class(String? value, String classes)
+        [InlineData(typeof(String), "", "form-control ")]
+        [InlineData(typeof(String), null, "form-control ")]
+        [InlineData(typeof(String), "test", "form-control test")]
+        [InlineData(typeof(Boolean), "", "form-check-input ")]
+        [InlineData(typeof(Boolean), null, "form-check-input ")]
+        [InlineData(typeof(Boolean), "test", "form-check-input test")]
+        public void Process_Class(Type type, String? value, String classes)
         {
             output.Attributes.Add("class", value);
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(type);
+            helper.For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, null));
 
             helper.Process(context, output);
 

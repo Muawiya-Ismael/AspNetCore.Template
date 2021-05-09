@@ -25,9 +25,9 @@ namespace MvcTemplate.Components.Mvc
         }
 
         [Theory]
-        [InlineData("", "form-control ")]
-        [InlineData(null, "form-control ")]
-        [InlineData("test", "form-control test")]
+        [InlineData("", "form-select ")]
+        [InlineData(null, "form-select ")]
+        [InlineData("test", "form-select test")]
         public void Process_Class(String? value, String classes)
         {
             output.Attributes.Add("class", value);
@@ -59,7 +59,7 @@ namespace MvcTemplate.Components.Mvc
 
             Assert.Single(output.Attributes);
             Assert.Empty(output.Content.GetContent());
-            Assert.Equal("form-control", output.Attributes["class"].Value);
+            Assert.Equal("form-select", output.Attributes["class"].Value);
         }
     }
 }

@@ -54,7 +54,7 @@
 }
 
 .navigation ul a .toggle {
-    font-size: 10px;
+    font-size: 0.75em;
 }
 
 .navigation ul .open > a > .toggle {
@@ -94,7 +94,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     .navigation {
         margin-top: 10px;
         flex: 0 0 45px;

@@ -1,17 +1,8 @@
 .widget-box {
+    margin-bottom: calc(var(--bs-gutter-x) / 2);
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.33);
     background-color: #fafafa;
     border: 1px solid #cdcdcd;
-    margin-bottom: 15px;
-}
-
-.widget-box.readonly select {
-    background-color: #e9ecef;
-}
-
-.widget-box.readonly select:focus {
-    box-shadow: 0 0 0 0.2rem rgb(154 149 150 / 0.25);
-    border-color: #ced4da;
 }
 
 .widget-header {
@@ -61,7 +52,7 @@
     padding-left: 5px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     .widget-header .widget-header-buttons .btn {
         min-width: 3em;
     }
@@ -111,29 +102,21 @@
 }
 
 .widget-content .control-label {
-    text-align: left;
+    text-align: right;
 }
 
 .widget-content .form-actions {
-    text-align: center;
+    text-align: right;
 }
 
-@media (min-width: 992px) {
-    .widget-content .control-label {
-        text-align: right;
-    }
-
-    .widget-content .control-validation {
+@media (max-width: 991.98px) {
+    .widget-content .form-actions {
         text-align: center;
     }
-
-    .widget-content .form-actions {
-        text-align: right;
-    }
 }
 
-@media (min-width: 1200px) {
-    .widget-content .control-validation {
+@media (max-width: 767.98px) {
+    .widget-content .control-label {
         text-align: left;
     }
 }

@@ -11,9 +11,9 @@ Alerts = {
         for (const alert of [].concat(alerts)) {
             const element = document.getElementById(alert.id) || emptyAlert();
 
-            element.setAttribute("data-timeout", alert.timeout || 0);
-            element.className = `alert alert-${getType(alert.type)}`;
-            element.children[0].innerText = alert.message || "";
+            element.className = `alert ${getType(alert.type)} alert-dismissible fade show`;
+            element.firstChild.textContent = alert.message || "";
+            element.dataset.timeout = alert.timeout || 0;
             element.id = alert.id || "";
 
             this.element.appendChild(element);
@@ -21,12 +21,13 @@ Alerts = {
         }
 
         function emptyAlert() {
-            const message = document.createElement("span");
-            const close = document.createElement("span");
+            const close = document.createElement("button");
             const alert = document.createElement("div");
+            const message = document.createTextNode("");
 
-            close.innerHTML = "&#x00D7;";
-            close.className = "close";
+            close.dataset.bsDismiss = "alert";
+            close.className = "btn-close";
+            close.type = "button";
 
             alert.append(message);
             alert.append(close);
@@ -37,30 +38,34 @@ Alerts = {
         function getType(id) {
             switch (id) {
                 case 0:
-                    return "danger";
+                    return "alert-danger";
                 case 1:
-                    return "warning";
+                    return "alert-warning";
                 case 2:
-                    return "info";
+                    return "alert-info";
                 case 3:
-                    return "success";
+                    return "alert-success";
                 default:
-                    return id;
+                    return `alert-${id}`;
             }
         }
     },
     bind(alert) {
         if (alert.dataset.timeout > 0) {
             setTimeout(() => {
-                alert.querySelector(".close").click();
+                alert.querySelector(".btn-close").click();
             }, alert.dataset.timeout);
         }
     },
     close(id) {
-        document.querySelector(`#${id} .close`).click();
+        const close = document.querySelector(`#${id} .btn-close`);
+
+        if (close) {
+            close.click();
+        }
     },
     closeAll() {
-        for (const close of this.element.querySelectorAll(".close")) {
+        for (const close of this.element.querySelectorAll(".btn-close")) {
             close.click();
         }
     },

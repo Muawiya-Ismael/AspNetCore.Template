@@ -22,11 +22,11 @@
         <div class="widget-content">
             @foreach (PropertyInfo property in Model.ViewProperties)
             {
-            <div class="form-group">
-                <div class="control-label col-md-3 col-lg-2">
+            <div class="form-group row">
+                <div class="control-label col-md-4 col-xl-2">
                     <label asp-for="@property.Name"></label>
                 </div>
-                <div class="control-content col-md-9 col-lg-4">
+                <div class="control-content col-md-8 col-xl-4">
                     @if (property.PropertyType == typeof(String))
                     {
                     <input asp-for="@property.Name" />
