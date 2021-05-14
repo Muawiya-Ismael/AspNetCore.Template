@@ -4,6 +4,7 @@ using MvcTemplate.Components.Security;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -110,7 +111,7 @@ namespace MvcTemplate.Services
 
             await context.SignInAsync("Cookies", new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString(CultureInfo.InvariantCulture)),
                 new Claim(ClaimTypes.Name, account.Username),
                 new Claim(ClaimTypes.Email, account.Email)
             }, "Password")));

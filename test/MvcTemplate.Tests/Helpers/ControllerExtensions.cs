@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -28,7 +29,7 @@ namespace MvcTemplate
 
         public static T ImitateLogin<T>(this T controller, Int64 id) where T : Controller
         {
-            Claim[] claims = { new(ClaimTypes.NameIdentifier, id.ToString()) };
+            Claim[] claims = { new(ClaimTypes.NameIdentifier, id.ToString(CultureInfo.CurrentCulture)) };
             controller.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Password"));
 
             ActionContext action = new(controller.HttpContext, controller.RouteData, new ActionDescriptor());
