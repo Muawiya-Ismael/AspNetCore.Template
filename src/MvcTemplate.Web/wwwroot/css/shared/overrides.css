@@ -17,7 +17,7 @@ hr {
 }
 
 .alerts {
-    margin: calc(var(--bs-gutter-x) / 4) 0;
+    margin: calc(var(--bs-gutter-x, 2rem) / 4) 0;
 }
 
 .alert {
