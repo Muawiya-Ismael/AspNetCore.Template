@@ -1,5 +1,5 @@
 /*!
- * Mvc.Lookup 5.1.3
+ * Mvc.Lookup 5.2.0
  *
  * Copyright © NonFactors
  *
@@ -48,7 +48,6 @@ class MvcLookupFilter {
         query.set("order", filter.order);
         query.set("sort", filter.sort);
         query.set("rows", filter.rows);
-        query.set("_", Date.now());
 
         return url.href;
     }
@@ -344,7 +343,7 @@ class MvcLookupDialog {
         lookup.controller.abort();
         clearTimeout(lookup.searchTimerId);
 
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
             lookup.filter.search = this.value;
             lookup.filter.offset = 0;
 
@@ -429,7 +428,7 @@ class MvcLookupOverlay {
         }
     }
     onKeyDown(e) {
-        if (e.which === 27 && MvcLookupDialog.current) {
+        if (e.key === "Escape" && MvcLookupDialog.current) {
             MvcLookupDialog.current.closeWithoutSave();
         }
     }
@@ -916,7 +915,7 @@ class MvcLookup {
         lookup.search.addEventListener("focus", function () {
             lookup.group.classList.add("mvc-lookup-focus");
 
-            if (autocomplete.options.minLength <= this.value.length) {
+            if (!lookup.readonly && autocomplete.options.minLength <= this.value.length) {
                 autocomplete.search(this.value);
             }
         });
@@ -951,14 +950,14 @@ class MvcLookup {
         });
 
         lookup.search.addEventListener("keydown", function (e) {
-            switch (e.which) {
-                case 8:
+            switch (e.key) {
+                case "Backspace":
                     if (!this.value.length && lookup.selected.length) {
                         lookup.select(lookup.selected.slice(0, -1), true);
                     }
 
                     break;
-                case 9:
+                case "Tab":
                     if (autocomplete.activeItem) {
                         if (lookup.browser) {
                             lookup.browser.tabIndex = -1;
@@ -972,7 +971,7 @@ class MvcLookup {
                     }
 
                     break;
-                case 13:
+                case "Enter":
                     if (autocomplete.activeItem) {
                         e.preventDefault();
 
@@ -980,13 +979,13 @@ class MvcLookup {
                     }
 
                     break;
-                case 38:
+                case "ArrowUp":
                     e.preventDefault();
 
                     autocomplete.previous();
 
                     break;
-                case 40:
+                case "ArrowDown":
                     e.preventDefault();
 
                     autocomplete.next();
