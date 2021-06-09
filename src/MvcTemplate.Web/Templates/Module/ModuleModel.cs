@@ -56,15 +56,15 @@ namespace MvcTemplate.Web.Templates
             Type viewType = typeof(AView).Assembly.GetType($"MvcTemplate.Objects.{View}") ?? typeof(AModel);
             PropertyInfo[] modelProperties = modelType.GetProperties();
 
-            AllModelProperties = modelProperties.Where(property => property.PropertyType.Namespace == "System").ToArray();
+            AllModelProperties = modelProperties.Where(property =>
+                (Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).IsEnum ||
+                property.PropertyType.Namespace == "System").ToArray();
             ViewProperties = viewType.GetProperties().Where(property => property.DeclaringType?.Name == View).ToArray();
             ModelProperties = AllModelProperties.Where(property => property.DeclaringType?.Name == Model).ToArray();
             AllViewProperties = viewType.GetProperties();
             EnumTypes = AllModelProperties
-                .Where(property =>
-                    property.PropertyType.IsEnum ||
-                    Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
                 .Select(property => Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType)
+                .Where(type => type.IsEnum)
                 .ToArray();
             Indexes = modelType
                 .GetCustomAttributes<IndexAttribute>()

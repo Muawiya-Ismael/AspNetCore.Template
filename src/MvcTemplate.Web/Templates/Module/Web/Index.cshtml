@@ -25,15 +25,17 @@
 
                     @foreach (PropertyInfo property in Model.ViewProperties)
                     {
-                        if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
+                        Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+ 
+                        if (type == typeof(DateTime))
                         {
                     @:columns.AddDate(model => model.@property.Name);
                         }
-                        else if (typeof(Boolean?).IsAssignableFrom(property.PropertyType))
+                        else if (type == typeof(Boolean))
                         {
                     @:columns.AddBoolean(model => model.@property.Name);
                         }
-                        else if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                        else if (type.IsEnum)
                         {
                     @:columns.AddEnum(model => model.@property.Name);
                         }

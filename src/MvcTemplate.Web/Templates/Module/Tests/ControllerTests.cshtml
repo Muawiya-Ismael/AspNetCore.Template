@@ -263,22 +263,26 @@ namespace @Model.ControllerNamespace
             @Model.View @Model.ModelVarName = ObjectsFactory.Create@(Model.View)(model.Id);
             @{ IEnumerable<String> changes = Model.ViewProperties.Select(property =>
             {
-                if (property.PropertyType == typeof(String))
+                Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+ 
+                if (property.PropertyType == typeof(DateTime?))
                 {
-                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} += \"Test\"";
+                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = model.{property.Name}!.Value.AddDays(1)";
                 }
-                if (typeof(Boolean?).IsAssignableFrom(property.PropertyType))
-                {
-                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = !model.{property.Name}";
-                }
-                if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
+                if (type == typeof(DateTime))
                 {
                     return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = model.{property.Name}.AddDays(1)";
                 }
-                if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                if (type == typeof(Boolean))
                 {
-                    Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
+                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = !model.{property.Name}";
+                }
+                if (type == typeof(String))
+                {
+                    return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} += \"Test\"";
+                }
+                if (type.IsEnum)
+                {
                     return $"{Model.ModelVarName}.{property.Name} = model.{property.Name} = {type.Name}.{Enum.GetNames(type).Skip(1).FirstOrDefault()}";
                 }
 

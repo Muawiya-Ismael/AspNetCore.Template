@@ -23,26 +23,28 @@
             <form asp-antiforgery="true">
                 @foreach (PropertyInfo property in Model.ViewProperties)
                 {
+                    Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+ 
                 <div class="form-group row">
                     <div class="control-label col-md-4 col-xl-2">
                         <label asp-for="@property.Name"></label>
                     </div>
                     <div class="control-content col-md-8 col-xl-4">
-                        @if (property.PropertyType == typeof(String))
+                        @if (type == typeof(String))
                         {
                         <input asp-for="@property.Name" />
                         }
-                        else if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
+                        else if (type == typeof(DateTime))
                         {
                         <input asp-for="@property.Name" asp-format="{0:d}" class="datepicker" type="text" />
                         }
-                        else if (typeof(Boolean?).IsAssignableFrom(property.PropertyType))
+                        else if (type == typeof(Boolean))
                         {
                         <input asp-for="@property.Name" />
                         }
-                        else if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
+                        else if (type.IsEnum)
                         {
-                        <select asp-for="@property.Name" asp-items="Html.GetEnumSelectList<@((Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).Name)>()"></select>
+                        <select asp-for="@property.Name" asp-items="Html.GetEnumSelectList<@type.Name>()"></select>
                         }
                         else if (Model.Relations[property] is String relation)
                         {

@@ -397,23 +397,20 @@ namespace MvcTemplate.Web.Templates
                 .OrderBy(property => property.Name.Length)
                 .Select(property =>
                 {
+                    Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
                     String set = $"                {property.Name} = ";
 
                     if (property.PropertyType == typeof(String))
                         return $"{set}$\"{property.Name}{{id}}\"";
 
-                    if (typeof(Boolean?).IsAssignableFrom(property.PropertyType))
+                    if (type == typeof(Boolean))
                         return $"{set}true";
 
-                    if (typeof(DateTime?).IsAssignableFrom(property.PropertyType))
+                    if (type == typeof(DateTime))
                         return $"{set}DateTime.Now.AddDays(id)";
 
-                    if (property.PropertyType.IsEnum || Nullable.GetUnderlyingType(property.PropertyType)?.IsEnum == true)
-                    {
-                        Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-                        return $"{type.Name}.{Enum.GetNames(type)[0]}";
-                    }
+                    if (type.IsEnum)
+                        return $"{set}{type.Name}.{Enum.GetNames(type)[0]}";
 
                     return $"{set}id";
                 })) +
