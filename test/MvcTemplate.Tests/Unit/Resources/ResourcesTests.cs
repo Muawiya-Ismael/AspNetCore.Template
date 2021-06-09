@@ -56,7 +56,7 @@ namespace MvcTemplate.Resources
 
             configuration.Seed();
 
-            foreach (String path in context.Set<Permission>().Select(permission => $"{permission.Area}/{permission.Controller}").Distinct())
+            foreach (String path in context.Set<Permission>().Select(permission => $"{permission.Area}/{permission.Controller}".Trim('/')).Distinct())
                 Assert.True(Resource.ForController(path) != "", $"'{path}' permission does not have a title.");
         }
 
