@@ -35,31 +35,74 @@ namespace MvcTemplate.Components.Mvc
 
             helper.Process(context, output);
 
-            Assert.Equal(2, output.Attributes.Count);
+            Assert.Equal(3, output.Attributes.Count);
             Assert.Empty(output.Content.GetContent());
+            Assert.Empty(output.PreElement.GetContent());
+            Assert.Empty(output.PostElement.GetContent());
+            Assert.Equal("text", output.Attributes["type"].Value);
             Assert.Equal("form-control", output.Attributes["class"].Value);
             Assert.Equal(autocomplete, output.Attributes["autocomplete"].Value);
         }
 
         [Theory]
-        [InlineData(typeof(String), "", "form-control ")]
-        [InlineData(typeof(String), null, "form-control ")]
-        [InlineData(typeof(String), "test", "form-control test")]
-        [InlineData(typeof(Boolean), "", "form-check-input ")]
-        [InlineData(typeof(Boolean), null, "form-check-input ")]
-        [InlineData(typeof(Boolean), "test", "form-check-input test")]
-        public void Process_Class(Type type, String? value, String classes)
+        [InlineData("", "form-control")]
+        [InlineData(null, "form-control")]
+        [InlineData("test", "form-control test")]
+        public void Process_TextClass(String? value, String classes)
         {
-            output.Attributes.Add("class", value);
-            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(type);
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(String));
             helper.For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, null));
+            output.Attributes.Add("class", value);
+
+            helper.Process(context, output);
+
+            Assert.Equal(3, output.Attributes.Count);
+            Assert.Empty(output.Content.GetContent());
+            Assert.Empty(output.PreElement.GetContent());
+            Assert.Empty(output.PostElement.GetContent());
+            Assert.Equal("text", output.Attributes["type"].Value);
+            Assert.Equal(classes, output.Attributes["class"].Value);
+            Assert.Equal("off", output.Attributes["autocomplete"].Value);
+        }
+
+        [Theory]
+        [InlineData("", "form-check-input")]
+        [InlineData(null, "form-check-input")]
+        [InlineData("test", "form-check-input test")]
+        public void Process_BooleanClass(String? value, String classes)
+        {
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(Boolean));
+            helper.For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, null));
+            output.Attributes.Add("class", value);
 
             helper.Process(context, output);
 
             Assert.Equal(2, output.Attributes.Count);
             Assert.Empty(output.Content.GetContent());
+            Assert.Empty(output.PreElement.GetContent());
+            Assert.Empty(output.PostElement.GetContent());
             Assert.Equal(classes, output.Attributes["class"].Value);
             Assert.Equal("off", output.Attributes["autocomplete"].Value);
+        }
+
+        [Theory]
+        [InlineData("date-picker")]
+        [InlineData("date-time-picker")]
+        public void Process_Datepicker(String classes)
+        {
+            ModelMetadata metadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(DateTime));
+            helper.For = new ModelExpression("Test", new ModelExplorer(metadata, metadata, null));
+            output.Attributes.Add("class", classes);
+
+            helper.Process(context, output);
+
+            Assert.Equal(3, output.Attributes.Count);
+            Assert.Empty(output.Content.GetContent());
+            Assert.Equal("text", output.Attributes["type"].Value);
+            Assert.Equal("off", output.Attributes["autocomplete"].Value);
+            Assert.Equal($"form-control {classes}", output.Attributes["class"].Value);
+            Assert.Equal("<div class=\"input-group\">", output.PreElement.GetContent());
+            Assert.Equal("<button class=\"date-picker-browser input-group-text fas fa-calendar-alt\" type=\"button\"></button></div>", output.PostElement.GetContent());
         }
 
         [Fact]
@@ -67,8 +110,11 @@ namespace MvcTemplate.Components.Mvc
         {
             helper.Process(context, output);
 
-            Assert.Equal(2, output.Attributes.Count);
+            Assert.Equal(3, output.Attributes.Count);
             Assert.Empty(output.Content.GetContent());
+            Assert.Empty(output.PreElement.GetContent());
+            Assert.Empty(output.PostElement.GetContent());
+            Assert.Equal("text", output.Attributes["type"].Value);
             Assert.Equal("off", output.Attributes["autocomplete"].Value);
             Assert.Equal("form-control", output.Attributes["class"].Value);
         }

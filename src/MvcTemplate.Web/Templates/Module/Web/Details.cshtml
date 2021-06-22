@@ -23,7 +23,7 @@
             @foreach (PropertyInfo property in Model.ViewProperties)
             {
                 Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
- 
+
             <div class="form-group row">
                 <div class="control-label col-md-4 col-xl-2">
                     <label asp-for="@property.Name"></label>
@@ -35,7 +35,7 @@
                     }
                     else if (type == typeof(DateTime))
                     {
-                    <input asp-for="@property.Name" asp-format="{0:d}" class="datepicker" type="text" />
+                    <input asp-for="@property.Name" asp-format="{0:d}" class="date-picker" />
                     }
                     else if (type == typeof(Boolean))
                     {
@@ -51,7 +51,7 @@
                     }
                     else
                     {
-                    <input asp-for="@property.Name" type="text" />
+                    <input asp-for="@property.Name" />
                     }
                 </div>
             </div>
