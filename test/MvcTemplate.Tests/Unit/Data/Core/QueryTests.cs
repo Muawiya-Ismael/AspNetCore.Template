@@ -59,15 +59,6 @@ namespace MvcTemplate.Data
             Assert.Same(expected, actual);
         }
 
-        [Fact]
-        public void Select_Selects()
-        {
-            IEnumerable<Int64> expected = context.Set<Role>().Select(model => model.Id);
-            IEnumerable<Int64> actual = select.Select(model => model.Id);
-
-            Assert.Equal(expected, actual);
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
