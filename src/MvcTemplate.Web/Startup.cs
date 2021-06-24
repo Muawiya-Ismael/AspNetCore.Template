@@ -27,6 +27,7 @@ using NonFactors.Mvc.Grid;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 
 namespace MvcTemplate.Web
 {
@@ -157,6 +158,12 @@ namespace MvcTemplate.Web
 
             services.AddScopedImplementations<IService>();
             services.AddScopedImplementations<IValidator>();
+
+            IServiceProvider provider = services.BuildServiceProvider();
+            LinkGenerator generator = provider.GetRequiredService<LinkGenerator>();
+
+            services.Remove(services.First(descriptor => descriptor.ServiceType == typeof(LinkGenerator)));
+            services.AddSingleton<LinkGenerator>(new DefaultLinkGenerator(generator));
         }
 
         private void RegisterResources()
