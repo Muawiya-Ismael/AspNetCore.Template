@@ -46,10 +46,7 @@ namespace MvcTemplate.Controllers
         [Fact]
         public void NotEmptyView_Null_NotFound()
         {
-            ViewResult expected = controller.StaticNotFoundView();
-            ViewResult actual = controller.NotEmptyView(null);
-
-            Assert.Same(expected, actual);
+            Assert.Equal(controller.StaticNotFoundView(), controller.NotEmptyView(null));
         }
 
         [Fact]
@@ -209,10 +206,7 @@ namespace MvcTemplate.Controllers
 
             controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller));
 
-            Object expected = JsonSerializer.Serialize(controller.Alerts);
-            Object actual = controller.TempData["Alerts"];
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(JsonSerializer.Serialize(controller.Alerts), controller.TempData["Alerts"]);
         }
 
         [Fact]
@@ -228,10 +222,7 @@ namespace MvcTemplate.Controllers
 
             controller.OnActionExecuted(new ActionExecutedContext(controller.ControllerContext, new List<IFilterMetadata>(), controller));
 
-            Object expected = JsonSerializer.Serialize(alerts);
-            Object actual = controller.TempData["Alerts"];
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(JsonSerializer.Serialize(alerts), controller.TempData["Alerts"]);
         }
 
         [Fact]

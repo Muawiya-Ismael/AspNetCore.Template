@@ -37,10 +37,7 @@ namespace MvcTemplate.Components.Mvc
 
             new IntegerValidator().AddValidation(context);
 
-            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-integer", "Test");
-            KeyValuePair<String, String> actual = attributes.Single();
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(KeyValuePair.Create("data-val-integer", "Test"), attributes.Single());
         }
     }
 }

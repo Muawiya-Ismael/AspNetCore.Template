@@ -1,5 +1,5 @@
 .input-group {
-    box-shadow: rgba(0, 0, 0, 0.05) 0 0 3px inset;
+    box-shadow: rgb(0 0 0 / 0.05) 0 0 3px inset;
     background: #ffffff;
     border-radius: 4px;
     margin-bottom: 2px;

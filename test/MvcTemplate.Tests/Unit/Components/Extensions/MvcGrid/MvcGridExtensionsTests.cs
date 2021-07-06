@@ -127,10 +127,7 @@ namespace MvcTemplate.Components.Extensions
             GridRow<AllTypesView> row = new(new AllTypesView { BooleanField = true }, 0);
             IGridColumn<AllTypesView, Boolean> column = columns.AddBoolean(model => model.BooleanField);
 
-            String? actual = column.ValueFor(row).ToString();
-            String? expected = Resource.ForString("Yes");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Resource.ForString("Yes"), column.ValueFor(row).ToString());
         }
 
         [Fact]
@@ -139,10 +136,7 @@ namespace MvcTemplate.Components.Extensions
             GridRow<AllTypesView> row = new(new AllTypesView { BooleanField = false }, 0);
             IGridColumn<AllTypesView, Boolean> column = columns.AddBoolean(model => model.BooleanField);
 
-            String? actual = column.ValueFor(row).ToString();
-            String? expected = Resource.ForString("No");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Resource.ForString("No"), column.ValueFor(row).ToString());
         }
 
         [Fact]
@@ -174,10 +168,7 @@ namespace MvcTemplate.Components.Extensions
             GridRow<AllTypesView> row = new(new AllTypesView { NullableBooleanField = true }, 0);
             IGridColumn<AllTypesView, Boolean?> column = columns.AddBoolean(model => model.NullableBooleanField);
 
-            String? actual = column.ValueFor(row).ToString();
-            String? expected = Resource.ForString("Yes");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Resource.ForString("Yes"), column.ValueFor(row).ToString());
         }
 
         [Fact]
@@ -186,10 +177,7 @@ namespace MvcTemplate.Components.Extensions
             GridRow<AllTypesView> row = new(new AllTypesView { NullableBooleanField = false }, 0);
             IGridColumn<AllTypesView, Boolean?> column = columns.AddBoolean(model => model.NullableBooleanField);
 
-            String? actual = column.ValueFor(row).ToString();
-            String? expected = Resource.ForString("No");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Resource.ForString("No"), column.ValueFor(row).ToString());
         }
 
         [Fact]

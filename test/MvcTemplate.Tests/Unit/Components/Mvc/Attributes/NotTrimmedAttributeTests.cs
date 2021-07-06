@@ -28,10 +28,7 @@ namespace MvcTemplate.Components.Mvc
 
             await new NotTrimmedAttribute().BindModelAsync(context);
 
-            ModelBindingResult expected = ModelBindingResult.Success(" Value  ");
-            ModelBindingResult actual = context.Result;
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(ModelBindingResult.Success(" Value  "), context.Result);
         }
     }
 }

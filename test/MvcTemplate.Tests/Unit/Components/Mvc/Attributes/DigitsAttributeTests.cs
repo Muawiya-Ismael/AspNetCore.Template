@@ -18,10 +18,7 @@ namespace MvcTemplate.Components.Mvc
         {
             attribute = new DigitsAttribute();
 
-            String expected = Validation.For("Digits", "Test");
-            String actual = attribute.FormatErrorMessage("Test");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("Digits", "Test"), attribute.FormatErrorMessage("Test"));
         }
 
         [Fact]

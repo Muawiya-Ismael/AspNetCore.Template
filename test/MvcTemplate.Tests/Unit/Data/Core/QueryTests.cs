@@ -44,19 +44,13 @@ namespace MvcTemplate.Data
 
             select = new Query<Role>(testingContext.Set<Role>(), TestingContext.Mapper.ConfigurationProvider);
 
-            Object expected = ((IQueryable)set).Expression;
-            Object actual = select.Expression;
-
-            Assert.Same(expected, actual);
+            Assert.Equal(((IQueryable)set).Expression, select.Expression);
         }
 
         [Fact]
         public void Provider_IsSetsProvider()
         {
-            Object expected = ((IQueryable)context.Set<Role>()).Provider;
-            Object actual = select.Provider;
-
-            Assert.Same(expected, actual);
+            Assert.Equal(((IQueryable)context.Set<Role>()).Provider, select.Provider);
         }
 
         [Theory]
@@ -64,10 +58,7 @@ namespace MvcTemplate.Data
         [InlineData(false)]
         public void Where_Filters(Boolean predicate)
         {
-            IEnumerable<Role> expected = context.Set<Role>().Where(_ => predicate);
-            IEnumerable<Role> actual = select.Where(_ => predicate);
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(context.Set<Role>().Where(_ => predicate), select.Where(_ => predicate));
         }
 
         [Fact]

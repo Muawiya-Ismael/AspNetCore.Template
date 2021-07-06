@@ -14,6 +14,7 @@ namespace MvcTemplate.Objects
 
         public Boolean IsLocked { get; set; }
 
+        [StringLength(128)]
         public String? RoleTitle { get; set; }
     }
 }

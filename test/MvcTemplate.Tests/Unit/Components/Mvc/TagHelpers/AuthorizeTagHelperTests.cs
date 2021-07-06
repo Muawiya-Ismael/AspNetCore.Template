@@ -31,7 +31,7 @@ namespace MvcTemplate.Components.Mvc
         public void Process_NotAuthorized_SuppressesOutput(
             String permission,
             String? area, String? controller, String? action,
-            String? routeArea, String? routeController, String? routeAction)
+            String routeArea, String routeController, String routeAction)
         {
             authorization.IsGrantedFor(Arg.Any<Int64>(), Arg.Any<String>()).Returns(true);
             authorization.IsGrantedFor(1, permission).Returns(false);

@@ -218,10 +218,10 @@ namespace MvcTemplate.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("MultiArea", "{language}/{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:int?}");
-                endpoints.MapControllerRoute("DefaultArea", "{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:int?}");
-                endpoints.MapControllerRoute("Multi", "{language}/{controller:slug}/{action:slug=Index}/{id:int?}");
-                endpoints.MapControllerRoute("Default", "{controller:slug}/{action:slug=Index}/{id:int?}");
+                endpoints.MapControllerRoute("MultiArea", "{language}/{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
+                endpoints.MapControllerRoute("DefaultArea", "{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
+                endpoints.MapControllerRoute("Multi", "{language}/{controller:slug}/{action:slug=Index}/{id:long?}");
+                endpoints.MapControllerRoute("Default", "{controller:slug}/{action:slug=Index}/{id:long?}");
                 endpoints.MapControllerRoute("Home", "{controller:slug=Home}/{action:slug=Index}");
             });
         }

@@ -33,8 +33,8 @@ namespace MvcTemplate.Components.Mvc
 
         private void WrapAsDatepicker(TagHelperOutput output)
         {
-            TagBuilder browser = new TagBuilder("button");
-            TagBuilder group = new TagBuilder("div");
+            TagBuilder group = new("div");
+            TagBuilder browser = new("button");
 
             browser.AddCssClass("date-picker-browser input-group-text fas fa-calendar-alt");
             browser.Attributes["type"] = "button";

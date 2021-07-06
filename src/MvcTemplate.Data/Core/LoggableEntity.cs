@@ -25,7 +25,7 @@ namespace MvcTemplate.Data
         public LoggableEntity(EntityEntry<AModel> entry)
         {
             Type type = entry.Entity.GetType();
-            PropertyValues values = entry.State == EntityState.Modified || entry.State == EntityState.Deleted
+            PropertyValues values = entry.State is EntityState.Modified or EntityState.Deleted
                 ? entry.GetDatabaseValues()
                 : entry.CurrentValues;
 

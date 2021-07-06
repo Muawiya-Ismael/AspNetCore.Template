@@ -27,10 +27,7 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void ModelMessagesProvider_SetsUnknownValueIsInvalidAccessor()
         {
-            String actual = messages.UnknownValueIsInvalidAccessor("Property");
-            String expected = Validation.For("InvalidField", "Property");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("InvalidField", "Property"), messages.UnknownValueIsInvalidAccessor("Property"));
         }
 
         [Fact]
@@ -45,37 +42,25 @@ namespace MvcTemplate.Components.Mvc
         [Fact]
         public void ModelMessagesProvider_SetsValueMustNotBeNullAccessor()
         {
-            String actual = messages.ValueMustNotBeNullAccessor("Property");
-            String expected = Validation.For("Required", "Property");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("Required", "Property"), messages.ValueMustNotBeNullAccessor("Property"));
         }
 
         [Fact]
         public void ModelMessagesProvider_ValueIsInvalidAccessor()
         {
-            String expected = Validation.For("InvalidValue", "Value");
-            String actual = messages.ValueIsInvalidAccessor("Value");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("InvalidValue", "Value"), messages.ValueIsInvalidAccessor("Value"));
         }
 
         [Fact]
         public void ModelMessagesProvider_SetsValueMustBeANumberAccessor()
         {
-            String actual = messages.ValueMustBeANumberAccessor("Property");
-            String expected = Validation.For("Number", "Property");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("Number", "Property"), messages.ValueMustBeANumberAccessor("Property"));
         }
 
         [Fact]
         public void ModelMessagesProvider_SetsMissingKeyOrValueAccessor()
         {
-            String actual = messages.MissingKeyOrValueAccessor();
-            String expected = Validation.For("RequiredValue");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(Validation.For("RequiredValue"), messages.MissingKeyOrValueAccessor());
         }
     }
 }

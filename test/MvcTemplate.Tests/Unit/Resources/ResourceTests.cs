@@ -81,10 +81,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForString_IsCaseInsensitive()
         {
-            String expected = ResourceFor("Shared/Shared", "Strings", "All");
-            String actual = Resource.ForString("all");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(ResourceFor("Shared/Shared", "Strings", "All"), Resource.ForString("all"));
         }
 
         [Fact]
@@ -114,10 +111,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForHeader_IsCaseInsensitive()
         {
-            String expected = ResourceFor("Shared/Page", "Headers", "Account");
-            String actual = Resource.ForHeader("account");
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(ResourceFor("Shared/Page", "Headers", "Account"), Resource.ForHeader("account"));
         }
 
         [Fact]

@@ -21,10 +21,10 @@ namespace MvcTemplate.Components.Mvc
             actual.Request.Path = path;
             Boolean asserted = false;
 
-            await new ErrorResponseMiddleware(actual =>
+            await new ErrorResponseMiddleware(next =>
             {
-                if (actual.Response.StatusCode != StatusCodes.Status404NotFound)
-                    actual.Response.StatusCode = StatusCodes.Status404NotFound;
+                if (next.Response.StatusCode != StatusCodes.Status404NotFound)
+                    next.Response.StatusCode = StatusCodes.Status404NotFound;
                 else
                     asserted = true;
 
@@ -49,9 +49,9 @@ namespace MvcTemplate.Components.Mvc
             actual.Request.Path = path;
             Boolean asserted = false;
 
-            await new ErrorResponseMiddleware(actual =>
+            await new ErrorResponseMiddleware(next =>
             {
-                Assert.Equal(requestPath, actual.Request.Path);
+                Assert.Equal(requestPath, next.Request.Path);
 
                 asserted = true;
 

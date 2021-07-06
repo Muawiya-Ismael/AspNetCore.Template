@@ -15,13 +15,13 @@ namespace MvcTemplate
         {
             return Assert.IsAssignableFrom<T>(Assert.IsType<ViewResult>(result).Model);
         }
-        public static void Returns<T, M>(this T controller, Func<M, ActionResult> action, M model)
+        public static void Returns<T, M>(this T _, Func<M, ActionResult> action, M model)
             where T : Controller
             where M : class
         {
             Assert.Same(Assert.IsType<ViewResult>(action(model)).Model, model);
         }
-        public static async Task Returns<T, M>(this T controller, Func<M, Task<ActionResult>> action, M model)
+        public static async Task Returns<T, M>(this T _, Func<M, Task<ActionResult>> action, M model)
             where T : Controller
             where M : class
         {

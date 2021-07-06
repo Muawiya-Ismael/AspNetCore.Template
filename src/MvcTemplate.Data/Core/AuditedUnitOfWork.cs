@@ -21,10 +21,7 @@ namespace MvcTemplate.Data
             LoggableEntity[] entities = Context
                 .ChangeTracker
                 .Entries<AModel>()
-                .Where(entry =>
-                    entry.State == EntityState.Added ||
-                    entry.State == EntityState.Deleted ||
-                    entry.State == EntityState.Modified)
+                .Where(entry => entry.State is EntityState.Added or EntityState.Deleted or EntityState.Modified)
                 .Select(entry => new LoggableEntity(entry))
                 .Where(entity => entity.IsModified)
                 .ToArray();

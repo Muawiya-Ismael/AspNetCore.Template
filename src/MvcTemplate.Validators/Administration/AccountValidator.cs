@@ -17,7 +17,7 @@ namespace MvcTemplate.Validators
             Hasher = hasher;
         }
 
-        public Boolean CanRecover(AccountRecoveryView view)
+        public Boolean CanRecover(AccountRecoveryView _)
         {
             return ModelState.IsValid;
         }

@@ -23,11 +23,11 @@ namespace MvcTemplate.Components.Mvc
             helper.ActionContext.Returns(context);
             helper.Action(Arg.Any<UrlActionContext>()).Returns(info =>
             {
-                UrlActionContext context = info.Arg<UrlActionContext>();
+                UrlActionContext url = info.Arg<UrlActionContext>();
                 RouteValueDictionary route = new(info.Arg<UrlActionContext>().Values);
                 String query = String.Join("&", route.Where(pair => pair.Key != "area").Select(pair => $"{pair.Key}={pair.Value}"));
 
-                return $"{route["area"]}/{context.Controller}/{context.Action}?{query}";
+                return $"{route["area"]}/{url.Controller}/{url.Action}?{query}";
             });
         }
 
@@ -38,7 +38,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("", "B", "C", "/B/C?")]
         [InlineData("A", "B", "C", "A/B/C?")]
         [InlineData(null, "B", "C", "/B/C?")]
-        public void Form_Url(String area, String controller, String action, String expected)
+        public void Form_Url(String? area, String controller, String? action, String expected)
         {
             String actual = new SiteMapNode { Area = area, Controller = controller, Action = action }.Form(helper);
 

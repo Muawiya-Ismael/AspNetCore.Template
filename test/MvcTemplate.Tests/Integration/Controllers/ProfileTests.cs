@@ -175,7 +175,7 @@ namespace MvcTemplate.Controllers
         [InlineData("")]
         [InlineData(null)]
         [InlineData("   ")]
-        public void Edit_Profile(String newPassword)
+        public void Edit_Profile(String? newPassword)
         {
             ProfileEditView profile = ObjectsFactory.CreateProfileEditView(-1);
             profile.Username = model.Username += "Test";

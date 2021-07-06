@@ -29,7 +29,7 @@ namespace MvcTemplate.Components.Mvc
         [InlineData("VIPWeekMulti", "VIP-Week-Multi")]
         [InlineData("TestWeekMulti", "Test-Week-Multi")]
         [InlineData("TestWEEKMulti", "Test-WEEK-Multi")]
-        public void TransformOutbound_Value(Object? value, String slug)
+        public void TransformOutbound_Value(Object? value, String? slug)
         {
             Assert.Equal(slug, new SlugifyTransformer().TransformOutbound(value));
         }

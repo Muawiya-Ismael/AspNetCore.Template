@@ -498,10 +498,7 @@ namespace MvcTemplate.Controllers
         {
             await controller.Logout();
 
-            String expected = @"""cookies"", ""storage"", ""executionContexts""";
-            String actual = controller.Response.Headers["Clear-Site-Data"];
-
-            Assert.Equal(expected, actual);
+            Assert.Equal(@"""cookies"", ""storage"", ""executionContexts""", controller.Response.Headers["Clear-Site-Data"]);
         }
 
         [Fact]

@@ -103,10 +103,7 @@ namespace MvcTemplate.Data
             IEnumerable<EntityState> unsupportedStates = Enum
                 .GetValues(typeof(EntityState))
                 .Cast<EntityState>()
-                .Where(state =>
-                    state != EntityState.Added &&
-                    state != EntityState.Modified &&
-                    state != EntityState.Deleted);
+                .Where(state => state is not EntityState.Added and not EntityState.Modified and not EntityState.Deleted);
 
             foreach (EntityState state in unsupportedStates)
             {
