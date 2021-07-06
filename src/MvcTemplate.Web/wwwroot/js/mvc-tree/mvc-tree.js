@@ -149,17 +149,25 @@ class MvcTree {
         const tree = this;
 
         for (const node of tree.element.querySelectorAll("a")) {
+            const branch = node.parentElement;
+
             node.addEventListener("click", e => {
                 e.preventDefault();
 
                 if (!tree.readonly) {
-                    const branch = node.parentElement;
-
                     if (branch.classList.contains("mvc-tree-checked")) {
                         tree.uncheck(branch);
                     } else {
                         tree.check(branch);
                     }
+                }
+            });
+
+            node.addEventListener("keyup", e => {
+                if (e.key == "ArrowLeft") {
+                    this.collapse(branch);
+                } else if (e.key == "ArrowRight") {
+                    this.expand(branch);
                 }
             });
         }
