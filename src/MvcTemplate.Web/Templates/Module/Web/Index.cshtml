@@ -1,5 +1,5 @@
 @model ModuleModel
-@@model IQueryable<@Model.View>
+@@model IQueryable<@Model.Views["Index"]>
 
 <div class="col">
     <div class="widget-box">
@@ -23,10 +23,10 @@
                     columns.AddAction(nameof(@(Model.Controller).Edit), "fa fa-pencil-alt");
                     columns.AddAction(nameof(@(Model.Controller).Delete), "fa fa-times");
 
-                    @foreach (PropertyInfo property in Model.ViewProperties)
+                    @foreach (PropertyInfo property in Model.ViewProperties["Index"])
                     {
                         Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
- 
+
                         if (type == typeof(DateTime))
                         {
                     @:columns.AddDate(model => model.@property.Name);
@@ -39,7 +39,7 @@
                         {
                     @:columns.AddEnum(model => model.@property.Name);
                         }
-                        else if (Model.Relations[property] == null)
+                        else if (Model.Relations.GetValueOrDefault(property.Name, null) == null)
                         {
                     @:columns.AddProperty(model => model.@property.Name);
                         }

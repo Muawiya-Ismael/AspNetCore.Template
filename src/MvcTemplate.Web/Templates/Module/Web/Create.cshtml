@@ -1,5 +1,5 @@
 @model ModuleModel
-@@model @Model.View
+@@model @Model.Views["Create"]
 
 <div class="col">
     <div class="widget-box">
@@ -9,7 +9,7 @@
         </div>
         <div class="widget-content">
             <form asp-antiforgery="true">
-                @foreach (PropertyInfo property in Model.ViewProperties)
+                @foreach (PropertyInfo property in Model.ViewProperties["Create"])
                 {
                     Type type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
@@ -34,7 +34,7 @@
                         {
                         <select asp-for="@property.Name" asp-items="Html.GetEnumSelectList<@type.Name>()"></select>
                         }
-                        else if (Model.Relations[property] is String relation)
+                        else if (Model.Relations.GetValueOrDefault(property.Name, null) is String relation)
                         {
                         <div mvc-lookup-for="@property.Name" handler="@@nameof(Lookup.@relation)"></div>
                         }

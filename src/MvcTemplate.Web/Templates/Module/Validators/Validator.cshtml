@@ -16,18 +16,18 @@ else
 
 namespace MvcTemplate.Validators
 {
-    public class @Model.Validator : AValidator
+    public class @(Model.Model)Validator : AValidator
     {
-        public @(Model.Validator)(IUnitOfWork unitOfWork)
+        public @(Model.Model)Validator(IUnitOfWork unitOfWork)
             : base(unitOfWork)
         {
         }
 
-        public Boolean CanCreate(@Model.View view)
+        public Boolean CanCreate(@Model.Views["Create"] view)
         {
-            @foreach (PropertyInfo property in Model.Indexes)
+            @foreach (PropertyInfo property in Model.Indexes["Create"])
             {
-                if (property == Model.Indexes[0])
+                if (property == Model.Indexes["Create"][0])
                 {
             @:Boolean isValid = IsUnique@(property.Name)(0, view.@(property.Name));
                 }
@@ -36,7 +36,7 @@ namespace MvcTemplate.Validators
             @:isValid &= IsUnique@(property.Name)(0, view.@(property.Name));
                 }
             }
-            @if (Model.Indexes.Any())
+            @if (Model.Indexes["Create"].Any())
             {
 @:isValid &= ModelState.IsValid;
 @:
@@ -47,11 +47,11 @@ namespace MvcTemplate.Validators
 @:return ModelState.IsValid;
             }
         }
-        public Boolean CanEdit(@Model.View view)
+        public Boolean CanEdit(@Model.Views["Edit"] view)
         {
-            @foreach (PropertyInfo property in Model.Indexes)
+            @foreach (PropertyInfo property in Model.Indexes["Edit"])
             {
-                if (property == Model.Indexes[0])
+                if (property == Model.Indexes["Edit"][0])
                 {
             @:Boolean isValid = IsUnique@(property.Name)(view.Id, view.@(property.Name));
                 }
@@ -60,7 +60,7 @@ namespace MvcTemplate.Validators
             @:isValid &= IsUnique@(property.Name)(view.Id, view.@(property.Name));
                 }
             }
-            @if (Model.Indexes.Any())
+            @if (Model.Indexes["Edit"].Any())
             {
 @:isValid &= ModelState.IsValid;
 @:
@@ -71,10 +71,14 @@ namespace MvcTemplate.Validators
 @:return ModelState.IsValid;
             }
         }
-        @if (Model.Indexes.Any())
+        @if (Model.Indexes["Create"].Any() || Model.Indexes["Edit"].Any())
         {
 @:
-            @foreach (PropertyInfo property in Model.Indexes)
+            PropertyInfo[] properties = Model.Indexes["Create"].Concat(Model.Indexes["Edit"]).ToArray();
+            properties = properties.GroupBy(property => property.Name).Select(group => group.First()).ToArray();
+            properties = properties.OrderByDescending(property => property.Name.Length).ThenByDescending(property => property.Name).ToArray();
+
+            @foreach (PropertyInfo property in properties)
             {
                 String name = Regex.Split(property.Name, "(?=[A-Z])").Last().ToLower();
 
@@ -89,12 +93,12 @@ namespace MvcTemplate.Validators
         @:{
         @:    Boolean isUnique = !UnitOfWork
         @:        .Select<@Model.Model>()
-        @:        .Any(@Model.ModelVarName =>
-        @:            @(Model.ModelVarName).Id != id &&
-        @:            @(Model.ModelVarName).@(property.Name) == @name);
+        @:        .Any(@Model.VarName =>
+        @:            @(Model.VarName).Id != id &&
+        @:            @(Model.VarName).@(property.Name) == @name);
 @:
         @:    if (!isUnique)
-        @:        ModelState.AddModelError(nameof(@(Model.View).@(property.Name)), Validation.For<@Model.View>("Unique@(property.Name)"));
+        @:        ModelState.AddModelError(nameof(@(Model.Views[""]).@(property.Name)), Validation.For<@Model.Views[""]>("Unique@(property.Name)"));
 @:
         @:    return isUnique;
         @:}

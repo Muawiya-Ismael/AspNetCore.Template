@@ -12,70 +12,71 @@ namespace MvcTemplate.Web.Templates
     public class ModuleModel
     {
         public String Model { get; }
-        public String Models { get; }
-        public String ModelVarName { get; }
-        public String ModelShortName { get; }
-
-        public String View { get; }
-
-        public String Service { get; }
-        public String Validator { get; }
-
-        public String ControllerNamespace { get; }
-        public String ControllerTests { get; }
-        public String Controller { get; }
-
         public String? Area { get; }
+        public String Models { get; }
+        public String VarName { get; }
+        public String ShortName { get; }
+        public String Controller { get; }
+        public String ControllerNamespace { get; }
 
         public Type[] EnumTypes { get; set; }
-        public PropertyInfo[] Indexes { get; set; }
-        public PropertyInfo[] ViewProperties { get; set; }
-        public PropertyInfo[] ModelProperties { get; set; }
-        public PropertyInfo[] AllViewProperties { get; set; }
-        public PropertyInfo[] AllModelProperties { get; set; }
-        public Dictionary<PropertyInfo, String?> Relations { get; set; }
+        public PropertyInfo[] Properties { get; set; }
+        public PropertyInfo[] AllProperties { get; set; }
+        public Dictionary<String, String> Views { get; set; }
+        public Dictionary<String, String?> Relations { get; set; }
+        public Dictionary<String, PropertyInfo[]> Indexes { get; set; }
+        public Dictionary<String, PropertyInfo[]> ViewProperties { get; set; }
+        public Dictionary<String, PropertyInfo[]> AllViewProperties { get; set; }
 
         public ModuleModel(String model, String controller, String? area)
         {
-            ModelShortName = Regex.Split(model, "(?=[A-Z])").Last();
-            ModelVarName = ModelShortName.ToLower();
+            Views = new Dictionary<String, String>();
+            Assembly assembly = typeof(AView).Assembly;
+            Indexes = new Dictionary<String, PropertyInfo[]>();
+            ViewProperties = new Dictionary<String, PropertyInfo[]>();
+            AllViewProperties = new Dictionary<String, PropertyInfo[]>();
+            Type modelType = assembly.GetType($"MvcTemplate.Objects.{model}") ?? typeof(AModel);
+            Type viewType = assembly.GetType($"MvcTemplate.Objects.{model}View") ?? typeof(AView<>);
+            BindingFlags declaredOnly = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+            ControllerNamespace = $"MvcTemplate.Controllers.{area}".Trim('.');
+            ShortName = Regex.Split(model, "(?=[A-Z])").Last();
+            VarName = ShortName.ToLower();
             Models = model.Pluralize();
-            Model = model;
-
-            View = $"{Model}View";
-            Service = $"{Model}Service";
-            Validator = $"{Model}Validator";
-
-            ControllerNamespace = $"MvcTemplate.Controllers{(String.IsNullOrWhiteSpace(area) ? "" : $".{area}")}";
-            ControllerTests = $"{controller}Tests";
             Controller = controller;
-
+            Model = model;
             Area = area;
 
-            Type modelType = typeof(AModel).Assembly.GetType($"MvcTemplate.Objects.{Model}") ?? typeof(AModel);
-            Type viewType = typeof(AView).Assembly.GetType($"MvcTemplate.Objects.{View}") ?? typeof(AModel);
             PropertyInfo[] modelProperties = modelType.GetProperties();
-
-            AllModelProperties = modelProperties.Where(property =>
-                (Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).IsEnum ||
-                property.PropertyType.Namespace == "System").ToArray();
-            ViewProperties = viewType.GetProperties().Where(property => property.DeclaringType?.Name == View).ToArray();
-            ModelProperties = AllModelProperties.Where(property => property.DeclaringType?.Name == Model).ToArray();
-            AllViewProperties = viewType.GetProperties();
-            EnumTypes = AllModelProperties
-                .Select(property => Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType)
-                .Where(type => type.IsEnum)
-                .ToArray();
-            Indexes = modelType
+            PropertyInfo[] indexes = modelType
                 .GetCustomAttributes<IndexAttribute>()
-                .Where(index => index.IsUnique && ViewProperties.Any(property => property.Name == index.PropertyNames[0]))
+                .Where(index => index.IsUnique)
                 .Select(index => modelType.GetProperty(index.PropertyNames[0])!)
                 .OrderByDescending(property => property.Name.Length)
                 .ThenByDescending(property => property.Name)
                 .ToArray();
-            Relations = AllViewProperties
+
+            foreach (String view in new[] { "", "Index", "Create", "Details", "Edit", "Delete" })
+            {
+                Type type = assembly.GetType($"MvcTemplate.Objects.{model}{view}View") ?? viewType;
+
+                Views[view] = type.Name;
+                AllViewProperties[view] = type.GetProperties();
+                ViewProperties[view] = type.GetProperties(declaredOnly);
+                Indexes[view] = indexes.Where(index => ViewProperties[view].Any(property => property.Name == index.Name)).ToArray();
+            }
+
+            AllProperties = modelProperties.Where(property =>
+                (Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType).IsEnum ||
+                property.PropertyType.Namespace == "System").ToArray();
+            Properties = modelType.GetProperties(declaredOnly);
+            EnumTypes = AllProperties
+                .Select(property => Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType)
+                .Where(type => type.IsEnum)
+                .ToArray();
+            Relations = modelProperties
                 .ToDictionary(
-                    property => property,
+                    property => property.Name,
                     property => modelProperties.SingleOrDefault(relation =>
                         property.Name.EndsWith("Id") &&
                         relation.PropertyType.Assembly == modelType.Assembly &&

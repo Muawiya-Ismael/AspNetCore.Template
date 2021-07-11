@@ -1,8 +1,5 @@
 using Genny;
 using Humanizer;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MvcTemplate.Objects;
 using System;
 using System.Collections.Generic;
@@ -53,10 +50,14 @@ namespace MvcTemplate.Web.Templates
                 { $"../MvcTemplate.Web/Views/{path}/Create.cshtml", Scaffold("Web/Create") },
                 { $"../MvcTemplate.Web/Views/{path}/Details.cshtml", Scaffold("Web/Details") },
                 { $"../MvcTemplate.Web/Views/{path}/Edit.cshtml", Scaffold("Web/Edit") },
-                { $"../MvcTemplate.Web/Views/{path}/Delete.cshtml", Scaffold("Web/Delete") },
-
-                { $"../MvcTemplate.Web/Resources/Views/{path}/{Model}View.json", Scaffold("Resources/View") }
+                { $"../MvcTemplate.Web/Views/{path}/Delete.cshtml", Scaffold("Web/Delete") }
             };
+
+            foreach (String view in model.ViewProperties.Keys.Where(key => key == "" || model.Views[key] != model.Views[""]))
+                results[$"../MvcTemplate.Web/Resources/Views/{path}/{Model}{view}View.json"] = Scaffold($"Resources/{view}View");
+
+            foreach (Type type in model.EnumTypes)
+                results[$"../MvcTemplate.Web/Resources/Enums/{path}/{type.Name}.json"] = Scaffold("Resources/Enum", Enum.GetNames(type));
 
             if (!File.Exists($"../MvcTemplate.Objects/Models/{path}/{Model}.cs") ||
                 !File.Exists($"../MvcTemplate.Objects/Views/{path}/{Model}View.cs"))
@@ -67,9 +68,6 @@ namespace MvcTemplate.Web.Templates
                     { $"../MvcTemplate.Objects/Views/{path}/{Model}View.cs", Scaffold("Objects/View") }
                 };
             }
-
-            foreach (Type type in model.EnumTypes)
-                results[$"../MvcTemplate.Web/Resources/Enums/{path}/{type.Name}.json"] = Scaffold("Resources/Enum", Enum.GetNames(type));
 
             if (results.Any(result => result.Value.Errors.Any()))
             {
@@ -274,28 +272,44 @@ namespace MvcTemplate.Web.Templates
         {
             Logger.Write("../../test/MvcTemplate.Tests/Helpers/ObjectsFactory.cs - ");
 
+            String content = File.ReadAllText("../../test/MvcTemplate.Tests/Helpers/ObjectsFactory.cs");
             ModuleModel model = new(Model!, Controller!, Area);
-            SyntaxNode tree = CSharpSyntaxTree.ParseText(File.ReadAllText("../../test/MvcTemplate.Tests/Helpers/ObjectsFactory.cs")).GetRoot();
+            String newContent = content;
 
-            if (tree.DescendantNodes().OfType<MethodDeclarationSyntax>().Any(method => method.Identifier.Text == $"Create{Model}"))
+            if (!content.Contains($" Create{Model}("))
+            {
+                String fakeModel = FakeObjectCreation(model.Model, model.Properties);
+
+                newContent = Regex.Replace(newContent, "(?=\r?\n    }\r?\n})", fakeModel);
+            }
+
+            foreach (String view in model.ViewProperties.Keys)
+            {
+                if (content.Contains($" Create{Model}{view}View("))
+                    continue;
+
+                if (view != "" && model.Views[""] == model.Views[view])
+                    continue;
+
+                String fakeView = FakeObjectCreation($"{Model}{view}View", model.ViewProperties[view]);
+
+                newContent = Regex.Replace(newContent, "(?=\r?\n    }\r?\n})", fakeView);
+            }
+
+            if (newContent == content)
             {
                 Logger.WriteLine("Already exists, skipping...", ConsoleColor.Yellow);
             }
             else
             {
-                String fakeView = FakeObjectCreation(model.View, model.AllViewProperties);
-                String fakeModel = FakeObjectCreation(model.Model, model.ModelProperties);
-                SyntaxNode last = tree.DescendantNodes().OfType<MethodDeclarationSyntax>().Last();
-                SyntaxNode modelCreation = CSharpSyntaxTree.ParseText($"{fakeModel}{fakeView}\n").GetRoot();
-                ClassDeclarationSyntax factory = tree.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
-                String content = tree.ReplaceNode(factory, factory.InsertNodesAfter(last, modelCreation.ChildNodes())).ToString();
-                Match[] matches = Regex.Matches(content, @"        public static (?<class>\w+) .*(.*\r?\n)+?        }").ToArray();
+                MatchCollection matches = Regex.Matches(newContent, @"        public static (?<class>\w+) .*(.*\r?\n)+?        }");
+                String[] factories = matches.OrderBy(match => match.Groups["class"].Value).Select(match => match.Value).ToArray();
 
-                content = Regex.Replace(content,
+                newContent = Regex.Replace(newContent,
                     @"    public static class ObjectsFactory.*\r?\n    {\r?\n(.*\r?\n)+?    }",
-                    $"    public static class ObjectsFactory\n    {{\n{String.Join("\n\n", matches.OrderBy(match => match.Groups["class"].Value).Select(match => match.Value))}\n    }}");
+                    $"    public static class ObjectsFactory\n    {{\n{String.Join("\n\n", factories)}\n    }}");
 
-                File.WriteAllText("../../test/MvcTemplate.Tests/Helpers/ObjectsFactory.cs", content);
+                File.WriteAllText("../../test/MvcTemplate.Tests/Helpers/ObjectsFactory.cs", newContent);
 
                 Logger.WriteLine("Succeeded", ConsoleColor.Green);
             }
@@ -387,7 +401,7 @@ namespace MvcTemplate.Web.Templates
         }
         private String FakeObjectCreation(String name, PropertyInfo[] properties)
         {
-            String creation = $"\n        public static {name} Create{name}(Int64 id)\n";
+            String creation = $"\n\n        public static {name} Create{name}(Int64 id)\n";
             creation += "        {\n";
             creation += "            return new()\n";
             creation += "            {\n";
