@@ -33,6 +33,10 @@
                     {
                     <input asp-for="@property.Name" />
                     }
+                    else if (type == typeof(MvcTree))
+                    {
+                    <div mvc-tree-for="@property.Name" hide-depth="3"></div>
+                    }
                     else if (type == typeof(DateTime))
                     {
                     <input asp-for="@property.Name" asp-format="{0:d}" class="date-picker" />

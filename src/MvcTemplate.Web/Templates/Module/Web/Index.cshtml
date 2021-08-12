@@ -39,7 +39,7 @@
                         {
                     @:columns.AddEnum(model => model.@property.Name);
                         }
-                        else if (Model.Relations.GetValueOrDefault(property.Name, null) == null)
+                        else if (Model.Relations.GetValueOrDefault(property.Name, null) == null && type != typeof(MvcTree))
                         {
                     @:columns.AddProperty(model => model.@property.Name);
                         }
