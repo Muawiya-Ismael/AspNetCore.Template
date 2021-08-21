@@ -2,8 +2,8 @@ NumberConverter = {
     init() {
         const parts = new Intl.NumberFormat(document.documentElement.lang).formatToParts(12345.6);
 
-        this.decimal = parts.find(part => part.type == "decimal").value;
-        this.group = parts.find(part => part.type == "group").value;
+        this.decimal = parts.find(part => part.type === "decimal").value;
+        this.group = parts.find(part => part.type === "group").value;
         this.decimalRegex = new RegExp(`[${this.decimal}]`, "g");
         this.groupRegex = new RegExp(`[${this.group}]`, "g");
     },

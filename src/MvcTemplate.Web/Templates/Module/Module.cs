@@ -53,7 +53,7 @@ namespace MvcTemplate.Web.Templates
                 { $"../MvcTemplate.Web/Views/{path}/Delete.cshtml", Scaffold("Web/Delete") }
             };
 
-            foreach (String view in model.ViewProperties.Keys.Where(key => key == "" || model.Views[key] != model.Views[""]))
+            foreach (String view in model.ViewProperties.Keys.Where(key => key.Length == 0 || model.Views[key] != model.Views[""]))
                 results[$"../MvcTemplate.Web/Resources/Views/{path}/{Model}{view}View.json"] = Scaffold($"Resources/{view}View");
 
             foreach (Type type in model.EnumTypes)

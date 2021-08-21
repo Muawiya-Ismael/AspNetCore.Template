@@ -29,7 +29,7 @@
     }
 
     window.addEventListener("change", e => {
-        if (e.target && e.target.tagName == "SELECT" && e.target.hasAttribute("readonly")) {
+        if (e.target && e.target.tagName === "SELECT" && e.target.hasAttribute("readonly")) {
             e.target.value = e.target.dataset.originalValue;
         }
     });

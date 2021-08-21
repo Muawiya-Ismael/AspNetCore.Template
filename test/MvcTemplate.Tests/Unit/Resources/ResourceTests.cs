@@ -266,7 +266,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForProperty_NotMemberExpression_ReturnNull()
         {
-            Expression<Func<RoleView, String?>> lambda = (view) => view.ToString();
+            Expression<Func<RoleView, String?>> lambda = view => view.ToString();
 
             Assert.Empty(Resource.ForProperty(lambda.Body));
         }
@@ -274,7 +274,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForProperty_FromExpression()
         {
-            Expression<Func<AccountView, String?>> lambda = (account) => account.Username;
+            Expression<Func<AccountView, String?>> lambda = account => account.Username;
 
             String expected = ResourceFor($"Views/{nameof(Area.Administration)}/{nameof(Accounts)}/{nameof(AccountView)}", "Titles", nameof(AccountView.Username));
             String actual = Resource.ForProperty(lambda.Body);
@@ -285,7 +285,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForProperty_NotFoundExpression_Empty()
         {
-            Expression<Func<AccountView, Int64>> lambda = (account) => account.Id;
+            Expression<Func<AccountView, Int64>> lambda = account => account.Id;
 
             Assert.Empty(Resource.ForProperty(lambda.Body));
         }
@@ -293,7 +293,7 @@ namespace MvcTemplate.Resources
         [Fact]
         public void ForProperty_NotFoundType_Empty()
         {
-            Expression<Func<Object, String?>> lambda = (test) => test.ToString();
+            Expression<Func<Object, String?>> lambda = test => test.ToString();
 
             Assert.Empty(Resource.ForProperty(lambda.Body));
         }

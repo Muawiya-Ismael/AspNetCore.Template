@@ -1,5 +1,4 @@
 using MvcTemplate.Resources;
-using System;
 using Xunit;
 
 namespace MvcTemplate.Components.Mvc

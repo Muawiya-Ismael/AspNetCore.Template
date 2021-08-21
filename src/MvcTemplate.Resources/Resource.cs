@@ -18,7 +18,6 @@ namespace MvcTemplate.Resources
             String path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Resources";
 
             if (Directory.Exists(path))
-            {
                 foreach (String resource in Directory.GetFiles(path, "*.json", SearchOption.AllDirectories))
                 {
                     String type = Path.GetFileNameWithoutExtension(resource);
@@ -27,7 +26,6 @@ namespace MvcTemplate.Resources
 
                     Set(type).Override(language, File.ReadAllText(resource));
                 }
-            }
         }
 
         public static ResourceSet Set(String type)

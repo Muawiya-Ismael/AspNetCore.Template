@@ -24,7 +24,7 @@ Navigation = {
 
                         if (navigation.element.clientWidth < maxWidth) {
                             [].forEach.call(submenu.parentElement.children, sibling => {
-                                if (sibling != submenu) {
+                                if (sibling !== submenu) {
                                     sibling.classList.remove("open");
                                 }
                             });
@@ -46,7 +46,7 @@ Navigation = {
                         target = target.parentElement;
                     }
 
-                    if (!target && target != window) {
+                    if (!target && target !== window) {
                         navigation.closeAll();
                     }
                 }

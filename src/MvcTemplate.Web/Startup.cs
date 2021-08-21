@@ -208,7 +208,7 @@ namespace MvcTemplate.Web
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                OnPrepareResponse = (response) => response.Context.Response.Headers["Cache-Control"] = "max-age=8640000"
+                OnPrepareResponse = response => response.Context.Response.Headers["Cache-Control"] = "max-age=8640000"
             });
 
             app.UseSession();

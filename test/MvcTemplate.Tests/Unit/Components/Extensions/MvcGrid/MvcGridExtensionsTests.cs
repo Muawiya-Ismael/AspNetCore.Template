@@ -80,7 +80,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddDate_Column()
         {
-            Expression<Func<AllTypesView, DateTime>> expression = (model) => model.DateTimeField;
+            Expression<Func<AllTypesView, DateTime>> expression = model => model.DateTimeField;
 
             IGridColumn<AllTypesView, DateTime> actual = columns.AddDate(expression);
 
@@ -95,7 +95,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddDate_Nullable_Column()
         {
-            Expression<Func<AllTypesView, DateTime?>> expression = (model) => model.NullableDateTimeField;
+            Expression<Func<AllTypesView, DateTime?>> expression = model => model.NullableDateTimeField;
 
             IGridColumn<AllTypesView, DateTime?> actual = columns.AddDate(expression);
 
@@ -110,7 +110,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddBoolean_Column()
         {
-            Expression<Func<AllTypesView, Boolean>> expression = (model) => model.BooleanField;
+            Expression<Func<AllTypesView, Boolean>> expression = model => model.BooleanField;
 
             IGridColumn<AllTypesView, Boolean> actual = columns.AddBoolean(expression);
 
@@ -142,7 +142,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddBoolean_Nullable_Column()
         {
-            Expression<Func<AllTypesView, Boolean?>> expression = (model) => model.NullableBooleanField;
+            Expression<Func<AllTypesView, Boolean?>> expression = model => model.NullableBooleanField;
 
             IGridColumn<AllTypesView, Boolean?> actual = columns.AddBoolean(expression);
 
@@ -183,7 +183,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddDateTime_Column()
         {
-            Expression<Func<AllTypesView, DateTime>> expression = (model) => model.DateTimeField;
+            Expression<Func<AllTypesView, DateTime>> expression = model => model.DateTimeField;
 
             IGridColumn<AllTypesView, DateTime> actual = columns.AddDateTime(expression);
 
@@ -198,7 +198,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddDateTime_Nullable_Column()
         {
-            Expression<Func<AllTypesView, DateTime?>> expression = (model) => model.NullableDateTimeField;
+            Expression<Func<AllTypesView, DateTime?>> expression = model => model.NullableDateTimeField;
 
             IGridColumn<AllTypesView, DateTime?> actual = columns.AddDateTime(expression);
 
@@ -213,7 +213,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddProperty_Column()
         {
-            Expression<Func<AllTypesView, AllTypesView>> expression = (model) => model;
+            Expression<Func<AllTypesView, AllTypesView>> expression = model => model;
 
             IGridColumn<AllTypesView, AllTypesView> actual = columns.AddProperty(expression);
 
@@ -227,7 +227,7 @@ namespace MvcTemplate.Components.Extensions
         [Fact]
         public void AddProperty_SetsColumnName()
         {
-            Expression<Func<AllTypesView, SByte>> expression = (model) => model.NullableSByteField!.Value;
+            Expression<Func<AllTypesView, SByte>> expression = model => model.NullableSByteField!.Value;
 
             Assert.Equal("nullable-s-byte-field-value", columns.AddProperty(expression).Name);
         }

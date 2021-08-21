@@ -31,7 +31,7 @@ namespace MvcTemplate.Components.Mvc
                         {
                             String group = groups.ContainsKey(name) ? groups[name] ?? "" : "";
                             String title = titles.ContainsKey(name) ? titles[name] ?? name : name;
-                            String value = (type.GetField(name)!.GetValue(null) as Enum)!.ToString("d")!;
+                            String value = (type.GetField(name)!.GetValue(null) as Enum)!.ToString("d");
 
                             return new KeyValuePair<EnumGroupAndName, String>(new EnumGroupAndName(group, title), value);
                         })
