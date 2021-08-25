@@ -27,6 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcTemplate.Controllers", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcTemplate.Tests", "test\MvcTemplate.Tests\MvcTemplate.Tests.csproj", "{2F7B7315-BF05-461F-9472-490DC607ABFD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD2EA3EA-D9F5-4799-95D3-36D4FD36AF38}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,5 +93,8 @@ Global
 		{089A5DF2-6112-4A59-BF9B-3DCD45B9D7A6} = {B0DD474E-025E-4274-9198-133B38685DB3}
 		{4777172D-6044-41FD-9480-EA836D70AD73} = {B0DD474E-025E-4274-9198-133B38685DB3}
 		{2F7B7315-BF05-461F-9472-490DC607ABFD} = {901D77D0-17AC-4ED1-8DB9-A9C376597601}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31FFED21-5D84-4B34-AA62-7719075E6A3F}
 	EndGlobalSection
 EndGlobal
