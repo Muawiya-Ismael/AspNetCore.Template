@@ -1,5 +1,4 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg?style=plastic)
-[![Tip](https://img.shields.io/badge/tip-paypal-blue.svg?style=plastic&logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CGQTQRG8AADYE&source=url)
 
 # Installation
 1. Before opening project rename it using "Rename.cmd".
