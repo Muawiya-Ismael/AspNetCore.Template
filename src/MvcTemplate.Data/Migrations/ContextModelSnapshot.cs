@@ -15,16 +15,16 @@ namespace MvcTemplate.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MvcTemplate.Objects.Account", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -75,7 +75,7 @@ namespace MvcTemplate.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long?>("AccountId")
                         .HasColumnType("bigint");
@@ -110,7 +110,7 @@ namespace MvcTemplate.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -140,7 +140,7 @@ namespace MvcTemplate.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -163,7 +163,7 @@ namespace MvcTemplate.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
