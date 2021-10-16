@@ -54,7 +54,7 @@ namespace MvcTemplate.Components.Logging
         {
             logger.Log(LogLevel.Warning, 0, "Message from above", null, (state, _) => state);
 
-            Assert.Contains($"{LogLevel.Warning}: Message from above", File.ReadAllText("file-log.txt"));
+            Assert.Contains($"{LogLevel.Warning}    : Message from above", File.ReadAllText("file-log.txt"));
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace MvcTemplate.Components.Logging
 
             Assert.Contains($"{nameof(InvalidOperationException)}: Exception from below", actual);
             Assert.Contains("ExceptionProxy: Lower exception message", actual);
-            Assert.Contains($"{LogLevel.Error}: Test", actual);
+            Assert.Contains($"{LogLevel.Error}      : Test", actual);
             Assert.Contains("Stack trace:", actual);
             Assert.Contains("Test trace", actual);
         }
@@ -83,7 +83,7 @@ namespace MvcTemplate.Components.Logging
 
             logger.Log(LogLevel.Trace, 0, "Nested message", null, (state, _) => state);
 
-            Assert.Contains($"{LogLevel.Trace}: Nested message", File.ReadAllText("FileLogger/InnerPath/log.txt"));
+            Assert.Contains($"{LogLevel.Trace}      : Nested message", File.ReadAllText("FileLogger/InnerPath/log.txt"));
         }
 
         [Fact]
