@@ -30,10 +30,10 @@ namespace MvcTemplate
         public static T ImitateLogin<T>(this T controller, Int64 id) where T : Controller
         {
             Claim[] claims = { new(ClaimTypes.NameIdentifier, id.ToString(CultureInfo.CurrentCulture)) };
-            controller.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Password"));
-
             ActionContext action = new(controller.HttpContext, controller.RouteData, new ActionDescriptor());
             ActionExecutingContext context = new(action, new List<IFilterMetadata>(), new Dictionary<String, Object>(), controller);
+
+            controller.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Password"));
 
             controller.OnActionExecuting(context);
 

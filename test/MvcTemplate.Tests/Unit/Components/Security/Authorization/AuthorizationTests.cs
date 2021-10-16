@@ -347,7 +347,7 @@ namespace MvcTemplate.Components.Security
         {
             Int64 accountId = CreateAccountWithPermissionFor("Area", nameof(AuthorizedController), nameof(AuthorizedController.Action));
 
-            Assert.True(authorization.IsGrantedFor(accountId, $"Area/{nameof(AuthorizedController)}/{nameof(AuthorizedController.Action)}".ToLower()));
+            Assert.True(authorization.IsGrantedFor(accountId, $"Area/{nameof(AuthorizedController)}/{nameof(AuthorizedController.Action)}".ToUpper()));
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace MvcTemplate.Components.Security
         {
             Int64 accountId = CreateAccountWithPermissionFor("Test", "Test", "Test");
 
-            Assert.False(authorization.IsGrantedFor(accountId, $"Area/{nameof(AuthorizedController)}/{nameof(AuthorizedController.Action)}".ToLower()));
+            Assert.False(authorization.IsGrantedFor(accountId, $"Area/{nameof(AuthorizedController)}/{nameof(AuthorizedController.Action)}".ToUpper()));
         }
 
         [Fact]

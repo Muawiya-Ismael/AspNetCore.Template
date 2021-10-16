@@ -67,7 +67,7 @@ namespace MvcTemplate.Resources
         public void ForLookup_IsCaseInsensitive()
         {
             String expected = ResourceFor("Shared/Lookup", "Titles", nameof(Role));
-            String actual = Resource.ForLookup(nameof(Role).ToLower());
+            String actual = Resource.ForLookup(nameof(Role).ToUpper());
 
             Assert.Equal(expected, actual);
         }
@@ -246,7 +246,7 @@ namespace MvcTemplate.Resources
         public void ForProperty_IsCaseInsensitive()
         {
             String expected = ResourceFor($"Views/{nameof(Area.Administration)}/{nameof(Accounts)}/{nameof(AccountView)}", "Titles", nameof(AccountView.Username));
-            String actual = Resource.ForProperty(typeof(AccountView), nameof(AccountView.Username).ToLower());
+            String actual = Resource.ForProperty(typeof(AccountView), nameof(AccountView.Username).ToUpper());
 
             Assert.Equal(expected, actual);
         }

@@ -11,6 +11,7 @@ namespace MvcTemplate.Components.Mvc
         public void Errors_FromModelState()
         {
             ModelStateDictionary modelState = new();
+            modelState.AddModelError("InnerParent.PropertyTitle", "Error");
             modelState.AddModelError("WhitespaceErrors", "           ");
             modelState.AddModelError("WhitespaceErrors", "Whitespace");
             modelState.AddModelError("TwoErrors", "Error1");
@@ -23,11 +24,12 @@ namespace MvcTemplate.Components.Mvc
 
             Dictionary<String, String?> actual = modelState.Errors();
 
+            Assert.Equal("Error", actual["InnerParent.PropertyTitle"]);
             Assert.Equal("           ", actual["WhitespaceErrors"]);
             Assert.Equal("Error1", actual["TwoErrors"]);
             Assert.Equal("E", actual["EmptyErrors"]);
             Assert.Equal("Error", actual["Error"]);
-            Assert.Equal(5, actual.Count);
+            Assert.Equal(6, actual.Count);
             Assert.Null(actual["Empty"]);
         }
     }

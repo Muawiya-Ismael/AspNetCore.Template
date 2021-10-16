@@ -156,7 +156,9 @@ namespace MvcTemplate.Web.Templates
             }
             else
             {
-                content = Regex.Replace(content, @"    {\r?\n( +\w+,?\r?\n)+    }", $"    {{\n        {String.Join(",\n        ", newAreas)}\n    }}");
+                content = Regex.Replace(content,
+                    @"    {\r?\n( +\w+,?\r?\n)+    }",
+                    $"    {{\n        {String.Join(",\n        ", newAreas)}\n    }}");
 
                 File.WriteAllText("../MvcTemplate.Controllers/Area.cs", content);
 
