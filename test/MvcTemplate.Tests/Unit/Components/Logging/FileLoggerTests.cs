@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using Xunit;
 
 namespace MvcTemplate.Components.Logging
@@ -47,6 +49,30 @@ namespace MvcTemplate.Components.Logging
             logger.Log(LogLevel.None, 0, new Object(), null, (_, _) => "Test");
 
             Assert.False(File.Exists("file-log.txt"));
+        }
+
+        [Fact]
+        public void Log_Id()
+        {
+            HttpContext context = new HttpContextAccessor().HttpContext = new DefaultHttpContext();
+            Claim[] claims = { new(ClaimTypes.NameIdentifier, "124") };
+
+            context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Password"));
+            context.TraceIdentifier = "TraceId";
+
+            logger.Log(LogLevel.Warning, 0, "Message", null, (state, _) => state);
+
+            Assert.Contains($"Id         : TraceId [124]", File.ReadAllText("file-log.txt"));
+        }
+
+        [Fact]
+        public void Log_System()
+        {
+            new HttpContextAccessor().HttpContext = null;
+
+            logger.Log(LogLevel.Warning, 0, "Message", null, (state, _) => state);
+
+            Assert.Contains($"Id         : System []", File.ReadAllText("file-log.txt"));
         }
 
         [Fact]

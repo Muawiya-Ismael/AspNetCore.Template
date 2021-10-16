@@ -43,7 +43,7 @@ namespace MvcTemplate.Components.Logging
                 return;
 
             StringBuilder log = new();
-            log.Append("Id         : ").Append(Accessor.HttpContext?.TraceIdentifier).Append(" [").Append(Accessor.HttpContext?.User.Id().ToString(CultureInfo.InvariantCulture)).AppendLine("]");
+            log.Append("Id         : ").Append(Accessor.HttpContext?.TraceIdentifier ?? "System").Append(" [").Append(Accessor.HttpContext?.User.Id().ToString(CultureInfo.InvariantCulture)).AppendLine("]");
             log.Append("Time       : ").AppendFormat("{0:yyyy-MM-dd HH:mm:ss.ffffff}", DateTime.Now).AppendLine();
             log.AppendFormat("{0,-11}", logLevel).Append(": ").AppendLine(formatter(state, exception));
 
