@@ -21,7 +21,7 @@ namespace MvcTemplate.Components.Mvc
 
             new DateValidator().AddValidation(context);
 
-            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-date", Validation.For("Date", "DateTime"));
+            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-date", Validation.For("DateTime", "DateTime"));
             KeyValuePair<String, String> actual = attributes.Single();
 
             Assert.Equal(expected, actual);

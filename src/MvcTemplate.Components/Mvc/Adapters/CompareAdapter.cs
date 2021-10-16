@@ -11,7 +11,7 @@ namespace MvcTemplate.Components.Mvc
         public CompareAdapter(CompareAttribute attribute)
             : base(attribute, null)
         {
-            attribute.ErrorMessage = Validation.For("EqualTo");
+            attribute.ErrorMessage = Validation.For("Compare");
         }
 
         public override void AddValidation(ClientModelValidationContext context)

@@ -7,7 +7,7 @@ namespace MvcTemplate.Components.Mvc
     {
         public void AddValidation(ClientModelValidationContext context)
         {
-            context.Attributes["data-val-date"] = Validation.For("Date", context.ModelMetadata.GetDisplayName());
+            context.Attributes["data-val-date"] = Validation.For("DateTime", context.ModelMetadata.GetDisplayName());
         }
     }
 }

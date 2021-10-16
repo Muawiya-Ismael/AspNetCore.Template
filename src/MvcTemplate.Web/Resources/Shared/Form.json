@@ -1,10 +1,10 @@
 {
     "Validations": {
         "AcceptFiles": "'{0}' field only accepts ({1}) format.",
-        "Date": "'{0}' field must be a date.",
+        "Compare": "'{0}' field must be equal to '{1}'.",
+        "DateTime": "'{0}' field must be a date.",
         "Digits": "'{0}' field must only contain digits.",
         "EmailAddress": "'{0}' field is not a valid email address.",
-        "EqualTo": "'{0}' field must be equal to '{1}'.",
         "FileSize": "'{0}' size should not exceed {1} MB.",
         "GreaterThan": "'{0}' field must be greater than {1}.",
         "Integer": "'{0}' field must be an integer.",
