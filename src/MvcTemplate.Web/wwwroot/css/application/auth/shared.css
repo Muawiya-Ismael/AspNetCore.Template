@@ -46,6 +46,10 @@
     display: none;
 }
 
+.input-group input::placeholder {
+    text-transform: none !important;
+}
+
 .input-group input:-webkit-autofill,
 .input-group input:-webkit-autofill:focus {
     box-shadow: 0 50px #ffffff inset;

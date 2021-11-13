@@ -79,6 +79,10 @@ body.private {
     display: none;
 }
 
+.control-content input::placeholder {
+    text-transform: none !important;
+}
+
 .control-validation {
     color: #dc3545;
     min-height: 0;
