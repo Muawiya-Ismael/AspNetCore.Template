@@ -48,27 +48,29 @@ Validator = {
         document.addEventListener("wellidate-error", e => {
             if (e.target.classList.contains("mvc-lookup-value")) {
                 const { wellidate } = e.detail.validatable;
-                const { control } = new MvcLookup(e.target);
+                const { group, search } = new MvcLookup(e.target);
 
-                control.classList.add(wellidate.inputErrorClass);
-                control.classList.remove(wellidate.inputValidClass);
-                control.classList.remove(wellidate.inputPendingClass);
+                group.classList.add("mvc-lookup-invalid");
+                search.classList.add(wellidate.inputErrorClass);
+                search.classList.remove(wellidate.inputValidClass);
+                search.classList.remove(wellidate.inputPendingClass);
             }
         });
 
         document.addEventListener("wellidate-success", e => {
             if (e.target.classList.contains("mvc-lookup-value")) {
                 const { wellidate } = e.detail.validatable;
-                const { control } = new MvcLookup(e.target);
+                const { group, search } = new MvcLookup(e.target);
 
-                control.classList.add(wellidate.inputValidClass);
-                control.classList.remove(wellidate.inputErrorClass);
-                control.classList.remove(wellidate.inputPendingClass);
+                group.classList.remove("mvc-lookup-invalid");
+                search.classList.add(wellidate.inputValidClass);
+                search.classList.remove(wellidate.inputErrorClass);
+                search.classList.remove(wellidate.inputPendingClass);
             }
         });
 
         for (const value of document.querySelectorAll(".mvc-lookup-value.input-validation-error")) {
-            new MvcLookup(value).control.classList.add("input-validation-error");
+            new MvcLookup(value).group.classList.add("mvc-lookup-invalid");
         }
 
         document.querySelectorAll("form").forEach(form => new Wellidate(form, {
