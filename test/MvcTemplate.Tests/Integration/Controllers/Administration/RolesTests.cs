@@ -9,6 +9,7 @@ using MvcTemplate.Validators;
 
 namespace MvcTemplate.Controllers.Administration;
 
+[Collection("Database access")]
 public class RolesTests : IDisposable
 {
     private Role model;

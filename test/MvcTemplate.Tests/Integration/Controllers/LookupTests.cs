@@ -3,6 +3,7 @@ using NonFactors.Mvc.Lookup;
 
 namespace MvcTemplate.Controllers;
 
+[Collection("Database access")]
 public class LookupTests : IDisposable
 {
     private Lookup controller;

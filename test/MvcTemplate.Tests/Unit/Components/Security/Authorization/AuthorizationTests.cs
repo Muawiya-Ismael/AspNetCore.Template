@@ -5,6 +5,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Components.Security;
 
+[Collection("Database access")]
 public class AuthorizationTests : IDisposable
 {
     private DbContext context;

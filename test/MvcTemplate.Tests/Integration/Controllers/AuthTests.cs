@@ -15,6 +15,7 @@ using System.Security.Claims;
 
 namespace MvcTemplate.Controllers;
 
+[Collection("Database access")]
 public class AuthTests : IDisposable
 {
     private Account model;

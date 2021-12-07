@@ -4,6 +4,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Data;
 
+[Collection("Database access")]
 public class LoggablePropertyTests
 {
     private PropertyEntry textProperty;

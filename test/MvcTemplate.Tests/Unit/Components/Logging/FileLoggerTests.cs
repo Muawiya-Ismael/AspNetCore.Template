@@ -4,6 +4,7 @@ using System.Security.Claims;
 
 namespace MvcTemplate.Components.Logging;
 
+[Collection("File access")]
 public class FileLoggerTests
 {
     private FileLogger logger;

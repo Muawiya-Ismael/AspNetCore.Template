@@ -12,6 +12,7 @@ using System.Security.Claims;
 
 namespace MvcTemplate.Controllers;
 
+[Collection("Database access")]
 public class ProfileTests : IDisposable
 {
     private Account model;

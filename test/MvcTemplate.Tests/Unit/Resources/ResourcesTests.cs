@@ -6,6 +6,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Resources;
 
+[Collection("Database access")]
 public class ResourcesTests
 {
     [Fact]

@@ -3,6 +3,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Data;
 
+[Collection("Database access")]
 public class AuditedUnitOfWorkTests : IDisposable
 {
     private Permission model;

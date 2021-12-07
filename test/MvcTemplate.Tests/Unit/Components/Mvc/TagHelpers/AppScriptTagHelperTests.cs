@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace MvcTemplate.Components.Mvc;
 
+[Collection("File access")]
 public class AppScriptTagHelperTests
 {
     private TagHelperOutput output;

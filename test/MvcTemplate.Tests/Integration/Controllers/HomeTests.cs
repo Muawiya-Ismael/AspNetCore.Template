@@ -12,6 +12,7 @@ using MvcTemplate.Validators;
 
 namespace MvcTemplate.Controllers;
 
+[Collection("Database access")]
 public class HomeTests : IDisposable
 {
     private Account model;

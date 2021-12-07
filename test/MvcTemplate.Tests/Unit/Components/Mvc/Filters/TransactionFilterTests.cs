@@ -9,6 +9,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Components.Mvc;
 
+[Collection("Database access")]
 public class TransactionFilterTests
 {
     [Fact]

@@ -3,6 +3,7 @@ using MvcTemplate.Objects;
 
 namespace MvcTemplate.Data.Migrations;
 
+[Collection("Database access")]
 public class ConfigurationTests : IDisposable
 {
     private Configuration configuration;
