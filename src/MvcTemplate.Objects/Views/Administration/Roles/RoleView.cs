@@ -1,32 +1,27 @@
 using AutoMapper;
 using MvcTemplate.Components.Tree;
 using NonFactors.Mvc.Lookup;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
-namespace MvcTemplate.Objects
+namespace MvcTemplate.Objects;
+
+public class RoleView : AView<Role>
 {
-    public class RoleView : AView<Role>
+    [LookupColumn]
+    [StringLength(128)]
+    public String Title { get; set; }
+
+    public MvcTree Permissions { get; set; }
+
+    public RoleView()
     {
-        [LookupColumn]
-        [StringLength(128)]
-        public String Title { get; set; }
+        Permissions = new MvcTree();
+    }
 
-        public MvcTree Permissions { get; set; }
-
-        public RoleView()
-        {
-            Permissions = new MvcTree();
-        }
-
-        internal override void Map(Profile profile)
-        {
-            profile.CreateMap<Role, RoleView>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
-                new MvcTree { SelectedIds = new HashSet<Int64>(role.Permissions.Select(role => role.PermissionId)) }));
-            profile.CreateMap<RoleView, Role>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
-                role.Permissions.SelectedIds.Select(permission => new RolePermission { PermissionId = permission }).ToList()));
-        }
+    internal override void Map(Profile profile)
+    {
+        profile.CreateMap<Role, RoleView>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
+            new MvcTree { SelectedIds = new HashSet<Int64>(role.Permissions.Select(role => role.PermissionId)) }));
+        profile.CreateMap<RoleView, Role>().ForMember(role => role.Permissions, member => member.MapFrom(role =>
+            role.Permissions.SelectedIds.Select(permission => new RolePermission { PermissionId = permission }).ToList()));
     }
 }

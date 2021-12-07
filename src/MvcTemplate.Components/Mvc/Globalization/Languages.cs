@@ -1,51 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+namespace MvcTemplate.Components.Mvc;
 
-namespace MvcTemplate.Components.Mvc
+public class Languages : ILanguages
 {
-    public class Languages : ILanguages
+    public Language Default
     {
-        public Language Default
+        get;
+    }
+    public Language Current
+    {
+        get
         {
-            get;
+            return Supported.Single(language => CultureInfo.CurrentUICulture.Equals(language.Culture));
         }
-        public Language Current
+        set
         {
-            get
-            {
-                return Supported.Single(language => CultureInfo.CurrentUICulture.Equals(language.Culture));
-            }
-            set
-            {
-                CultureInfo.CurrentCulture = value.Culture ?? CultureInfo.CurrentCulture;
-                CultureInfo.CurrentUICulture = value.Culture ?? CultureInfo.CurrentUICulture;
-            }
+            CultureInfo.CurrentCulture = value.Culture ?? CultureInfo.CurrentCulture;
+            CultureInfo.CurrentUICulture = value.Culture ?? CultureInfo.CurrentUICulture;
         }
-        public Language[] Supported
-        {
-            get;
-        }
+    }
+    public Language[] Supported
+    {
+        get;
+    }
 
-        private Dictionary<String, Language> Dictionary
-        {
-            get;
-        }
+    private Dictionary<String, Language> Dictionary
+    {
+        get;
+    }
 
-        public Languages(String defaultAbbreviation, Language[] supported)
-        {
-            Dictionary = supported.ToDictionary(language => language.Abbreviation!);
-            Default = Dictionary[defaultAbbreviation];
-            Supported = supported;
-        }
+    public Languages(String defaultAbbreviation, Language[] supported)
+    {
+        Dictionary = supported.ToDictionary(language => language.Abbreviation!);
+        Default = Dictionary[defaultAbbreviation];
+        Supported = supported;
+    }
 
-        public Language this[String abbreviation]
+    public Language this[String abbreviation]
+    {
+        get
         {
-            get
-            {
-                return Dictionary.TryGetValue(abbreviation, out Language? language) ? language : Default;
-            }
+            return Dictionary.TryGetValue(abbreviation, out Language? language) ? language : Default;
         }
     }
 }

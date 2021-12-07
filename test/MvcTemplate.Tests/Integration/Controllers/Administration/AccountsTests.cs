@@ -4,273 +4,268 @@ using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
-using NSubstitute;
-using System;
-using System.Linq;
-using Xunit;
 
-namespace MvcTemplate.Controllers.Administration
+namespace MvcTemplate.Controllers.Administration;
+
+public class AccountsTests : IDisposable
 {
-    public class AccountsTests : IDisposable
+    private Account model;
+    private DbContext context;
+    private Account otherModel;
+    private Accounts controller;
+
+    public AccountsTests()
     {
-        private Account model;
-        private DbContext context;
-        private Account otherModel;
-        private Accounts controller;
+        context = TestingContext.Create();
+        IHasher hasher = Substitute.For<IHasher>();
+        UnitOfWork unitOfWork = new(TestingContext.Create(), TestingContext.Mapper);
+        controller = Substitute.ForPartsOf<Accounts>(new AccountValidator(unitOfWork, hasher), new AccountService(unitOfWork, hasher));
 
-        public AccountsTests()
+        hasher.VerifyPassword(Arg.Any<String>(), Arg.Any<String>()).Returns(info => $"{info.ArgAt<String>(0)}Hashed" == info.ArgAt<String>(1));
+        hasher.HashPassword(Arg.Any<String>()).Returns(info => $"{info.Arg<String>()}Hashed");
+        context.Drop().Add(model = ObjectsFactory.CreateAccount(-1));
+        context.Add(otherModel = ObjectsFactory.CreateAccount(-2));
+        context.SaveChanges();
+
+        controller.Initialize();
+    }
+    public void Dispose()
+    {
+        controller.Dispose();
+        context.Dispose();
+    }
+
+    [Fact]
+    public void Index_Accounts()
+    {
+        Account[] expected = context.Set<Account>().OrderByDescending(account => account.Id).ToArray();
+        AccountView[] actual = controller.Index().Returns<IQueryable<AccountView>>().ToArray();
+
+        for (Int32 i = 0; i < expected.Length || i < actual.Length; i++)
         {
-            context = TestingContext.Create();
-            IHasher hasher = Substitute.For<IHasher>();
-            UnitOfWork unitOfWork = new(TestingContext.Create(), TestingContext.Mapper);
-            controller = Substitute.ForPartsOf<Accounts>(new AccountValidator(unitOfWork, hasher), new AccountService(unitOfWork, hasher));
-
-            hasher.VerifyPassword(Arg.Any<String>(), Arg.Any<String>()).Returns(info => $"{info.ArgAt<String>(0)}Hashed" == info.ArgAt<String>(1));
-            hasher.HashPassword(Arg.Any<String>()).Returns(info => $"{info.Arg<String>()}Hashed");
-            context.Drop().Add(model = ObjectsFactory.CreateAccount(-1));
-            context.Add(otherModel = ObjectsFactory.CreateAccount(-2));
-            context.SaveChanges();
-
-            controller.Initialize();
-        }
-        public void Dispose()
-        {
-            controller.Dispose();
-            context.Dispose();
-        }
-
-        [Fact]
-        public void Index_Accounts()
-        {
-            Account[] expected = context.Set<Account>().OrderByDescending(account => account.Id).ToArray();
-            AccountView[] actual = controller.Index().Returns<IQueryable<AccountView>>().ToArray();
-
-            for (Int32 i = 0; i < expected.Length || i < actual.Length; i++)
-            {
-                Assert.Equal(expected[i].CreationDate, actual[i].CreationDate);
-                Assert.Equal(expected[i].Role?.Title, actual[i].RoleTitle);
-                Assert.Equal(expected[i].IsLocked, actual[i].IsLocked);
-                Assert.Equal(expected[i].Username, actual[i].Username);
-                Assert.Equal(expected[i].Email, actual[i].Email);
-                Assert.Equal(expected[i].Id, actual[i].Id);
-            }
-
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
+            Assert.Equal(expected[i].CreationDate, actual[i].CreationDate);
+            Assert.Equal(expected[i].Role?.Title, actual[i].RoleTitle);
+            Assert.Equal(expected[i].IsLocked, actual[i].IsLocked);
+            Assert.Equal(expected[i].Username, actual[i].Username);
+            Assert.Equal(expected[i].Email, actual[i].Email);
+            Assert.Equal(expected[i].Id, actual[i].Id);
         }
 
-        [Fact]
-        public void Create_View()
-        {
-            Assert.Null(controller.Create().Model);
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-        }
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+    }
 
-        [Fact]
-        public void Create_InvalidModelState_Error()
-        {
-            controller.ModelState.AddModelError("Test", "Error");
+    [Fact]
+    public void Create_View()
+    {
+        Assert.Null(controller.Create().Model);
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Create, ObjectsFactory.CreateAccountCreateView(model.Id));
+    [Fact]
+    public void Create_InvalidModelState_Error()
+    {
+        controller.ModelState.AddModelError("Test", "Error");
 
-            controller.ModelState.IsSingle("Test", "Error");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Create, ObjectsFactory.CreateAccountCreateView(model.Id));
 
-        [Fact]
-        public void Create_UsedUsername_Error()
-        {
-            AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
-            account.Username = model.Username.ToUpper();
+        controller.ModelState.IsSingle("Test", "Error");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Create, account);
+    [Fact]
+    public void Create_UsedUsername_Error()
+    {
+        AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
+        account.Username = model.Username.ToUpper();
 
-            controller.ModelState.IsSingle<AccountView>(nameof(AccountCreateView.Username), "UniqueUsername");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Create, account);
 
-        [Fact]
-        public void Create_UsedEmail_Error()
-        {
-            AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
-            account.Email = model.Email.ToUpper();
+        controller.ModelState.IsSingle<AccountView>(nameof(AccountCreateView.Username), "UniqueUsername");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Create, account);
+    [Fact]
+    public void Create_UsedEmail_Error()
+    {
+        AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
+        account.Email = model.Email.ToUpper();
 
-            controller.ModelState.IsSingle<AccountView>(nameof(AccountCreateView.Email), "UniqueEmail");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Create, account);
 
-        [Fact]
-        public void Create_Account()
-        {
-            AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
-            account.RoleId = model.RoleId;
+        controller.ModelState.IsSingle<AccountView>(nameof(AccountCreateView.Email), "UniqueEmail");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Create(account);
+    [Fact]
+    public void Create_Account()
+    {
+        AccountCreateView account = ObjectsFactory.CreateAccountCreateView(model.Id);
+        account.RoleId = model.RoleId;
 
-            Account actual = context.Db<Account>().Single(account => account.Id > otherModel.Id);
+        controller.Create(account);
 
-            Assert.Equal($"{account.Password}Hashed", actual.Passhash);
-            Assert.Equal(account.CreationDate, actual.CreationDate);
-            Assert.Equal(account.Email.ToLower(), actual.Email);
-            Assert.Equal(account.Username, actual.Username);
-            Assert.Equal(account.RoleId, actual.RoleId);
-            Assert.Null(actual.RecoveryTokenExpiration);
-            Assert.Null(actual.RecoveryToken);
-            Assert.False(actual.IsLocked);
-        }
+        Account actual = context.Db<Account>().Single(account => account.Id > otherModel.Id);
 
-        [Fact]
-        public void Create_Authorization_Refresh()
-        {
-            controller.Create(ObjectsFactory.CreateAccountCreateView(model.Id));
+        Assert.Equal($"{account.Password}Hashed", actual.Passhash);
+        Assert.Equal(account.CreationDate, actual.CreationDate);
+        Assert.Equal(account.Email.ToLower(), actual.Email);
+        Assert.Equal(account.Username, actual.Username);
+        Assert.Equal(account.RoleId, actual.RoleId);
+        Assert.Null(actual.RecoveryTokenExpiration);
+        Assert.Null(actual.RecoveryToken);
+        Assert.False(actual.IsLocked);
+    }
 
-            controller.Authorization.Received().Refresh(controller.HttpContext.RequestServices);
-        }
+    [Fact]
+    public void Create_Authorization_Refresh()
+    {
+        controller.Create(ObjectsFactory.CreateAccountCreateView(model.Id));
 
-        [Fact]
-        public void Create_Success_Redirect()
-        {
-            Object expected = controller.StaticRedirectTo(nameof(Accounts.Index));
-            Object actual = controller.Create(ObjectsFactory.CreateAccountCreateView(model.Id));
+        controller.Authorization.Received().Refresh(controller.HttpContext.RequestServices);
+    }
 
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-            Assert.Same(expected, actual);
-        }
+    [Fact]
+    public void Create_Success_Redirect()
+    {
+        Object expected = controller.StaticRedirectTo(nameof(Accounts.Index));
+        Object actual = controller.Create(ObjectsFactory.CreateAccountCreateView(model.Id));
 
-        [Fact]
-        public void Details_NotFound()
-        {
-            Object expected = controller.StaticNotFoundView();
-            Object actual = controller.Details(0);
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+        Assert.Same(expected, actual);
+    }
 
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-            Assert.Same(expected, actual);
-        }
+    [Fact]
+    public void Details_NotFound()
+    {
+        Object expected = controller.StaticNotFoundView();
+        Object actual = controller.Details(0);
 
-        [Fact]
-        public void Details_View()
-        {
-            Account expected = model;
-            AccountView actual = controller.Details(model.Id).Returns<AccountView>();
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+        Assert.Same(expected, actual);
+    }
 
-            Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.Role?.Title, actual.RoleTitle);
-            Assert.Equal(expected.IsLocked, actual.IsLocked);
-            Assert.Equal(expected.Username, actual.Username);
-            Assert.Equal(expected.Email, actual.Email);
-            Assert.Equal(expected.Id, actual.Id);
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-        }
+    [Fact]
+    public void Details_View()
+    {
+        Account expected = model;
+        AccountView actual = controller.Details(model.Id).Returns<AccountView>();
 
-        [Fact]
-        public void Edit_NotFound()
-        {
-            Object expected = controller.StaticNotFoundView();
-            Object actual = controller.Edit(0);
+        Assert.Equal(expected.CreationDate, actual.CreationDate);
+        Assert.Equal(expected.Role?.Title, actual.RoleTitle);
+        Assert.Equal(expected.IsLocked, actual.IsLocked);
+        Assert.Equal(expected.Username, actual.Username);
+        Assert.Equal(expected.Email, actual.Email);
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+    }
 
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-            Assert.Same(expected, actual);
-        }
+    [Fact]
+    public void Edit_NotFound()
+    {
+        Object expected = controller.StaticNotFoundView();
+        Object actual = controller.Edit(0);
 
-        [Fact]
-        public void Edit_View()
-        {
-            Account expected = model;
-            AccountEditView actual = controller.Edit(model.Id).Returns<AccountEditView>();
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+        Assert.Same(expected, actual);
+    }
 
-            Assert.Equal(expected.CreationDate, actual.CreationDate);
-            Assert.Equal(expected.IsLocked, actual.IsLocked);
-            Assert.Equal(expected.Username, actual.Username);
-            Assert.Equal(expected.RoleId, actual.RoleId);
-            Assert.Equal(expected.Email, actual.Email);
-            Assert.Equal(expected.Id, actual.Id);
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-        }
+    [Fact]
+    public void Edit_View()
+    {
+        Account expected = model;
+        AccountEditView actual = controller.Edit(model.Id).Returns<AccountEditView>();
 
-        [Fact]
-        public void Edit_InvalidModelState_Error()
-        {
-            controller.ModelState.AddModelError("Test", "Error");
+        Assert.Equal(expected.CreationDate, actual.CreationDate);
+        Assert.Equal(expected.IsLocked, actual.IsLocked);
+        Assert.Equal(expected.Username, actual.Username);
+        Assert.Equal(expected.RoleId, actual.RoleId);
+        Assert.Equal(expected.Email, actual.Email);
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Edit, ObjectsFactory.CreateAccountEditView(model.Id));
+    [Fact]
+    public void Edit_InvalidModelState_Error()
+    {
+        controller.ModelState.AddModelError("Test", "Error");
 
-            controller.ModelState.IsSingle("Test", "Error");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Edit, ObjectsFactory.CreateAccountEditView(model.Id));
 
-        [Fact]
-        public void Edit_UsedUsername_Error()
-        {
-            AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
-            account.Username = otherModel.Username.ToUpper();
+        controller.ModelState.IsSingle("Test", "Error");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Edit, account);
+    [Fact]
+    public void Edit_UsedUsername_Error()
+    {
+        AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
+        account.Username = otherModel.Username.ToUpper();
 
-            controller.ModelState.IsSingle<AccountView>(nameof(AccountEditView.Username), "UniqueUsername");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Edit, account);
 
-        [Fact]
-        public void Edit_UsedEmail_Error()
-        {
-            AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
-            account.Email = otherModel.Email.ToUpper();
+        controller.ModelState.IsSingle<AccountView>(nameof(AccountEditView.Username), "UniqueUsername");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Returns(controller.Edit, account);
+    [Fact]
+    public void Edit_UsedEmail_Error()
+    {
+        AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
+        account.Email = otherModel.Email.ToUpper();
 
-            controller.ModelState.IsSingle<AccountView>(nameof(AccountEditView.Email), "UniqueEmail");
-            Assert.Empty(controller.Alerts);
-        }
+        controller.Returns(controller.Edit, account);
 
-        [Fact]
-        public void Edit_Account()
-        {
-            AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
-            account.IsLocked = model.IsLocked = !model.IsLocked;
-            account.Username = $"{model.Username}Test";
-            account.RoleId = model.RoleId = null;
-            account.Email = $"{model.Email}Test";
+        controller.ModelState.IsSingle<AccountView>(nameof(AccountEditView.Email), "UniqueEmail");
+        Assert.Empty(controller.Alerts);
+    }
 
-            controller.Edit(account);
+    [Fact]
+    public void Edit_Account()
+    {
+        AccountEditView account = ObjectsFactory.CreateAccountEditView(model.Id);
+        account.IsLocked = model.IsLocked = !model.IsLocked;
+        account.Username = $"{model.Username}Test";
+        account.RoleId = model.RoleId = null;
+        account.Email = $"{model.Email}Test";
 
-            Account actual = context.Db<Account>().Single(account => account.Id == model.Id);
+        controller.Edit(account);
 
-            Assert.Equal(model.RecoveryTokenExpiration, actual.RecoveryTokenExpiration);
-            Assert.Equal(model.RecoveryToken, actual.RecoveryToken);
-            Assert.Equal(model.CreationDate, actual.CreationDate);
-            Assert.Equal(model.IsLocked, actual.IsLocked);
-            Assert.Equal(model.Passhash, actual.Passhash);
-            Assert.Equal(model.Username, actual.Username);
-            Assert.Equal(model.RoleId, actual.RoleId);
-            Assert.Equal(model.Email, actual.Email);
-            Assert.Equal(model.Id, actual.Id);
-        }
+        Account actual = context.Db<Account>().Single(account => account.Id == model.Id);
 
-        [Fact]
-        public void Edit_Authorization_Refresh()
-        {
-            controller.Edit(ObjectsFactory.CreateAccountEditView(model.Id));
+        Assert.Equal(model.RecoveryTokenExpiration, actual.RecoveryTokenExpiration);
+        Assert.Equal(model.RecoveryToken, actual.RecoveryToken);
+        Assert.Equal(model.CreationDate, actual.CreationDate);
+        Assert.Equal(model.IsLocked, actual.IsLocked);
+        Assert.Equal(model.Passhash, actual.Passhash);
+        Assert.Equal(model.Username, actual.Username);
+        Assert.Equal(model.RoleId, actual.RoleId);
+        Assert.Equal(model.Email, actual.Email);
+        Assert.Equal(model.Id, actual.Id);
+    }
 
-            controller.Authorization.Received().Refresh(controller.HttpContext.RequestServices);
-        }
+    [Fact]
+    public void Edit_Authorization_Refresh()
+    {
+        controller.Edit(ObjectsFactory.CreateAccountEditView(model.Id));
 
-        [Fact]
-        public void Edit_Success_Redirect()
-        {
-            Object expected = controller.StaticRedirectTo(nameof(Accounts.Index));
-            Object actual = controller.Edit(ObjectsFactory.CreateAccountEditView(model.Id));
+        controller.Authorization.Received().Refresh(controller.HttpContext.RequestServices);
+    }
 
-            Assert.Empty(controller.ModelState);
-            Assert.Empty(controller.Alerts);
-            Assert.Same(expected, actual);
-        }
+    [Fact]
+    public void Edit_Success_Redirect()
+    {
+        Object expected = controller.StaticRedirectTo(nameof(Accounts.Index));
+        Object actual = controller.Edit(ObjectsFactory.CreateAccountEditView(model.Id));
+
+        Assert.Empty(controller.ModelState);
+        Assert.Empty(controller.Alerts);
+        Assert.Same(expected, actual);
     }
 }

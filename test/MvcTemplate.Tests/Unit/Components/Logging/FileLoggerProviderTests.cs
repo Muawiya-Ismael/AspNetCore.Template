@@ -1,15 +1,12 @@
-using Xunit;
+namespace MvcTemplate.Components.Logging;
 
-namespace MvcTemplate.Components.Logging
+public class FileLoggerProviderTests
 {
-    public class FileLoggerProviderTests
+    [Fact]
+    public void Create_SameInstance()
     {
-        [Fact]
-        public void Create_SameInstance()
-        {
-            using FileLoggerProvider provider = new("log.txt", 10);
+        using FileLoggerProvider provider = new("log.txt", 10);
 
-            Assert.Same(provider.CreateLogger("1"), provider.CreateLogger("2"));
-        }
+        Assert.Same(provider.CreateLogger("1"), provider.CreateLogger("2"));
     }
 }

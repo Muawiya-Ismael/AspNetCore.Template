@@ -1,7 +1,6 @@
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+public enum Area
 {
-    public enum Area
-    {
-        Administration
-    }
+    Administration
 }

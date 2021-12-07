@@ -1,10 +1,9 @@
-namespace MvcTemplate.Components.Notifications
+namespace MvcTemplate.Components.Notifications;
+
+public enum AlertType
 {
-    public enum AlertType
-    {
-        Danger,
-        Warning,
-        Info,
-        Success
-    }
+    Danger,
+    Warning,
+    Info,
+    Success
 }

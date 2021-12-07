@@ -2,48 +2,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class EmailAddressAdapterTests
 {
-    public class EmailAddressAdapterTests
+    private EmailAddressAdapter adapter;
+    private ClientModelValidationContext context;
+    private Dictionary<String, String> attributes;
+
+    public EmailAddressAdapterTests()
     {
-        private EmailAddressAdapter adapter;
-        private ClientModelValidationContext context;
-        private Dictionary<String, String> attributes;
+        attributes = new Dictionary<String, String>();
+        adapter = new EmailAddressAdapter(new EmailAddressAttribute());
+        IModelMetadataProvider provider = new EmptyModelMetadataProvider();
+        ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.StringField));
 
-        public EmailAddressAdapterTests()
-        {
-            attributes = new Dictionary<String, String>();
-            adapter = new EmailAddressAdapter(new EmailAddressAttribute());
-            IModelMetadataProvider provider = new EmptyModelMetadataProvider();
-            ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.StringField));
+        context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
+    }
 
-            context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
-        }
+    [Fact]
+    public void AddValidation_Email()
+    {
+        adapter.AddValidation(context);
 
-        [Fact]
-        public void AddValidation_Email()
-        {
-            adapter.AddValidation(context);
+        KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-email", Validation.For("EmailAddress", context.ModelMetadata.PropertyName));
+        KeyValuePair<String, String> actual = attributes.Single();
 
-            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-email", Validation.For("EmailAddress", context.ModelMetadata.PropertyName));
-            KeyValuePair<String, String> actual = attributes.Single();
+        Assert.Equal(expected, actual);
+    }
 
-            Assert.Equal(expected, actual);
-        }
+    [Fact]
+    public void GetErrorMessage_Email()
+    {
+        String expected = Validation.For("EmailAddress", context.ModelMetadata.PropertyName);
+        String actual = adapter.GetErrorMessage(context);
 
-        [Fact]
-        public void GetErrorMessage_Email()
-        {
-            String expected = Validation.For("EmailAddress", context.ModelMetadata.PropertyName);
-            String actual = adapter.GetErrorMessage(context);
-
-            Assert.Equal(expected, actual);
-        }
+        Assert.Equal(expected, actual);
     }
 }

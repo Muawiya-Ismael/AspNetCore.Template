@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public interface ISiteMap
 {
-    public interface ISiteMap
-    {
-        SiteMapNode[] For(ViewContext context);
-        SiteMapNode[] BreadcrumbFor(ViewContext context);
-    }
+    SiteMapNode[] For(ViewContext context);
+    SiteMapNode[] BreadcrumbFor(ViewContext context);
 }

@@ -1,16 +1,13 @@
-using Xunit;
+namespace MvcTemplate.Components.Tree;
 
-namespace MvcTemplate.Components.Tree
+public class MvcTreeTests
 {
-    public class MvcTreeTests
+    [Fact]
+    public void MvcTree_CreatesEmpty()
     {
-        [Fact]
-        public void MvcTree_CreatesEmpty()
-        {
-            MvcTree actual = new();
+        MvcTree actual = new();
 
-            Assert.Empty(actual.Nodes);
-            Assert.Empty(actual.SelectedIds);
-        }
+        Assert.Empty(actual.Nodes);
+        Assert.Empty(actual.SelectedIds);
     }
 }

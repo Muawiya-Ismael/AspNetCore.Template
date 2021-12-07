@@ -1,12 +1,8 @@
 @model ModuleModel
-using System;
-using System.ComponentModel.DataAnnotations;
+namespace MvcTemplate.Objects;
 
-namespace MvcTemplate.Objects
+public class @Model.Model : AModel
 {
-    public class @Model.Model : AModel
-    {
-        [StringLength(128)]
-        public String Title { get; set; }
-    }
+    [StringLength(128)]
+    public String Title { get; set; }
 }

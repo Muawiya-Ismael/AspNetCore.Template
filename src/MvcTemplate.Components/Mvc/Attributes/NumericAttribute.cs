@@ -1,51 +1,47 @@
 using MvcTemplate.Resources;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data.SqlTypes;
-using System.Globalization;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class NumericAttribute : ValidationAttribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class NumericAttribute : ValidationAttribute
+    public Int32 Scale { get; }
+    public Int32 Precision { get; }
+
+    public NumericAttribute(Int32 precision, Int32 scale)
+        : base(() => Validation.For("Numeric"))
     {
-        public Int32 Scale { get; }
-        public Int32 Precision { get; }
+        Precision = precision;
+        Scale = scale;
+    }
 
-        public NumericAttribute(Int32 precision, Int32 scale)
-            : base(() => Validation.For("Numeric"))
+    public override String FormatErrorMessage(String name)
+    {
+        return String.Format(ErrorMessageString, name, Precision - Scale, Scale);
+    }
+    public override Boolean IsValid(Object? value)
+    {
+        if (value == null)
+            return true;
+
+        try
         {
-            Precision = precision;
-            Scale = scale;
-        }
+            SqlDecimal number = new(Trim(Convert.ToDecimal(value)));
 
-        public override String FormatErrorMessage(String name)
+            return number.Precision - number.Scale <= Precision - Scale && number.Scale <= Scale;
+        }
+        catch
         {
-            return String.Format(ErrorMessageString, name, Precision - Scale, Scale);
+            return false;
         }
-        public override Boolean IsValid(Object? value)
-        {
-            if (value == null)
-                return true;
+    }
 
-            try
-            {
-                SqlDecimal number = new(Trim(Convert.ToDecimal(value)));
+    private Decimal Trim(Decimal value)
+    {
+        String trimmed = Convert.ToDecimal(value).ToString(CultureInfo.InvariantCulture);
+        trimmed = trimmed.Contains('.') ? trimmed.TrimEnd('0') : trimmed;
 
-                return number.Precision - number.Scale <= Precision - Scale && number.Scale <= Scale;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private Decimal Trim(Decimal value)
-        {
-            String trimmed = Convert.ToDecimal(value).ToString(CultureInfo.InvariantCulture);
-            trimmed = trimmed.Contains('.') ? trimmed.TrimEnd('0') : trimmed;
-
-            return Convert.ToDecimal(trimmed, CultureInfo.InvariantCulture);
-        }
+        return Convert.ToDecimal(trimmed, CultureInfo.InvariantCulture);
     }
 }

@@ -1,17 +1,15 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NonFactors.Mvc.Lookup;
-using System;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class TrimmingModelBinderProvider : IModelBinderProvider
 {
-    public class TrimmingModelBinderProvider : IModelBinderProvider
+    public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        public IModelBinder? GetBinder(ModelBinderProviderContext context)
-        {
-            if (context.Metadata.ModelType != typeof(String) || context.Metadata.ContainerType == typeof(LookupFilter))
-                return null;
+        if (context.Metadata.ModelType != typeof(String) || context.Metadata.ContainerType == typeof(LookupFilter))
+            return null;
 
-            return new TrimmingModelBinder();
-        }
+        return new TrimmingModelBinder();
     }
 }

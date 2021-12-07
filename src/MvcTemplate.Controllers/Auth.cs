@@ -5,113 +5,110 @@ using MvcTemplate.Objects;
 using MvcTemplate.Resources;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
-using System;
-using System.Threading.Tasks;
 
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+[AllowAnonymous]
+public class Auth : ValidatedController<AccountValidator, AccountService>
 {
-    [AllowAnonymous]
-    public class Auth : ValidatedController<AccountValidator, AccountService>
+    private IMailClient MailClient { get; }
+
+    public Auth(AccountValidator validator, AccountService service, IMailClient mailClient)
+        : base(validator, service)
     {
-        private IMailClient MailClient { get; }
+        MailClient = mailClient;
+    }
 
-        public Auth(AccountValidator validator, AccountService service, IMailClient mailClient)
-            : base(validator, service)
+    [HttpGet]
+    public ActionResult Recover()
+    {
+        if (Service.IsLoggedIn(User))
+            return RedirectToAction(nameof(Home.Index), nameof(Home));
+
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Recover(AccountRecoveryView account)
+    {
+        if (Service.IsLoggedIn(User))
+            return RedirectToAction(nameof(Home.Index), nameof(Home));
+
+        if (!Validator.CanRecover(account))
+            return View(account);
+
+        if (Service.Recover(account) is String token)
         {
-            MailClient = mailClient;
+            String? url = Url.Action(nameof(Reset), nameof(Auth), new { token }, Request.Scheme);
+
+            await MailClient.SendAsync(account.Email,
+                Message.For<AccountView>("RecoveryEmailSubject"),
+                Message.For<AccountView>("RecoveryEmailBody", url));
         }
 
-        [HttpGet]
-        public ActionResult Recover()
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToAction(nameof(Home.Index), nameof(Home));
+        Alerts.AddInfo(Message.For<AccountView>("RecoveryInformation"));
 
-            return View();
-        }
+        return RedirectToAction(nameof(Login));
+    }
 
-        [HttpPost]
-        public async Task<ActionResult> Recover(AccountRecoveryView account)
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToAction(nameof(Home.Index), nameof(Home));
+    [HttpGet]
+    public ActionResult Reset(String? token)
+    {
+        if (Service.IsLoggedIn(User))
+            return RedirectToAction(nameof(Home.Index), nameof(Home));
 
-            if (!Validator.CanRecover(account))
-                return View(account);
+        if (!Validator.CanReset(new AccountResetView { Token = token }))
+            return RedirectToAction(nameof(Recover));
 
-            if (Service.Recover(account) is String token)
-            {
-                String url = Url.Action(nameof(Reset), nameof(Auth), new { token }, Request.Scheme);
+        return View();
+    }
 
-                await MailClient.SendAsync(account.Email,
-                    Message.For<AccountView>("RecoveryEmailSubject"),
-                    Message.For<AccountView>("RecoveryEmailBody", url));
-            }
+    [HttpPost]
+    public ActionResult Reset(AccountResetView account)
+    {
+        if (Service.IsLoggedIn(User))
+            return RedirectToAction(nameof(Home.Index), nameof(Home));
 
-            Alerts.AddInfo(Message.For<AccountView>("RecoveryInformation"));
+        if (!Validator.CanReset(account))
+            return RedirectToAction(nameof(Recover));
 
-            return RedirectToAction(nameof(Login));
-        }
+        Service.Reset(account);
 
-        [HttpGet]
-        public ActionResult Reset(String? token)
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToAction(nameof(Home.Index), nameof(Home));
+        Alerts.AddSuccess(Message.For<AccountView>("SuccessfulReset"), 4000);
 
-            if (!Validator.CanReset(new AccountResetView { Token = token }))
-                return RedirectToAction(nameof(Recover));
+        return RedirectToAction(nameof(Login));
+    }
 
-            return View();
-        }
+    [HttpGet]
+    public ActionResult Login(String? returnUrl)
+    {
+        if (Service.IsLoggedIn(User))
+            return RedirectToLocal(returnUrl);
 
-        [HttpPost]
-        public ActionResult Reset(AccountResetView account)
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToAction(nameof(Home.Index), nameof(Home));
+        return View();
+    }
 
-            if (!Validator.CanReset(account))
-                return RedirectToAction(nameof(Recover));
-
-            Service.Reset(account);
-
-            Alerts.AddSuccess(Message.For<AccountView>("SuccessfulReset"), 4000);
-
-            return RedirectToAction(nameof(Login));
-        }
-
-        [HttpGet]
-        public ActionResult Login(String? returnUrl)
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToLocal(returnUrl);
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Login(AccountLoginView account)
-        {
-            if (Service.IsLoggedIn(User))
-                return RedirectToLocal(account.ReturnUrl);
-
-            if (!Validator.CanLogin(account))
-                return View(account);
-
-            await Service.Login(HttpContext, account.Username);
-
+    [HttpPost]
+    public async Task<ActionResult> Login(AccountLoginView account)
+    {
+        if (Service.IsLoggedIn(User))
             return RedirectToLocal(account.ReturnUrl);
-        }
 
-        [HttpGet]
-        public async Task<RedirectToActionResult> Logout()
-        {
-            await Service.Logout(HttpContext);
+        if (!Validator.CanLogin(account))
+            return View(account);
 
-            Response.Headers["Clear-Site-Data"] = @"""cookies"", ""storage"", ""executionContexts""";
+        await Service.Login(HttpContext, account.Username);
 
-            return RedirectToAction(nameof(Login));
-        }
+        return RedirectToLocal(account.ReturnUrl);
+    }
+
+    [HttpGet]
+    public async Task<RedirectToActionResult> Logout()
+    {
+        await Service.Logout(HttpContext);
+
+        Response.Headers["Clear-Site-Data"] = @"""cookies"", ""storage"", ""executionContexts""";
+
+        return RedirectToAction(nameof(Login));
     }
 }

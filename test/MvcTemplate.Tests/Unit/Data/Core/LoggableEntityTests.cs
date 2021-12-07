@@ -2,129 +2,125 @@ using Castle.DynamicProxy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MvcTemplate.Objects;
-using System;
-using System.Linq;
-using Xunit;
 
-namespace MvcTemplate.Data
+namespace MvcTemplate.Data;
+
+public class LoggableEntityTests : IDisposable
 {
-    public class LoggableEntityTests : IDisposable
+    private Role model;
+    private DbContext context;
+    private EntityEntry<AModel> entry;
+
+    public LoggableEntityTests()
     {
-        private Role model;
-        private DbContext context;
-        private EntityEntry<AModel> entry;
-
-        public LoggableEntityTests()
+        using (context = TestingContext.Create())
         {
-            using (context = TestingContext.Create())
-            {
-                context.Drop().Add(model = ObjectsFactory.CreateRole(0));
-                context.SaveChanges();
-            }
-
-            context = TestingContext.Create();
-            entry = context.Entry<AModel>(model);
-        }
-        public void Dispose()
-        {
-            context.Dispose();
+            context.Drop().Add(model = ObjectsFactory.CreateRole(0));
+            context.SaveChanges();
         }
 
-        [Fact]
-        public void LoggableEntity_SetsAction()
-        {
-            entry.State = EntityState.Deleted;
+        context = TestingContext.Create();
+        entry = context.Entry<AModel>(model);
+    }
+    public void Dispose()
+    {
+        context.Dispose();
+    }
 
-            Assert.Equal(nameof(EntityState.Deleted), new LoggableEntity(entry).Action);
-        }
+    [Fact]
+    public void LoggableEntity_SetsAction()
+    {
+        entry.State = EntityState.Deleted;
 
-        [Fact]
-        public void LoggableEntity_SetsName()
-        {
-            Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
-        }
+        Assert.Equal(nameof(EntityState.Deleted), new LoggableEntity(entry).Action);
+    }
 
-        [Fact]
-        public void LoggableEntity_Proxy_SetsName()
-        {
-            model = context.Set<Role>().Single();
-            entry = context.ChangeTracker.Entries<AModel>().Single();
+    [Fact]
+    public void LoggableEntity_SetsName()
+    {
+        Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
+    }
 
-            Assert.IsAssignableFrom<IProxyTargetAccessor>(model);
-            Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
-        }
+    [Fact]
+    public void LoggableEntity_Proxy_SetsName()
+    {
+        model = context.Set<Role>().Single();
+        entry = context.ChangeTracker.Entries<AModel>().Single();
 
-        [Fact]
-        public void LoggableEntity_SetsId()
-        {
-            Assert.Equal(model.Id, new LoggableEntity(entry).Id());
-        }
+        Assert.IsAssignableFrom<IProxyTargetAccessor>(model);
+        Assert.Equal(nameof(Role), new LoggableEntity(entry).Name);
+    }
 
-        [Fact]
-        public void LoggableEntity_Added_SetsIsModified()
-        {
-            entry.State = EntityState.Added;
+    [Fact]
+    public void LoggableEntity_SetsId()
+    {
+        Assert.Equal(model.Id, new LoggableEntity(entry).Id());
+    }
 
-            Assert.True(new LoggableEntity(entry).IsModified);
-        }
+    [Fact]
+    public void LoggableEntity_Added_SetsIsModified()
+    {
+        entry.State = EntityState.Added;
 
-        [Fact]
-        public void LoggableEntity_Modified_SetsIsModified()
-        {
-            model.Title += "Test";
-            entry.State = EntityState.Modified;
+        Assert.True(new LoggableEntity(entry).IsModified);
+    }
 
-            Assert.True(new LoggableEntity(entry).IsModified);
-        }
+    [Fact]
+    public void LoggableEntity_Modified_SetsIsModified()
+    {
+        model.Title += "Test";
+        entry.State = EntityState.Modified;
 
-        [Fact]
-        public void LoggableEntity_NotModified_SetsIsModified()
-        {
-            entry.State = EntityState.Modified;
+        Assert.True(new LoggableEntity(entry).IsModified);
+    }
 
-            Assert.False(new LoggableEntity(entry).IsModified);
-        }
+    [Fact]
+    public void LoggableEntity_NotModified_SetsIsModified()
+    {
+        entry.State = EntityState.Modified;
 
-        [Fact]
-        public void LoggableEntity_Deleted_SetsIsModified()
-        {
-            entry.State = EntityState.Deleted;
+        Assert.False(new LoggableEntity(entry).IsModified);
+    }
 
-            Assert.True(new LoggableEntity(entry).IsModified);
-        }
+    [Fact]
+    public void LoggableEntity_Deleted_SetsIsModified()
+    {
+        entry.State = EntityState.Deleted;
 
-        [Fact]
-        public void ToString_Added_Changes()
-        {
-            entry.State = EntityState.Added;
+        Assert.True(new LoggableEntity(entry).IsModified);
+    }
 
-            String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
-            String actual = new LoggableEntity(entry).ToString();
+    [Fact]
+    public void ToString_Added_Changes()
+    {
+        entry.State = EntityState.Added;
 
-            Assert.Equal(expected, actual);
-        }
+        String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
+        String actual = new LoggableEntity(entry).ToString();
 
-        [Fact]
-        public void ToString_Modified_Changes()
-        {
-            model.Title += "Test";
-            entry.State = EntityState.Modified;
+        Assert.Equal(expected, actual);
+    }
 
-            String expected = $"Title: \"{model.Title[..^4]}\" => \"{model.Title}\"\n";
-            String actual = new LoggableEntity(entry).ToString();
+    [Fact]
+    public void ToString_Modified_Changes()
+    {
+        model.Title += "Test";
+        entry.State = EntityState.Modified;
 
-            Assert.Equal(expected, actual);
-        }
+        String expected = $"Title: \"{model.Title[..^4]}\" => \"{model.Title}\"\n";
+        String actual = new LoggableEntity(entry).ToString();
 
-        [Fact]
-        public void ToString_Deleted_Changes()
-        {
-            entry.State = EntityState.Deleted;
+        Assert.Equal(expected, actual);
+    }
 
-            String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
-            String actual = new LoggableEntity(entry).ToString();
+    [Fact]
+    public void ToString_Deleted_Changes()
+    {
+        entry.State = EntityState.Deleted;
 
-            Assert.Equal(expected, actual);
-        }
+        String expected = $"CreationDate: \"{model.CreationDate}\"\nTitle: \"{model.Title}\"\n";
+        String actual = new LoggableEntity(entry).ToString();
+
+        Assert.Equal(expected, actual);
     }
 }

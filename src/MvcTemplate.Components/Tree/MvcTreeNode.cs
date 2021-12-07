@@ -1,23 +1,19 @@
-using System;
-using System.Collections.Generic;
+namespace MvcTemplate.Components.Tree;
 
-namespace MvcTemplate.Components.Tree
+public class MvcTreeNode
 {
-    public class MvcTreeNode
-    {
-        public Int64? Id { get; set; }
-        public String Title { get; set; }
-        public List<MvcTreeNode> Children { get; set; }
+    public Int64? Id { get; set; }
+    public String Title { get; set; }
+    public List<MvcTreeNode> Children { get; set; }
 
-        public MvcTreeNode(Int64 id, String title)
-            : this(title)
-        {
-            Id = id;
-        }
-        public MvcTreeNode(String title)
-        {
-            Title = title;
-            Children = new List<MvcTreeNode>();
-        }
+    public MvcTreeNode(Int64 id, String title)
+        : this(title)
+    {
+        Id = id;
+    }
+    public MvcTreeNode(String title)
+    {
+        Title = title;
+        Children = new List<MvcTreeNode>();
     }
 }

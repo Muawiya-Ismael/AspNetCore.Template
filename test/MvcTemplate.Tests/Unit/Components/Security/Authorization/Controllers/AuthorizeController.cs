@@ -1,38 +1,36 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcTemplate.Components.Security
+namespace MvcTemplate.Components.Security;
+
+[Authorize]
+[ExcludeFromCodeCoverage]
+public class AuthorizeController : Controller
 {
-    [Authorize]
-    [ExcludeFromCodeCoverage]
-    public class AuthorizeController : Controller
+    [HttpGet]
+    public ViewResult Action()
     {
-        [HttpGet]
-        public ViewResult Action()
-        {
-            return View();
-        }
+        return View();
+    }
 
-        [HttpPost]
-        public ViewResult Action(Object obj)
-        {
-            return View(obj);
-        }
+    [HttpPost]
+    public ViewResult Action(Object obj)
+    {
+        return View(obj);
+    }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public ViewResult AllowAnonymousAction()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AllowAnonymous]
+    public ViewResult AllowAnonymousAction()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        [AllowUnauthorized]
-        public ViewResult AllowUnauthorizedAction()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AllowUnauthorized]
+    public ViewResult AllowUnauthorizedAction()
+    {
+        return View();
     }
 }

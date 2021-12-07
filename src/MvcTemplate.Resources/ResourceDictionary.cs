@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Concurrent;
+namespace MvcTemplate.Resources;
 
-namespace MvcTemplate.Resources
+internal class ResourceDictionary : ConcurrentDictionary<String, String?>
 {
-    internal class ResourceDictionary : ConcurrentDictionary<String, String?>
+    public ResourceDictionary()
+        : base(StringComparer.OrdinalIgnoreCase)
     {
-        public ResourceDictionary()
-            : base(StringComparer.OrdinalIgnoreCase)
-        {
-        }
     }
 }

@@ -2,45 +2,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class GreaterThanAdapterTests
 {
-    public class GreaterThanAdapterTests
+    private GreaterThanAdapter adapter;
+    private ClientModelValidationContext context;
+    private Dictionary<String, String> attributes;
+
+    public GreaterThanAdapterTests()
     {
-        private GreaterThanAdapter adapter;
-        private ClientModelValidationContext context;
-        private Dictionary<String, String> attributes;
+        attributes = new Dictionary<String, String>();
+        adapter = new GreaterThanAdapter(new GreaterThanAttribute(128));
+        IModelMetadataProvider provider = new EmptyModelMetadataProvider();
+        ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.Int32Field));
 
-        public GreaterThanAdapterTests()
-        {
-            attributes = new Dictionary<String, String>();
-            adapter = new GreaterThanAdapter(new GreaterThanAttribute(128));
-            IModelMetadataProvider provider = new EmptyModelMetadataProvider();
-            ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.Int32Field));
+        context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
+    }
 
-            context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
-        }
+    [Fact]
+    public void AddValidation_GreaterThan()
+    {
+        adapter.AddValidation(context);
 
-        [Fact]
-        public void AddValidation_GreaterThan()
-        {
-            adapter.AddValidation(context);
+        Assert.Equal(2, attributes.Count);
+        Assert.Equal("128", attributes["data-val-greater-than"]);
+        Assert.Equal(Validation.For("GreaterThan", context.ModelMetadata.PropertyName, 128), attributes["data-val-greater"]);
+    }
 
-            Assert.Equal(2, attributes.Count);
-            Assert.Equal("128", attributes["data-val-greater-than"]);
-            Assert.Equal(Validation.For("GreaterThan", context.ModelMetadata.PropertyName, 128), attributes["data-val-greater"]);
-        }
+    [Fact]
+    public void GetErrorMessage_GreaterThan()
+    {
+        String expected = Validation.For("GreaterThan", context.ModelMetadata.PropertyName, 128);
+        String actual = adapter.GetErrorMessage(context);
 
-        [Fact]
-        public void GetErrorMessage_GreaterThan()
-        {
-            String expected = Validation.For("GreaterThan", context.ModelMetadata.PropertyName, 128);
-            String actual = adapter.GetErrorMessage(context);
-
-            Assert.Equal(expected, actual);
-        }
+        Assert.Equal(expected, actual);
     }
 }

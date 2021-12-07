@@ -1,34 +1,31 @@
 using MvcTemplate.Resources;
-using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class MinValueAttribute : ValidationAttribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class MinValueAttribute : ValidationAttribute
+    public Decimal Minimum { get; }
+
+    public MinValueAttribute(Double minimum)
+        : base(() => Validation.For("MinValue"))
     {
-        public Decimal Minimum { get; }
+        Minimum = Convert.ToDecimal(minimum);
+    }
 
-        public MinValueAttribute(Double minimum)
-            : base(() => Validation.For("MinValue"))
+    public override String FormatErrorMessage(String name)
+    {
+        return String.Format(ErrorMessageString, name, Minimum);
+    }
+    public override Boolean IsValid(Object? value)
+    {
+        try
         {
-            Minimum = Convert.ToDecimal(minimum);
+            return value == null || Minimum <= Convert.ToDecimal(value);
         }
-
-        public override String FormatErrorMessage(String name)
+        catch
         {
-            return String.Format(ErrorMessageString, name, Minimum);
-        }
-        public override Boolean IsValid(Object? value)
-        {
-            try
-            {
-                return value == null || Minimum <= Convert.ToDecimal(value);
-            }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

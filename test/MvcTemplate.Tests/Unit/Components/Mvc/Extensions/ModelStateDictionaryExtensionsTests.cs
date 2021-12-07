@@ -1,36 +1,32 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class ModelStateDictionaryExtensionsTests
 {
-    public class ModelStateDictionaryExtensionsTests
+    [Fact]
+    public void Errors_FromModelState()
     {
-        [Fact]
-        public void Errors_FromModelState()
-        {
-            ModelStateDictionary modelState = new();
-            modelState.AddModelError("InnerParent.PropertyTitle", "Error");
-            modelState.AddModelError("WhitespaceErrors", "           ");
-            modelState.AddModelError("WhitespaceErrors", "Whitespace");
-            modelState.AddModelError("TwoErrors", "Error1");
-            modelState.AddModelError("TwoErrors", "Error2");
-            modelState.SetModelValue("Normal", "1", "1");
-            modelState.AddModelError("EmptyErrors", "E");
-            modelState.AddModelError("EmptyErrors", "");
-            modelState.AddModelError("Error", "Error");
-            modelState.AddModelError("Empty", "");
+        ModelStateDictionary modelState = new();
+        modelState.AddModelError("InnerParent.PropertyTitle", "Error");
+        modelState.AddModelError("WhitespaceErrors", "           ");
+        modelState.AddModelError("WhitespaceErrors", "Whitespace");
+        modelState.AddModelError("TwoErrors", "Error1");
+        modelState.AddModelError("TwoErrors", "Error2");
+        modelState.SetModelValue("Normal", "1", "1");
+        modelState.AddModelError("EmptyErrors", "E");
+        modelState.AddModelError("EmptyErrors", "");
+        modelState.AddModelError("Error", "Error");
+        modelState.AddModelError("Empty", "");
 
-            Dictionary<String, String?> actual = modelState.Errors();
+        Dictionary<String, String?> actual = modelState.Errors();
 
-            Assert.Equal("Error", actual["InnerParent.PropertyTitle"]);
-            Assert.Equal("           ", actual["WhitespaceErrors"]);
-            Assert.Equal("Error1", actual["TwoErrors"]);
-            Assert.Equal("E", actual["EmptyErrors"]);
-            Assert.Equal("Error", actual["Error"]);
-            Assert.Equal(6, actual.Count);
-            Assert.Null(actual["Empty"]);
-        }
+        Assert.Equal("Error", actual["InnerParent.PropertyTitle"]);
+        Assert.Equal("           ", actual["WhitespaceErrors"]);
+        Assert.Equal("Error1", actual["TwoErrors"]);
+        Assert.Equal("E", actual["EmptyErrors"]);
+        Assert.Equal("Error", actual["Error"]);
+        Assert.Equal(6, actual.Count);
+        Assert.Null(actual["Empty"]);
     }
 }

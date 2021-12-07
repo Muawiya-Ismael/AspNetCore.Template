@@ -3,10 +3,14 @@
   <PropertyGroup>
     <Version>0.0.0</Version>
     <Nullable>annotations</Nullable>
-    <TargetFramework>net5.0</TargetFramework>
-    <GenerateFullPaths>true</GenerateFullPaths>
+    <Deterministic>true</Deterministic>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net6.0</TargetFramework>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +18,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvcTemplate.Components\MvcTemplate.Components.csproj" />
+    <ProjectReference Include="../MvcTemplate.Components/MvcTemplate.Components.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Xml.Linq" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Reflection" />
+    <Using Include="System.Globalization" />
+    <Using Include="System.Linq.Expressions" />
+    <Using Include="System.Collections.Concurrent" />
+    <Using Include="System.Text.RegularExpressions" />
+    <Using Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <SourceRoot Remove="$(NugetPackageRoot)" />
+    <SourceRoot Include="$(ProjectDir)" />
   </ItemGroup>
 
 </Project>

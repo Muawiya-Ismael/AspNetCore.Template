@@ -1,45 +1,42 @@
 using MvcTemplate.Resources;
-using System;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class DigitsAttributeTests
 {
-    public class DigitsAttributeTests
+    private DigitsAttribute attribute;
+
+    public DigitsAttributeTests()
     {
-        private DigitsAttribute attribute;
+        attribute = new DigitsAttribute();
+    }
 
-        public DigitsAttributeTests()
-        {
-            attribute = new DigitsAttribute();
-        }
+    [Fact]
+    public void DigitsAttribute_SetsErrorMessage()
+    {
+        attribute = new DigitsAttribute();
 
-        [Fact]
-        public void DigitsAttribute_SetsErrorMessage()
-        {
-            attribute = new DigitsAttribute();
+        Assert.Equal(Validation.For("Digits", "Test"), attribute.FormatErrorMessage("Test"));
+    }
 
-            Assert.Equal(Validation.For("Digits", "Test"), attribute.FormatErrorMessage("Test"));
-        }
+    [Fact]
+    public void IsValid_Null()
+    {
+        Assert.True(attribute.IsValid(null));
+    }
 
-        [Fact]
-        public void IsValid_Null()
-        {
-            Assert.True(attribute.IsValid(null));
-        }
+    [Theory]
+    [InlineData(12.549)]
+    [InlineData("+1402")]
+    [InlineData(-2546798)]
+    public void IsValid_NotDigits_ReturnsFalse(Object value)
+    {
+        Assert.False(attribute.IsValid(value));
+    }
 
-        [Theory]
-        [InlineData(12.549)]
-        [InlineData("+1402")]
-        [InlineData(-2546798)]
-        public void IsValid_NotDigits_ReturnsFalse(Object value)
-        {
-            Assert.False(attribute.IsValid(value));
-        }
-
-        [Fact]
-        public void IsValid_Digits()
-        {
-            Assert.True(attribute.IsValid("92233720368547758074878484887777"));
-        }
+    [Fact]
+    public void IsValid_Digits()
+    {
+        Assert.True(attribute.IsValid("92233720368547758074878484887777"));
     }
 }

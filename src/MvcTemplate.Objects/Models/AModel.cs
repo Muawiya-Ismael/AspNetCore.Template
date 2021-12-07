@@ -1,41 +1,37 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+namespace MvcTemplate.Objects;
 
-namespace MvcTemplate.Objects
+public abstract class AModel
 {
-    public abstract class AModel
+    [Key]
+    public virtual Int64 Id
     {
-        [Key]
-        public virtual Int64 Id
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        public virtual DateTime CreationDate
+    public virtual DateTime CreationDate
+    {
+        get
         {
-            get
-            {
-                if (!IsCreationDateSet)
-                    CreationDate = DateTime.Now;
+            if (!IsCreationDateSet)
+                CreationDate = DateTime.Now;
 
-                return InternalCreationDate;
-            }
-            protected set
-            {
-                IsCreationDateSet = true;
-                InternalCreationDate = value;
-            }
+            return InternalCreationDate;
         }
-        private Boolean IsCreationDateSet
+        protected set
         {
-            get;
-            set;
+            IsCreationDateSet = true;
+            InternalCreationDate = value;
         }
-        private DateTime InternalCreationDate
-        {
-            get;
-            set;
-        }
+    }
+    private Boolean IsCreationDateSet
+    {
+        get;
+        set;
+    }
+    private DateTime InternalCreationDate
+    {
+        get;
+        set;
     }
 }

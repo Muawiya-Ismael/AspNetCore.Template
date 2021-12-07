@@ -9,7 +9,7 @@
             </div>
         }
     }
-    @foreach (String message in ViewData.ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage))
+    @foreach (String message in ViewData.ModelState.SelectMany(state => state.Value!.Errors).Select(error => error.ErrorMessage))
     {
         <div class="alert alert-danger alert-dismissible fade show text-center">
             @message

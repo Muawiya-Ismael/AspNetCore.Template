@@ -1,17 +1,15 @@
 using MvcTemplate.Components.Tree;
-using Xunit;
 
-namespace MvcTemplate.Objects
+namespace MvcTemplate.Objects;
+
+public class RoleViewTests
 {
-    public class RoleViewTests
+    [Fact]
+    public void RoleView_CreatesEmpty()
     {
-        [Fact]
-        public void RoleView_CreatesEmpty()
-        {
-            MvcTree actual = new RoleView().Permissions;
+        MvcTree actual = new RoleView().Permissions;
 
-            Assert.Empty(actual.SelectedIds);
-            Assert.Empty(actual.Nodes);
-        }
+        Assert.Empty(actual.SelectedIds);
+        Assert.Empty(actual.Nodes);
     }
 }

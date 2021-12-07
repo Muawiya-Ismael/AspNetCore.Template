@@ -2,105 +2,101 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using MvcTemplate.Components.Tree;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[HtmlTargetElement("div", Attributes = "mvc-tree-for")]
+public class MvcTreeTagHelper : TagHelper
 {
-    [HtmlTargetElement("div", Attributes = "mvc-tree-for")]
-    public class MvcTreeTagHelper : TagHelper
+    [HtmlAttributeName("readonly")]
+    public Boolean Readonly { get; set; }
+
+    [HtmlAttributeName("hide-depth")]
+    public Int32? HideDepth { get; set; }
+
+    [HtmlAttributeName("mvc-tree-for")]
+    public ModelExpression? For { get; set; }
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        [HtmlAttributeName("readonly")]
-        public Boolean Readonly { get; set; }
+        String treeClasses = "mvc-tree";
+        MvcTree tree = For?.Model as MvcTree ?? new MvcTree();
 
-        [HtmlAttributeName("hide-depth")]
-        public Int32? HideDepth { get; set; }
+        if (Readonly)
+            treeClasses += " mvc-tree-readonly";
 
-        [HtmlAttributeName("mvc-tree-for")]
-        public ModelExpression? For { get; set; }
+        output.Content.AppendHtml(IdsFor(tree));
+        output.Content.AppendHtml(ViewFor(tree));
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        output.Attributes.SetAttribute("data-for", $"{For?.Name}.SelectedIds");
+        output.Attributes.SetAttribute("class", $"{treeClasses} {output.Attributes["class"]?.Value}".Trim());
+    }
+
+    private TagBuilder IdsFor(MvcTree model)
+    {
+        TagBuilder ids = new("div");
+        ids.AddCssClass("mvc-tree-ids");
+        String name = $"{For?.Name}.SelectedIds";
+
+        foreach (Int64 id in model.SelectedIds)
         {
-            String treeClasses = "mvc-tree";
-            MvcTree tree = For?.Model as MvcTree ?? new MvcTree();
+            TagBuilder input = new("input");
+            input.TagRenderMode = TagRenderMode.SelfClosing;
+            input.Attributes["value"] = id.ToString();
+            input.Attributes["type"] = "hidden";
+            input.Attributes["name"] = name;
 
-            if (Readonly)
-                treeClasses += " mvc-tree-readonly";
-
-            output.Content.AppendHtml(IdsFor(tree));
-            output.Content.AppendHtml(ViewFor(tree));
-
-            output.Attributes.SetAttribute("data-for", $"{For?.Name}.SelectedIds");
-            output.Attributes.SetAttribute("class", $"{treeClasses} {output.Attributes["class"]?.Value}".Trim());
+            ids.InnerHtml.AppendHtml(input);
         }
 
-        private TagBuilder IdsFor(MvcTree model)
+        return ids;
+    }
+    private TagBuilder ViewFor(MvcTree model)
+    {
+        TagBuilder view = new("ul");
+        view.AddCssClass("mvc-tree-view");
+
+        foreach (TagBuilder node in Build(model, model.Nodes, 1))
+            view.InnerHtml.AppendHtml(node);
+
+        return view;
+    }
+    private IEnumerable<TagBuilder> Build(MvcTree model, List<MvcTreeNode> nodes, Int32 depth)
+    {
+        return nodes.Select(node =>
         {
-            TagBuilder ids = new("div");
-            ids.AddCssClass("mvc-tree-ids");
-            String name = $"{For?.Name}.SelectedIds";
+            TagBuilder item = new("li");
+            item.InnerHtml.AppendHtml("<i></i> ");
 
-            foreach (Int64 id in model.SelectedIds)
+            if (node.Id is Int64 id)
             {
-                TagBuilder input = new("input");
-                input.TagRenderMode = TagRenderMode.SelfClosing;
-                input.Attributes["value"] = id.ToString();
-                input.Attributes["type"] = "hidden";
-                input.Attributes["name"] = name;
+                if (model.SelectedIds.Contains(id))
+                    item.AddCssClass("mvc-tree-checked");
 
-                ids.InnerHtml.AppendHtml(input);
+                item.Attributes["data-id"] = id.ToString();
             }
 
-            return ids;
-        }
-        private TagBuilder ViewFor(MvcTree model)
-        {
-            TagBuilder view = new("ul");
-            view.AddCssClass("mvc-tree-view");
+            TagBuilder anchor = new("a");
+            anchor.Attributes["href"] = "#";
+            anchor.InnerHtml.Append(node.Title);
 
-            foreach (TagBuilder node in Build(model, model.Nodes, 1))
-                view.InnerHtml.AppendHtml(node);
+            item.InnerHtml.AppendHtml(anchor);
 
-            return view;
-        }
-        private IEnumerable<TagBuilder> Build(MvcTree model, List<MvcTreeNode> nodes, Int32 depth)
-        {
-            return nodes.Select(node =>
+            if (node.Children.Count > 0)
             {
-                TagBuilder item = new("li");
-                item.InnerHtml.AppendHtml("<i></i>");
+                TagBuilder branch = new("ul");
+                item.AddCssClass("mvc-tree-branch");
 
-                if (node.Id is Int64 id)
-                {
-                    if (model.SelectedIds.Contains(id))
-                        item.AddCssClass("mvc-tree-checked");
+                if (HideDepth <= depth + 1)
+                    item.AddCssClass("mvc-tree-collapsed");
 
-                    item.Attributes["data-id"] = id.ToString();
-                }
+                foreach (TagBuilder leaf in Build(model, node.Children, depth + 1))
+                    branch.InnerHtml.AppendHtml(leaf);
 
-                TagBuilder anchor = new("a");
-                anchor.Attributes["href"] = "#";
-                anchor.InnerHtml.Append(node.Title);
+                item.InnerHtml.AppendHtml(branch);
+            }
 
-                item.InnerHtml.AppendHtml(anchor);
-
-                if (node.Children.Count > 0)
-                {
-                    TagBuilder branch = new("ul");
-                    item.AddCssClass("mvc-tree-branch");
-
-                    if (HideDepth <= depth + 1)
-                        item.AddCssClass("mvc-tree-collapsed");
-
-                    foreach (TagBuilder leaf in Build(model, node.Children, depth + 1))
-                        branch.InnerHtml.AppendHtml(leaf);
-
-                    item.InnerHtml.AppendHtml(branch);
-                }
-
-                return item;
-            });
-        }
+            return item;
+        });
     }
 }

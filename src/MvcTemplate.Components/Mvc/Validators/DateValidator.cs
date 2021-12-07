@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class DateValidator : IClientModelValidator
 {
-    public class DateValidator : IClientModelValidator
+    public void AddValidation(ClientModelValidationContext context)
     {
-        public void AddValidation(ClientModelValidationContext context)
-        {
-            context.Attributes["data-val-date"] = Validation.For("DateTime", context.ModelMetadata.GetDisplayName());
-        }
+        context.Attributes["data-val-date"] = Validation.For("DateTime", context.ModelMetadata.GetDisplayName());
     }
 }

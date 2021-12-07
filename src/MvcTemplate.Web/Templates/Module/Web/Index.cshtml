@@ -7,9 +7,10 @@
             <span class="icon fa fa-th"></span>
             <h5>@@Resource.ForHeader("@(Model.Models)")</h5>
             <div class="widget-header-buttons">
-                <authorize action="@@nameof(@(Model.Controller).Create)">
-                    <a asp-action="@@nameof(@(Model.Controller).Create)" class="btn">
-                        <span class="far fa-file"></span><span class="text">@@Resource.ForAction(nameof(@(Model.Controller).Create))</span>
+                <authorize action="@("@nameof")(@(Model.Controller).Create)">
+                    <a asp-action="@("@nameof")(@(Model.Controller).Create)" class="btn">
+                        <span class="far fa-file"></span>
+                        <span class="text">@@Resource.ForAction(nameof(@(Model.Controller).Create))</span>
                     </a>
                 </authorize>
             </div>

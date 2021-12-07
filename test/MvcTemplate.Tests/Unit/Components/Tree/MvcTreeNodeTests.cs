@@ -1,27 +1,24 @@
-using Xunit;
+namespace MvcTemplate.Components.Tree;
 
-namespace MvcTemplate.Components.Tree
+public class MvcTreeNodeTests
 {
-    public class MvcTreeNodeTests
+    [Fact]
+    public void MvcTreeNode_SetsTitle()
     {
-        [Fact]
-        public void MvcTreeNode_SetsTitle()
-        {
-            MvcTreeNode actual = new("Nodey");
+        MvcTreeNode actual = new("Nodey");
 
-            Assert.Equal("Nodey", actual.Title);
-            Assert.Empty(actual.Children);
-            Assert.Null(actual.Id);
-        }
+        Assert.Equal("Nodey", actual.Title);
+        Assert.Empty(actual.Children);
+        Assert.Null(actual.Id);
+    }
 
-        [Fact]
-        public void MvcTreeNode_SetsIdAndTitle()
-        {
-            MvcTreeNode actual = new(1, "Nodey");
+    [Fact]
+    public void MvcTreeNode_SetsIdAndTitle()
+    {
+        MvcTreeNode actual = new(1, "Nodey");
 
-            Assert.Equal("Nodey", actual.Title);
-            Assert.Empty(actual.Children);
-            Assert.Equal(1, actual.Id);
-        }
+        Assert.Equal("Nodey", actual.Title);
+        Assert.Empty(actual.Children);
+        Assert.Equal(1, actual.Id);
     }
 }

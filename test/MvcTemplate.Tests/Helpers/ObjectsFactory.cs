@@ -1,126 +1,123 @@
 using MvcTemplate.Controllers;
 using MvcTemplate.Controllers.Administration;
 using MvcTemplate.Objects;
-using System;
-using System.Collections.Generic;
 
-namespace MvcTemplate
+namespace MvcTemplate;
+
+public static class ObjectsFactory
 {
-    public static class ObjectsFactory
+    public static Account CreateAccount(Int64 id)
     {
-        public static Account CreateAccount(Int64 id)
+        return new()
         {
-            return new()
-            {
-                Username = $"Username{id}",
-                Passhash = $"Password{id}Hashed",
-                Email = $"{id}@tests.com",
-                IsLocked = false,
-                RecoveryToken = Guid.NewGuid().ToString(),
-                RecoveryTokenExpiration = DateTime.Now.AddMinutes(-5),
-                Role = CreateRole(id)
-            };
-        }
+            Username = $"Username{id}",
+            Passhash = $"Password{id}Hashed",
+            Email = $"{id}@tests.com",
+            IsLocked = false,
+            RecoveryToken = Guid.NewGuid().ToString(),
+            RecoveryTokenExpiration = DateTime.Now.AddMinutes(-5),
+            Role = CreateRole(id)
+        };
+    }
 
-        public static AccountCreateView CreateAccountCreateView(Int64 id)
+    public static AccountCreateView CreateAccountCreateView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Username = $"Username{id}",
-                Password = $"Password{id}",
-                Email = $"{id}@tests.com"
-            };
-        }
+            Id = id,
+            Username = $"Username{id}",
+            Password = $"Password{id}",
+            Email = $"{id}@tests.com"
+        };
+    }
 
-        public static AccountEditView CreateAccountEditView(Int64 id)
+    public static AccountEditView CreateAccountEditView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Username = $"Username{id}",
-                Email = $"{id}@tests.com",
-                IsLocked = true
-            };
-        }
+            Id = id,
+            Username = $"Username{id}",
+            Email = $"{id}@tests.com",
+            IsLocked = true
+        };
+    }
 
-        public static AccountLoginView CreateAccountLoginView(Int64 id)
+    public static AccountLoginView CreateAccountLoginView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Username = $"Username{id}",
-                Password = $"Password{id}",
-                ReturnUrl = $"ReturnUrl{id}"
-            };
-        }
+            Id = id,
+            Username = $"Username{id}",
+            Password = $"Password{id}",
+            ReturnUrl = $"ReturnUrl{id}"
+        };
+    }
 
-        public static Permission CreatePermission(Int64 id)
+    public static Permission CreatePermission(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Area = $"Area{id}",
-                Action = $"Action{id}",
-                Controller = $"Controller{id}"
-            };
-        }
+            Area = $"Area{id}",
+            Action = $"Action{id}",
+            Controller = $"Controller{id}"
+        };
+    }
 
-        public static ProfileDeleteView CreateProfileDeleteView(Int64 id)
+    public static ProfileDeleteView CreateProfileDeleteView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Password = $"Password{id}"
-            };
-        }
+            Id = id,
+            Password = $"Password{id}"
+        };
+    }
 
-        public static ProfileEditView CreateProfileEditView(Int64 id)
+    public static ProfileEditView CreateProfileEditView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Email = $"{id}@tests.com",
-                Username = $"Username{id}",
-                Password = $"Password{id}",
-                NewPassword = $"NewPassword{id}"
-            };
-        }
+            Id = id,
+            Email = $"{id}@tests.com",
+            Username = $"Username{id}",
+            Password = $"Password{id}",
+            NewPassword = $"NewPassword{id}"
+        };
+    }
 
-        public static Role CreateRole(Int64 id)
+    public static Role CreateRole(Int64 id)
+    {
+        return new()
         {
-            return new()
+            Title = $"Title{id}",
+            Accounts = new List<Account>(),
+            Permissions = new List<RolePermission>
             {
-                Title = $"Title{id}",
-                Accounts = new List<Account>(),
-                Permissions = new List<RolePermission>
-                {
-                    new() { Permission = new Permission { Area = "", Controller = nameof(Auth), Action = nameof(Auth.Recover) } },
-                    new() { Permission = new Permission { Area = "", Controller = nameof(Profile), Action = nameof(Profile.Delete) } },
-                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Create) } },
-                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Delete) } },
-                    new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Accounts), Action = nameof(Accounts.Edit) } }
-                }
-            };
-        }
+                new() { Permission = new Permission { Area = "", Controller = nameof(Auth), Action = nameof(Auth.Recover) } },
+                new() { Permission = new Permission { Area = "", Controller = nameof(Profile), Action = nameof(Profile.Delete) } },
+                new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Create) } },
+                new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Roles), Action = nameof(Roles.Delete) } },
+                new() { Permission = new Permission { Area = nameof(Area.Administration), Controller = nameof(Accounts), Action = nameof(Accounts.Edit) } }
+            }
+        };
+    }
 
-        public static RolePermission CreateRolePermission(Int64 id)
+    public static RolePermission CreateRolePermission(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                RoleId = id,
-                Role = CreateRole(id),
-                PermissionId = id,
-                Permission = CreatePermission(id)
-            };
-        }
+            RoleId = id,
+            Role = CreateRole(id),
+            PermissionId = id,
+            Permission = CreatePermission(id)
+        };
+    }
 
-        public static RoleView CreateRoleView(Int64 id)
+    public static RoleView CreateRoleView(Int64 id)
+    {
+        return new()
         {
-            return new()
-            {
-                Id = id,
-                Title = $"Title{id}"
-            };
-        }
+            Id = id,
+            Title = $"Title{id}"
+        };
     }
 }

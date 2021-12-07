@@ -1,48 +1,46 @@
-using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[HtmlTargetElement("input", Attributes = "asp-for")]
+public class FormInputTagHelper : TagHelper
 {
-    [HtmlTargetElement("input", Attributes = "asp-for")]
-    public class FormInputTagHelper : TagHelper
+    [HtmlAttributeName("type")]
+    public String? Type { get; set; }
+
+    [HtmlAttributeName("asp-for")]
+    public ModelExpression? For { get; set; }
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        [HtmlAttributeName("type")]
-        public String? Type { get; set; }
+        String classes = For?.Metadata.ModelType == typeof(Boolean) ? "form-check-input" : "form-control";
+        classes = $"{classes} {output.Attributes["class"]?.Value}".Trim();
 
-        [HtmlAttributeName("asp-for")]
-        public ModelExpression? For { get; set; }
+        if (Type == null && For?.Metadata.ModelType != typeof(Boolean))
+            output.Attributes.SetAttribute("type", "text");
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            String classes = For?.Metadata.ModelType == typeof(Boolean) ? "form-check-input" : "form-control";
-            classes = $"{classes} {output.Attributes["class"]?.Value}".Trim();
+        if (output.Attributes["autocomplete"] == null)
+            output.Attributes.Add("autocomplete", "off");
 
-            if (Type == null && For?.Metadata.ModelType != typeof(Boolean))
-                output.Attributes.SetAttribute("type", "text");
+        output.Attributes.SetAttribute("class", classes);
 
-            if (output.Attributes["autocomplete"] == null)
-                output.Attributes.Add("autocomplete", "off");
+        if (classes.Contains("date-picker") || classes.Contains("date-time-picker"))
+            WrapAsDatepicker(output);
+    }
 
-            output.Attributes.SetAttribute("class", classes);
+    private void WrapAsDatepicker(TagHelperOutput output)
+    {
+        TagBuilder group = new("div");
+        TagBuilder browser = new("button");
 
-            if (classes.Contains("date-picker") || classes.Contains("date-time-picker"))
-                WrapAsDatepicker(output);
-        }
+        browser.AddCssClass("date-picker-browser input-group-text fas fa-calendar-alt");
+        browser.Attributes["type"] = "button";
+        group.AddCssClass("input-group");
 
-        private void WrapAsDatepicker(TagHelperOutput output)
-        {
-            TagBuilder group = new("div");
-            TagBuilder browser = new("button");
-
-            browser.AddCssClass("date-picker-browser input-group-text fas fa-calendar-alt");
-            browser.Attributes["type"] = "button";
-            group.AddCssClass("input-group");
-
-            output.PreElement.AppendHtml(group.RenderStartTag());
-            output.PostElement.AppendHtml(browser);
-            output.PostElement.AppendHtml(group.RenderEndTag());
-        }
+        output.PreElement.AppendHtml(group.RenderStartTag());
+        output.PostElement.AppendHtml(browser);
+        output.PostElement.AppendHtml(group.RenderEndTag());
     }
 }

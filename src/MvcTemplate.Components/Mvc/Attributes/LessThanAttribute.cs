@@ -1,34 +1,31 @@
 using MvcTemplate.Resources;
-using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class LessThanAttribute : ValidationAttribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class LessThanAttribute : ValidationAttribute
+    public Decimal Maximum { get; }
+
+    public LessThanAttribute(Double maximum)
+        : base(() => Validation.For("LessThan"))
     {
-        public Decimal Maximum { get; }
+        Maximum = Convert.ToDecimal(maximum);
+    }
 
-        public LessThanAttribute(Double maximum)
-            : base(() => Validation.For("LessThan"))
+    public override String FormatErrorMessage(String name)
+    {
+        return String.Format(ErrorMessageString, name, Maximum);
+    }
+    public override Boolean IsValid(Object? value)
+    {
+        try
         {
-            Maximum = Convert.ToDecimal(maximum);
+            return value == null || Convert.ToDecimal(value) < Maximum;
         }
-
-        public override String FormatErrorMessage(String name)
+        catch
         {
-            return String.Format(ErrorMessageString, name, Maximum);
-        }
-        public override Boolean IsValid(Object? value)
-        {
-            try
-            {
-                return value == null || Convert.ToDecimal(value) < Maximum;
-            }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

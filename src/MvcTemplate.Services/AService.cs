@@ -1,19 +1,18 @@
 using MvcTemplate.Data;
 
-namespace MvcTemplate.Services
+namespace MvcTemplate.Services;
+
+public abstract class AService : IService
 {
-    public abstract class AService : IService
+    protected IUnitOfWork UnitOfWork { get; }
+
+    protected AService(IUnitOfWork unitOfWork)
     {
-        protected IUnitOfWork UnitOfWork { get; }
+        UnitOfWork = unitOfWork;
+    }
 
-        protected AService(IUnitOfWork unitOfWork)
-        {
-            UnitOfWork = unitOfWork;
-        }
-
-        public void Dispose()
-        {
-            UnitOfWork.Dispose();
-        }
+    public void Dispose()
+    {
+        UnitOfWork.Dispose();
     }
 }

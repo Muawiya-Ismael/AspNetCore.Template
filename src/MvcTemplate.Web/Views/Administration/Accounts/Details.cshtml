@@ -8,7 +8,8 @@
             <div class="widget-header-buttons">
                 <authorize action="@nameof(Accounts.Edit)">
                     <a asp-action="@nameof(Accounts.Edit)" asp-route-id="@Model.Id" class="btn">
-                        <span class="fa fa-pencil-alt"></span><span class="text">@Resource.ForAction(nameof(Accounts.Edit))</span>
+                        <span class="fa fa-pencil-alt"></span>
+                        <span class="text">@Resource.ForAction(nameof(Accounts.Edit))</span>
                     </a>
                 </authorize>
             </div>

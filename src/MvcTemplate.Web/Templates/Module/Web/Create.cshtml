@@ -40,7 +40,7 @@
                         }
                         else if (Model.Relations.GetValueOrDefault(property.Name, null) is String relation)
                         {
-                        <div mvc-lookup-for="@property.Name" handler="@@nameof(Lookup.@relation)"></div>
+                        <div mvc-lookup-for="@property.Name" handler="@("@nameof")(Lookup.@relation)"></div>
                         }
                         else
                         {

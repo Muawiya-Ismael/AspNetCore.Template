@@ -5,9 +5,11 @@
         .OrderBy(property => property.Name)
         .ToArray();
 
-    PropertyInfo[] indexes = Model
-        .Indexes[""]
-        .OrderBy(property => property.Name)
+    String[] indexes = Model.Indexes["Create"]
+        .Concat(Model.Indexes["Edit"])
+        .Select(property => property.Name)
+        .Distinct()
+        .OrderBy(property => property)
         .ToArray();
 }
 {
@@ -27,25 +29,25 @@
         }
     @if (indexes.Any())
     {
-@:},
+    @:},
     @:"Validations": {
         @for (Int32 i = 0; i < indexes.Length; i++)
         {
-            String title = indexes[i].Name.Humanize();
+            String title = indexes[i].Humanize();
 
             if (i + 1 < indexes.Length)
             {
-        @:"Unique@(indexes[i].Name)": "@title is already being used.",
+        @:"Unique@(indexes[i])": "@title is already being used.",
             }
             else
             {
-        @:"Unique@(indexes[i].Name)": "@title is already being used."
+        @:"Unique@(indexes[i])": "@title is already being used."
             }
         }
     @:}
     }
     else
     {
-@:}
+    @:}
     }
 }

@@ -48,17 +48,9 @@
     color: #ffffff;
 }
 
-.widget-header .widget-header-buttons .btn .text {
-    padding-left: 5px;
-}
-
 @media (max-width: 767.98px) {
     .widget-header .widget-header-buttons .btn {
         min-width: 3em;
-    }
-
-    .widget-header .widget-header-buttons .btn > span {
-        padding: 0;
     }
 
     .widget-header .widget-header-buttons .text {

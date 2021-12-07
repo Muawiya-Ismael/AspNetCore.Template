@@ -1,87 +1,85 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcTemplate.Components.Security.Area
+namespace MvcTemplate.Components.Security.Area;
+
+[Authorize]
+[Area("Area")]
+[ExcludeFromCodeCoverage]
+public class AuthorizedController : Controller
 {
-    [Authorize]
-    [Area("Area")]
-    [ExcludeFromCodeCoverage]
-    public class AuthorizedController : Controller
+    [HttpGet]
+    public ViewResult Action()
     {
-        [HttpGet]
-        public ViewResult Action()
-        {
-            return View();
-        }
+        return View();
+    }
 
-        [HttpPost]
-        public ViewResult Action(Object obj)
-        {
-            return View(obj);
-        }
+    [HttpPost]
+    public ViewResult Action(Object obj)
+    {
+        return View(obj);
+    }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public ViewResult AuthorizedGetAction()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AllowAnonymous]
+    public ViewResult AuthorizedGetAction()
+    {
+        return View();
+    }
 
-        [HttpPost]
-        public ViewResult AuthorizedGetAction(Object obj)
-        {
-            return View(obj);
-        }
+    [HttpPost]
+    public ViewResult AuthorizedGetAction(Object obj)
+    {
+        return View(obj);
+    }
 
-        [HttpPost]
-        public ViewResult AuthorizedPostAction()
-        {
-            return View();
-        }
+    [HttpPost]
+    public ViewResult AuthorizedPostAction()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        [AllowAnonymous]
-        [ActionName("AuthorizedNamedGetAction")]
-        public ViewResult GetActionWithName()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AllowAnonymous]
+    [ActionName("AuthorizedNamedGetAction")]
+    public ViewResult GetActionWithName()
+    {
+        return View();
+    }
 
-        [HttpPost]
-        [ActionName("AuthorizedNamedGetAction")]
-        public ViewResult GetActionWithName(Object obj)
-        {
-            return View(obj);
-        }
+    [HttpPost]
+    [ActionName("AuthorizedNamedGetAction")]
+    public ViewResult GetActionWithName(Object obj)
+    {
+        return View(obj);
+    }
 
-        [HttpPost]
-        [ActionName("AuthorizedNamedPostAction")]
-        public ViewResult PostActionWithName()
-        {
-            return View();
-        }
+    [HttpPost]
+    [ActionName("AuthorizedNamedPostAction")]
+    public ViewResult PostActionWithName()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        [AuthorizeAs(nameof(Action))]
-        public ViewResult AuthorizedAsAction()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AuthorizeAs(nameof(Action))]
+    public ViewResult AuthorizedAsAction()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        [AuthorizeAs(nameof(AuthorizedAsSelf))]
-        public ViewResult AuthorizedAsSelf()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AuthorizeAs(nameof(AuthorizedAsSelf))]
+    public ViewResult AuthorizedAsSelf()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        [AuthorizeAs(nameof(InheritedAuthorizedController.InheritanceAction), Controller = nameof(InheritedAuthorizedController), Area = "")]
-        public ViewResult AuthorizedAsOtherAction()
-        {
-            return View();
-        }
+    [HttpGet]
+    [AuthorizeAs(nameof(InheritedAuthorizedController.InheritanceAction), Controller = nameof(InheritedAuthorizedController), Area = "")]
+    public ViewResult AuthorizedAsOtherAction()
+    {
+        return View();
     }
 }

@@ -295,49 +295,37 @@ hr {
 }
 
 /* mvc.grid */
-.mvc-grid {
-    line-height: 1.5;
-    font-size: 1em;
-}
-
-.mvc-grid > table > thead {
+.mvc-grid-table > table > thead {
     background-image: linear-gradient(#ffffff, #f2f2f2);
     background-color: #ffffff;
 }
 
-.mvc-grid > table > thead > tr > th {
+.mvc-grid-table > table > thead > tr > th {
     text-align: left !important;
     vertical-align: middle;
     white-space: nowrap;
     background: none;
 }
 
-.mvc-grid > table > thead > tr > th,
-.mvc-grid > table > tbody > tr > td,
-.mvc-grid > table > tfoot > tr > td {
+.mvc-grid-table > table > thead > tr > th,
+.mvc-grid-table > table > tbody > tr > td,
+.mvc-grid-table > table > tfoot > tr > td {
     border-width: 0 0 1px;
-    padding: 0.5rem;
 }
 
-.mvc-grid > table > thead > tr > th + th,
-.mvc-grid > table > tbody > tr > td + td,
-.mvc-grid > table > tfoot > tr > td + td {
+.mvc-grid-table > table > thead > tr > th + th,
+.mvc-grid-table > table > tbody > tr > td + td,
+.mvc-grid-table > table > tfoot > tr > td + td {
     border-left-width: 1px;
 }
 
-.mvc-grid .mvc-grid-headers .mvc-grid-filter,
-.mvc-grid .mvc-grid-filters .mvc-grid-filter {
+.mvc-grid-table .mvc-grid-headers .mvc-grid-filter,
+.mvc-grid-table .mvc-grid-filters .mvc-grid-filter {
     border-left: 1px solid #dee2e6;
-}
-
-.mvc-grid-header-mode .mvc-grid-value {
-    font-weight: 500;
-    padding: 0.5em;
 }
 
 .mvc-grid-filter {
     background: none;
-    font-size: 1em;
 }
 
 .mvc-grid-filter:focus,
@@ -345,26 +333,14 @@ hr {
     background: rgb(0 0 0 / 0.03);
 }
 
-.mvc-grid-pager .active {
+.mvc-grid-pager .active,
+.mvc-grid-pager .active:focus,
+.mvc-grid-pager .active:hover {
     background: linear-gradient(#6f93a7, #2a4e62);
     border-color: #59788a;
     color: #ffffff;
 }
 
-.mvc-grid-popup {
-    font-size: 1em;
-}
-
-.mvc-grid-popup .invalid {
-    outline-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.mvc-grid-popup .popup-actions {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.mvc-grid-popup .mvc-grid-value,
 .mvc-grid-popup .mvc-grid-method,
 .mvc-grid-popup .mvc-grid-operator {
     padding: 0 0.5em;

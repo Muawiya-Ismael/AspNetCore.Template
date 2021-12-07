@@ -2,34 +2,27 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class PlaceholderTagHelperTests
 {
-    public class PlaceholderTagHelperTests
+    [Fact]
+    public void Process_Placeholder()
     {
-        [Fact]
-        public void Process_Placeholder()
-        {
-            TagHelperContent content = new DefaultTagHelperContent();
-            ModelMetadata metadata = Substitute.For<ModelMetadata>(ModelMetadataIdentity.ForType(typeof(String)));
-            TagHelperContext context = new(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
-            TagHelperOutput output = new("input", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
-            PlaceholderTagHelper helper = new() { For = new ModelExpression("Total", new ModelExplorer(metadata, metadata, null)) };
+        TagHelperContent content = new DefaultTagHelperContent();
+        ModelMetadata metadata = Substitute.For<ModelMetadata>(ModelMetadataIdentity.ForType(typeof(String)));
+        TagHelperContext context = new(new TagHelperAttributeList(), new Dictionary<Object, Object>(), "test");
+        TagHelperOutput output = new("input", new TagHelperAttributeList(), (_, _) => Task.FromResult(content));
+        PlaceholderTagHelper helper = new() { For = new ModelExpression("Total", new ModelExplorer(metadata, metadata, null)) };
 
-            metadata.DisplayName.Returns("Test");
-            helper.Process(context, output);
+        metadata.DisplayName.Returns("Test");
+        helper.Process(context, output);
 
-            TagHelperAttribute actual = output.Attributes.Single();
+        TagHelperAttribute actual = output.Attributes.Single();
 
-            Assert.Empty(output.Content.GetContent());
-            Assert.Equal("placeholder", actual.Name);
-            Assert.Equal("Test", actual.Value);
-        }
+        Assert.Empty(output.Content.GetContent());
+        Assert.Equal("placeholder", actual.Name);
+        Assert.Equal("Test", actual.Value);
     }
 }

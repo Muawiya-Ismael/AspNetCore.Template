@@ -1,5 +1,5 @@
 /*!
- * Mvc.Lookup 5.3.0
+ * Mvc.Lookup 6.0.0
  *
  * Copyright © NonFactors
  *
@@ -669,7 +669,6 @@ class MvcLookup {
             lookup.group.classList.add("mvc-lookup-readonly");
 
             if (lookup.browser) {
-                lookup.browser.tabIndex = -1;
                 lookup.browser.disabled = true;
             }
         } else {
@@ -679,7 +678,6 @@ class MvcLookup {
 
             if (lookup.browser) {
                 lookup.browser.disabled = false;
-                lookup.browser.removeAttribute("tabindex");
             }
         }
 
@@ -961,14 +959,6 @@ class MvcLookup {
                     break;
                 case "Tab":
                     if (autocomplete.activeItem) {
-                        if (lookup.browser) {
-                            lookup.browser.tabIndex = -1;
-
-                            setTimeout(() => {
-                                lookup.browser.removeAttribute("tabindex");
-                            }, 100);
-                        }
-
                         autocomplete.activeItem.click();
                     }
 

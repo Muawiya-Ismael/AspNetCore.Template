@@ -2,47 +2,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class DigitsAdapterTests
 {
-    public class DigitsAdapterTests
+    private DigitsAdapter adapter;
+    private ClientModelValidationContext context;
+    private Dictionary<String, String> attributes;
+
+    public DigitsAdapterTests()
     {
-        private DigitsAdapter adapter;
-        private ClientModelValidationContext context;
-        private Dictionary<String, String> attributes;
+        attributes = new Dictionary<String, String>();
+        adapter = new DigitsAdapter(new DigitsAttribute());
+        IModelMetadataProvider provider = new EmptyModelMetadataProvider();
+        ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.StringField));
 
-        public DigitsAdapterTests()
-        {
-            attributes = new Dictionary<String, String>();
-            adapter = new DigitsAdapter(new DigitsAttribute());
-            IModelMetadataProvider provider = new EmptyModelMetadataProvider();
-            ModelMetadata metadata = provider.GetMetadataForProperty(typeof(AllTypesView), nameof(AllTypesView.StringField));
+        context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
+    }
 
-            context = new ClientModelValidationContext(new ActionContext(), metadata, provider, attributes);
-        }
+    [Fact]
+    public void AddValidation_Digits()
+    {
+        adapter.AddValidation(context);
 
-        [Fact]
-        public void AddValidation_Digits()
-        {
-            adapter.AddValidation(context);
+        KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-digits", Validation.For("Digits", context.ModelMetadata.PropertyName));
+        KeyValuePair<String, String> actual = attributes.Single();
 
-            KeyValuePair<String, String> expected = KeyValuePair.Create("data-val-digits", Validation.For("Digits", context.ModelMetadata.PropertyName));
-            KeyValuePair<String, String> actual = attributes.Single();
+        Assert.Equal(expected, actual);
+    }
 
-            Assert.Equal(expected, actual);
-        }
+    [Fact]
+    public void GetErrorMessage_Digits()
+    {
+        String expected = Validation.For("Digits", context.ModelMetadata.PropertyName);
+        String actual = adapter.GetErrorMessage(context);
 
-        [Fact]
-        public void GetErrorMessage_Digits()
-        {
-            String expected = Validation.For("Digits", context.ModelMetadata.PropertyName);
-            String actual = adapter.GetErrorMessage(context);
-
-            Assert.Equal(expected, actual);
-        }
+        Assert.Equal(expected, actual);
     }
 }

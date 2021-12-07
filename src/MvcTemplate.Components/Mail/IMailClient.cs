@@ -1,10 +1,6 @@
-using System;
-using System.Threading.Tasks;
+namespace MvcTemplate.Components.Mail;
 
-namespace MvcTemplate.Components.Mail
+public interface IMailClient
 {
-    public interface IMailClient
-    {
-        Task SendAsync(String email, String subject, String body);
-    }
+    Task SendAsync(String email, String subject, String body);
 }

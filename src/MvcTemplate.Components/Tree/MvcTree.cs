@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
+namespace MvcTemplate.Components.Tree;
 
-namespace MvcTemplate.Components.Tree
+public class MvcTree
 {
-    public class MvcTree
-    {
-        public List<MvcTreeNode> Nodes { get; set; }
-        public HashSet<Int64> SelectedIds { get; set; }
+    public List<MvcTreeNode> Nodes { get; set; }
+    public HashSet<Int64> SelectedIds { get; set; }
 
-        public MvcTree()
-        {
-            Nodes = new List<MvcTreeNode>();
-            SelectedIds = new HashSet<Int64>();
-        }
+    public MvcTree()
+    {
+        Nodes = new List<MvcTreeNode>();
+        SelectedIds = new HashSet<Int64>();
     }
 }

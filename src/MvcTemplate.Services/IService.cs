@@ -1,8 +1,5 @@
-using System;
+namespace MvcTemplate.Services;
 
-namespace MvcTemplate.Services
+public interface IService : IDisposable
 {
-    public interface IService : IDisposable
-    {
-    }
 }

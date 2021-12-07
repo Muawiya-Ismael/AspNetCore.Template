@@ -8,7 +8,8 @@
             <div class="widget-header-buttons">
                 <authorize action="@nameof(Accounts.Create)">
                     <a asp-action="@nameof(Accounts.Create)" class="btn">
-                        <span class="far fa-file"></span><span class="text">@Resource.ForAction(nameof(Accounts.Create))</span>
+                        <span class="far fa-file"></span>
+                        <span class="text">@Resource.ForAction(nameof(Accounts.Create))</span>
                     </a>
                 </authorize>
             </div>
@@ -23,8 +24,8 @@
 
                     columns.AddProperty(model => model.Username);
                     columns.AddProperty(model => model.Email);
-                    columns.AddProperty(model => model.RoleTitle);
                     columns.AddBoolean(model => model.IsLocked);
+                    columns.AddProperty(model => model.RoleTitle);
                 })
                 .ApplyDefaults()
             )

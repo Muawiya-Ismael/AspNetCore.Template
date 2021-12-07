@@ -7,55 +7,54 @@ using MvcTemplate.Components.Security;
 using MvcTemplate.Resources;
 using MvcTemplate.Services;
 
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+[AllowUnauthorized]
+public class Home : ServicedController<AccountService>
 {
-    [AllowUnauthorized]
-    public class Home : ServicedController<AccountService>
+    public Home(AccountService service)
+        : base(service)
     {
-        public Home(AccountService service)
-            : base(service)
+    }
+
+    [HttpGet]
+    public ActionResult Index()
+    {
+        if (!Service.IsActive(User.Id()))
+            return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
+
+        return View();
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public ActionResult Error()
+    {
+        Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
-        }
-
-        [HttpGet]
-        public ActionResult Index()
-        {
-            if (!Service.IsActive(User.Id()))
-                return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
-
-            return View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Error()
-        {
-            Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            Alerts.Add(new Alert
             {
-                Alerts.Add(new Alert
-                {
-                    Id = "SystemError",
-                    Type = AlertType.Danger,
-                    Message = Resource.ForString("SystemError", HttpContext.TraceIdentifier)
-                });
+                Id = "SystemError",
+                Type = AlertType.Danger,
+                Message = Resource.ForString("SystemError", HttpContext.TraceIdentifier)
+            });
 
-                return Json(new { alerts = Alerts });
-            }
-
-            return View();
+            return Json(new { alerts = Alerts });
         }
 
-        [AllowAnonymous]
-        public new ActionResult NotFound()
-        {
-            if (Service.IsLoggedIn(User) && !Service.IsActive(User.Id()))
-                return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
+        return View();
+    }
 
-            Response.StatusCode = StatusCodes.Status404NotFound;
+    [AllowAnonymous]
+    public new ActionResult NotFound()
+    {
+        if (Service.IsLoggedIn(User) && !Service.IsActive(User.Id()))
+            return RedirectToAction(nameof(Auth.Logout), nameof(Auth));
 
-            return View();
-        }
+        Response.StatusCode = StatusCodes.Status404NotFound;
+
+        return View();
     }
 }

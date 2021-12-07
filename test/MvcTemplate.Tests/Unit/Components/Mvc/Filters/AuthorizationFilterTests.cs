@@ -4,64 +4,60 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using MvcTemplate.Components.Security;
-using NSubstitute;
-using System;
 using System.Security.Claims;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class AuthorizationFilterTests
 {
-    public class AuthorizationFilterTests
+    private AuthorizationFilter filter;
+    private IAuthorization authorization;
+    private AuthorizationFilterContext context;
+
+    public AuthorizationFilterTests()
     {
-        private AuthorizationFilter filter;
-        private IAuthorization authorization;
-        private AuthorizationFilterContext context;
+        ActionContext action = new(Substitute.For<HttpContext>(), new RouteData(), new ActionDescriptor());
+        context = new AuthorizationFilterContext(action, Array.Empty<IFilterMetadata>());
+        authorization = Substitute.For<IAuthorization>();
+        filter = new AuthorizationFilter(authorization);
+    }
 
-        public AuthorizationFilterTests()
-        {
-            ActionContext action = new(Substitute.For<HttpContext>(), new RouteData(), new ActionDescriptor());
-            context = new AuthorizationFilterContext(action, Array.Empty<IFilterMetadata>());
-            authorization = Substitute.For<IAuthorization>();
-            filter = new AuthorizationFilter(authorization);
-        }
+    [Fact]
+    public void OnAuthorization_NotAuthenticated_SetsNullResult()
+    {
+        context.HttpContext.User.Identity?.IsAuthenticated.Returns(false);
 
-        [Fact]
-        public void OnAuthorization_NotAuthenticated_SetsNullResult()
-        {
-            context.HttpContext.User.Identity?.IsAuthenticated.Returns(false);
+        filter.OnAuthorization(context);
 
-            filter.OnAuthorization(context);
+        Assert.Null(context.Result);
+    }
 
-            Assert.Null(context.Result);
-        }
+    [Fact]
+    public void OnAuthorization_NotAuthorized_ReturnsNotFoundView()
+    {
+        context.HttpContext.User.Identity?.IsAuthenticated.Returns(true);
 
-        [Fact]
-        public void OnAuthorization_NotAuthorized_ReturnsNotFoundView()
-        {
-            context.HttpContext.User.Identity?.IsAuthenticated.Returns(true);
+        filter.OnAuthorization(context);
 
-            filter.OnAuthorization(context);
+        ViewResult actual = Assert.IsType<ViewResult>(context.Result);
 
-            ViewResult actual = Assert.IsType<ViewResult>(context.Result);
+        Assert.Equal("~/Views/Home/NotFound.cshtml", actual.ViewName);
+        Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
+    }
 
-            Assert.Equal("~/Views/Home/NotFound.cshtml", actual.ViewName);
-            Assert.Equal(StatusCodes.Status404NotFound, actual.StatusCode);
-        }
+    [Fact]
+    public void OnAuthorization_IsAuthorized_SetsNullResult()
+    {
+        context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Returns(new Claim(ClaimTypes.NameIdentifier, "11000"));
+        context.HttpContext.User.Identity?.IsAuthenticated.Returns(true);
+        context.RouteData.Values["controller"] = "Controller";
+        context.RouteData.Values["action"] = "Action";
+        context.RouteData.Values["area"] = "Area";
 
-        [Fact]
-        public void OnAuthorization_IsAuthorized_SetsNullResult()
-        {
-            context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Returns(new Claim(ClaimTypes.NameIdentifier, "11000"));
-            context.HttpContext.User.Identity?.IsAuthenticated.Returns(true);
-            context.RouteData.Values["controller"] = "Controller";
-            context.RouteData.Values["action"] = "Action";
-            context.RouteData.Values["area"] = "Area";
+        authorization.IsGrantedFor(11000, "Area/Controller/Action").Returns(true);
 
-            authorization.IsGrantedFor(11000, "Area/Controller/Action").Returns(true);
+        filter.OnAuthorization(context);
 
-            filter.OnAuthorization(context);
-
-            Assert.Null(context.Result);
-        }
+        Assert.Null(context.Result);
     }
 }

@@ -1,34 +1,31 @@
 using MvcTemplate.Resources;
-using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class MaxValueAttribute : ValidationAttribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class MaxValueAttribute : ValidationAttribute
+    public Decimal Maximum { get; }
+
+    public MaxValueAttribute(Double maximum)
+        : base(() => Validation.For("MaxValue"))
     {
-        public Decimal Maximum { get; }
+        Maximum = Convert.ToDecimal(maximum);
+    }
 
-        public MaxValueAttribute(Double maximum)
-            : base(() => Validation.For("MaxValue"))
+    public override String FormatErrorMessage(String name)
+    {
+        return String.Format(ErrorMessageString, name, Maximum);
+    }
+    public override Boolean IsValid(Object? value)
+    {
+        try
         {
-            Maximum = Convert.ToDecimal(maximum);
+            return value == null || Convert.ToDecimal(value) <= Maximum;
         }
-
-        public override String FormatErrorMessage(String name)
+        catch
         {
-            return String.Format(ErrorMessageString, name, Maximum);
-        }
-        public override Boolean IsValid(Object? value)
-        {
-            try
-            {
-                return value == null || Convert.ToDecimal(value) <= Maximum;
-            }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

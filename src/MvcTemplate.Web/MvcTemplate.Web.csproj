@@ -2,52 +2,68 @@
 
   <PropertyGroup>
     <Version>0.0.0</Version>
-    <Nullable>enable</Nullable>
-    <TargetFramework>net5.0</TargetFramework>
-    <GenerateFullPaths>true</GenerateFullPaths>
+    <Nullable>annotations</Nullable>
+    <Deterministic>true</Deterministic>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net6.0</TargetFramework>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
-    <PreserveCompilationReferences Condition="'$(Configuration)'=='Debug'">true</PreserveCompilationReferences>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Logs\**" />
+    <None Remove="Logs/**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Templates\**" Condition="'$(Configuration)'!='Debug'" />
-    <Content Remove="Templates\**" Condition="'$(Configuration)'!='Debug'" />
+    <Compile Remove="Templates/**" Condition="'$(Configuration)'!='Debug'" />
+    <Content Remove="Templates/**" Condition="'$(Configuration)'!='Debug'" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="mvc.sitemap" CopyToOutputDirectory="Always" />
-    <Content Update="wwwroot\js\**" CopyToPublishDirectory="Never" />
-    <Content Update="wwwroot\css\**" CopyToPublishDirectory="Never" />
-    <Content Update="wwwroot\css\**\*.woff" CopyToPublishDirectory="Always" />
-    <Content Update="wwwroot\js\**\*.min.js" CopyToPublishDirectory="Always" />
-    <Content Update="wwwroot\css\**\*.min.css" CopyToPublishDirectory="Always" />
+    <Content Update="wwwroot/js/**" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot/css/**" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot/css/**/*.woff" CopyToPublishDirectory="Always" />
+    <Content Update="wwwroot/js/**/*.min.js" CopyToPublishDirectory="Always" />
+    <Content Update="wwwroot/css/**/*.min.css" CopyToPublishDirectory="Always" />
     <Content Update="package.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
     <Content Update="package-lock.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Genny" Version="2.4.1" />
+    <PackageReference Include="NonFactors.Grid.Mvc6" Version="7.0.0" />
+    <PackageReference Include="NonFactors.Lookup.Mvc6" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Genny.Core" Version="3.0.0" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Humanizer.Core" Version="2.13.14" Condition="'$(Configuration)'=='Debug'" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NonFactors.Grid.Mvc6" Version="6.2.4" />
-    <PackageReference Include="NonFactors.Lookup.Mvc6" Version="5.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
-    <PackageReference Include="Genny" Version="2.4.1" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Humanizer.Core" Version="2.11.10" Condition="'$(Configuration)'=='Debug'" />
+    <ProjectReference Include="../MvcTemplate.Controllers/MvcTemplate.Controllers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvcTemplate.Controllers\MvcTemplate.Controllers.csproj" />
+    <Using Include="System.Xml.Linq" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Reflection" />
+    <Using Include="System.Globalization" />
+    <Using Include="System.Linq.Expressions" />
+    <Using Include="System.Collections.Concurrent" />
+    <Using Include="System.Text.RegularExpressions" />
+    <Using Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <SourceRoot Remove="$(NugetPackageRoot)" />
+    <SourceRoot Include="$(ProjectDir)" />
   </ItemGroup>
 
   <Target Name="PrePublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install --no-save" />
     <Exec Command="npm run build" />
   </Target>
+
 </Project>

@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using MvcTemplate.Resources;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class NumberValidator : IClientModelValidator
 {
-    public class NumberValidator : IClientModelValidator
+    public void AddValidation(ClientModelValidationContext context)
     {
-        public void AddValidation(ClientModelValidationContext context)
-        {
-            if (!context.Attributes.ContainsKey("data-val-number"))
-                context.Attributes["data-val-number"] = Validation.For("Number", context.ModelMetadata.GetDisplayName());
-        }
+        if (!context.Attributes.ContainsKey("data-val-number"))
+            context.Attributes["data-val-number"] = Validation.For("Number", context.ModelMetadata.GetDisplayName());
     }
 }

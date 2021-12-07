@@ -1,54 +1,50 @@
-using System;
 using MvcTemplate.Data;
 using NonFactors.Mvc.Lookup;
-using NSubstitute;
-using Xunit;
 
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+public class LookupTests : IDisposable
 {
-    public class LookupTests : IDisposable
+    private Lookup controller;
+    private IUnitOfWork unitOfWork;
+
+    public LookupTests()
     {
-        private Lookup controller;
-        private IUnitOfWork unitOfWork;
+        unitOfWork = new UnitOfWork(TestingContext.Create(), TestingContext.Mapper);
+        controller = new Lookup(unitOfWork);
+    }
+    public void Dispose()
+    {
+        controller.Dispose();
+        unitOfWork.Dispose();
+    }
 
-        public LookupTests()
-        {
-            unitOfWork = new UnitOfWork(TestingContext.Create(), TestingContext.Mapper);
-            controller = new Lookup(unitOfWork);
-        }
-        public void Dispose()
-        {
-            controller.Dispose();
-            unitOfWork.Dispose();
-        }
+    [Fact]
+    public void Role_Lookup()
+    {
+        LookupData actual = Assert.IsType<LookupData>(controller.Role(new LookupFilter()).Value);
 
-        [Fact]
-        public void Role_Lookup()
-        {
-            LookupData actual = Assert.IsType<LookupData>(controller.Role(new LookupFilter()).Value);
+        Assert.NotEmpty(actual.Columns);
+    }
 
-            Assert.NotEmpty(actual.Columns);
-        }
+    [Fact]
+    public void Dispose_UnitOfWork()
+    {
+        IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
 
-        [Fact]
-        public void Dispose_UnitOfWork()
-        {
-            IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
+        new Lookup(dbUnit).Dispose();
 
-            new Lookup(dbUnit).Dispose();
+        dbUnit.Received().Dispose();
+    }
 
-            dbUnit.Received().Dispose();
-        }
+    [Fact]
+    public void Dispose_MultipleTimes()
+    {
+        IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
 
-        [Fact]
-        public void Dispose_MultipleTimes()
-        {
-            IUnitOfWork dbUnit = Substitute.For<IUnitOfWork>();
+        new Lookup(dbUnit).Dispose();
 
-            new Lookup(dbUnit).Dispose();
-
-            controller.Dispose();
-            controller.Dispose();
-        }
+        controller.Dispose();
+        controller.Dispose();
     }
 }

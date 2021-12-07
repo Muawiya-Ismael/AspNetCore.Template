@@ -1,11 +1,8 @@
-using System;
+namespace MvcTemplate.Components.Security;
 
-namespace MvcTemplate.Components.Security
+public interface IAuthorization
 {
-    public interface IAuthorization
-    {
-        Boolean IsGrantedFor(Int64 accountId, String permission);
+    Boolean IsGrantedFor(Int64 accountId, String permission);
 
-        void Refresh(IServiceProvider services);
-    }
+    void Refresh(IServiceProvider services);
 }

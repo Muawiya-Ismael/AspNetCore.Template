@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcTemplate.Components.Security
+namespace MvcTemplate.Components.Security;
+
+[ExcludeFromCodeCoverage]
+public class NotAttributedController : Controller
 {
-    [ExcludeFromCodeCoverage]
-    public class NotAttributedController : Controller
+    [HttpGet]
+    public ViewResult Action()
     {
-        [HttpGet]
-        public ViewResult Action()
-        {
-            return View();
-        }
+        return View();
     }
 }

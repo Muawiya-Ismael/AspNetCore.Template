@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcTemplate.Components.Security
+namespace MvcTemplate.Components.Security;
+
+[ExcludeFromCodeCoverage]
+public class InheritedAuthorizedController : AuthorizeController
 {
-    [ExcludeFromCodeCoverage]
-    public class InheritedAuthorizedController : AuthorizeController
+    [HttpGet]
+    public ViewResult InheritanceAction()
     {
-        [HttpGet]
-        public ViewResult InheritanceAction()
-        {
-            return View();
-        }
+        return View();
     }
 }

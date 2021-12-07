@@ -3,94 +3,90 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MvcTemplate.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace MvcTemplate.Data
+namespace MvcTemplate.Data;
+
+public class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    protected IMapper Mapper { get; }
+    protected DbContext Context { get; }
+
+    public UnitOfWork(DbContext context, IMapper mapper)
     {
-        protected IMapper Mapper { get; }
-        protected DbContext Context { get; }
+        Mapper = mapper;
+        Context = context;
+    }
 
-        public UnitOfWork(DbContext context, IMapper mapper)
-        {
-            Mapper = mapper;
-            Context = context;
-        }
+    public TDestination? GetAs<TModel, TDestination>(Int64? id) where TModel : AModel where TDestination : class
+    {
+        return id == null
+            ? default
+            : Context
+                .Set<TModel>()
+                .AsNoTracking()
+                .Where(model => model.Id == id)
+                .ProjectTo<TDestination>(Mapper.ConfigurationProvider)
+                .FirstOrDefault();
+    }
+    public TModel? Get<TModel>(Int64? id) where TModel : AModel
+    {
+        return id == null ? null : Context.Find<TModel>(id);
+    }
+    public TDestination To<TDestination>(Object source)
+    {
+        return Mapper.Map<TDestination>(source);
+    }
 
-        public TDestination? GetAs<TModel, TDestination>(Int64? id) where TModel : AModel where TDestination : class
-        {
-            return id == null
-                ? default
-                : Context
-                    .Set<TModel>()
-                    .AsNoTracking()
-                    .Where(model => model.Id == id)
-                    .ProjectTo<TDestination>(Mapper.ConfigurationProvider)
-                    .FirstOrDefault();
-        }
-        public TModel? Get<TModel>(Int64? id) where TModel : AModel
-        {
-            return id == null ? null : Context.Find<TModel>(id);
-        }
-        public TDestination To<TDestination>(Object source)
-        {
-            return Mapper.Map<TDestination>(source);
-        }
+    public IQuery<TModel> Select<TModel>() where TModel : AModel
+    {
+        return new Query<TModel>(Context.Set<TModel>(), Mapper.ConfigurationProvider);
+    }
 
-        public IQuery<TModel> Select<TModel>() where TModel : AModel
-        {
-            return new Query<TModel>(Context.Set<TModel>(), Mapper.ConfigurationProvider);
-        }
-
-        public void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : AModel
-        {
-            foreach (TModel model in models)
-            {
-                model.Id = 0;
-
-                Context.Add(model);
-            }
-        }
-        public void Insert<TModel>(TModel model) where TModel : AModel
+    public void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : AModel
+    {
+        foreach (TModel model in models)
         {
             model.Id = 0;
 
             Context.Add(model);
         }
-        public void Update<TModel>(TModel model) where TModel : AModel
-        {
-            EntityEntry<TModel> entry = Context.Entry(model);
+    }
+    public void Insert<TModel>(TModel model) where TModel : AModel
+    {
+        model.Id = 0;
 
-            if (entry.State == EntityState.Detached)
-                entry.State = EntityState.Modified;
+        Context.Add(model);
+    }
+    public void Update<TModel>(TModel model) where TModel : AModel
+    {
+        EntityEntry<TModel> entry = Context.Entry(model);
 
-            entry.Property(property => property.CreationDate).IsModified = false;
-        }
+        if (entry.State == EntityState.Detached)
+            entry.State = EntityState.Modified;
 
-        public void DeleteRange<TModel>(IEnumerable<TModel> models) where TModel : AModel
-        {
-            Context.RemoveRange(models);
-        }
-        public void Delete<TModel>(TModel model) where TModel : AModel
-        {
-            Context.Remove(model);
-        }
-        public void Delete<TModel>(Int64 id) where TModel : AModel
-        {
-            Delete(Context.Find<TModel>(id));
-        }
+        entry.Property(property => property.CreationDate).IsModified = false;
+    }
 
-        public virtual void Commit()
-        {
-            Context.SaveChanges();
-        }
+    public void DeleteRange<TModel>(IEnumerable<TModel> models) where TModel : AModel
+    {
+        Context.RemoveRange(models);
+    }
+    public void Delete<TModel>(TModel model) where TModel : AModel
+    {
+        Context.Remove(model);
+    }
+    public void Delete<TModel>(Int64 id) where TModel : AModel
+    {
+        Delete(Context.Find<TModel>(id)!);
+    }
 
-        public void Dispose()
-        {
-            Context.Dispose();
-        }
+    public virtual void Commit()
+    {
+        Context.SaveChanges();
+    }
+
+    public void Dispose()
+    {
+        Context.Dispose();
     }
 }

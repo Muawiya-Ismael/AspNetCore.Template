@@ -1,16 +1,9 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MvcTemplate.Components.Extensions;
 using MvcTemplate.Components.Logging;
 using MvcTemplate.Components.Mail;
@@ -24,214 +17,210 @@ using MvcTemplate.Resources;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
 using NonFactors.Mvc.Grid;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 
-namespace MvcTemplate.Web
+namespace MvcTemplate.Web;
+
+[ExcludeFromCodeCoverage]
+public class Startup
 {
-    [ExcludeFromCodeCoverage]
-    public class Startup
+    private IConfiguration Config { get; }
+    private IHostEnvironment Environment { get; }
+
+    public Startup(IHostEnvironment host)
     {
-        private IConfiguration Config { get; }
-        private IHostEnvironment Environment { get; }
+        Environment = host;
+        Config = new ConfigurationBuilder()
+            .SetBasePath(host.ContentRootPath)
+            .AddEnvironmentVariables("ASPNETCORE_")
+            .AddJsonFile("configuration.json")
+            .AddJsonFile($"configuration.{host.EnvironmentName.ToLower()}.json", optional: true)
+            .Build();
+    }
 
-        public Startup(IHostEnvironment host)
+    public void Configure(IApplicationBuilder app)
+    {
+        SeedDatabase(app);
+
+        RegisterResources();
+        RegisterConstants(app);
+        RegisterMiddleware(app);
+    }
+    public void ConfigureServices(IServiceCollection services)
+    {
+        ConfigureMvc(services);
+        ConfigureOptions(services);
+        ConfigureDependencies(services);
+    }
+
+    private void ConfigureMvc(IServiceCollection services)
+    {
+        services
+            .AddMvc()
+            .AddMvcOptions(options =>
+            {
+                options.Filters.Add<LanguageFilter>();
+                options.Filters.Add<TransactionFilter>();
+                options.Filters.Add<AuthorizationFilter>();
+                ModelMessagesProvider.Set(options.ModelBindingMessageProvider);
+                options.ModelMetadataDetailsProviders.Add(new DisplayMetadataProvider());
+                options.ModelBinderProviders.Insert(4, new TrimmingModelBinderProvider());
+            })
+            .AddRazorOptions(options => options.ViewLocationExpanders.Add(new ViewLocationExpander()))
+            .AddViewOptions(options => options.ClientModelValidatorProviders.Add(new ClientValidatorProvider()));
+
+        services.AddAuthentication("Cookies").AddCookie(authentication =>
         {
-            Environment = host;
-            Config = new ConfigurationBuilder()
-                .SetBasePath(host.ContentRootPath)
-                .AddEnvironmentVariables("ASPNETCORE_")
-                .AddJsonFile("configuration.json")
-                .AddJsonFile($"configuration.{host.EnvironmentName.ToLower()}.json", optional: true)
-                .Build();
-        }
+            authentication.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            authentication.Cookie.Name = Config["Cookies:Auth"];
+            authentication.Events = new AuthenticationEvents();
+            authentication.Cookie.HttpOnly = true;
+        });
 
-        public void Configure(IApplicationBuilder app)
+        services.AddMvcGrid(filters =>
         {
-            SeedDatabase(app);
+            filters.BooleanFalseOptionText = () => Resource.ForString("No");
+            filters.BooleanTrueOptionText = () => Resource.ForString("Yes");
+        });
 
-            RegisterResources();
-            RegisterConstants(app);
-            RegisterMiddleware(app);
-        }
-        public void ConfigureServices(IServiceCollection services)
+        services.AddLogging(builder =>
         {
-            ConfigureMvc(services);
-            ConfigureOptions(services);
-            ConfigureDependencies(services);
-        }
+            builder.AddConfiguration(Config.GetSection("Logging"));
 
-        private void ConfigureMvc(IServiceCollection services)
+            if (Environment.IsDevelopment())
+                builder.AddConsole();
+            else
+                builder.AddProvider(new FileLoggerProvider(Config["Logging:File:Path"], Config.GetValue<Int64>("Logging:File:RollSize")));
+        });
+    }
+    private void ConfigureOptions(IServiceCollection services)
+    {
+        services.Configure<RouteOptions>(options => options.ConstraintMap["slug"] = typeof(SlugifyTransformer));
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+        services.Configure<MailConfiguration>(Config.GetSection("Mail"));
+        services.Configure<CookieTempDataProviderOptions>(tempData =>
         {
-            services
-                .AddMvc()
-                .AddMvcOptions(options =>
-                {
-                    options.Filters.Add<LanguageFilter>();
-                    options.Filters.Add<TransactionFilter>();
-                    options.Filters.Add<AuthorizationFilter>();
-                    ModelMessagesProvider.Set(options.ModelBindingMessageProvider);
-                    options.ModelMetadataDetailsProviders.Add(new DisplayMetadataProvider());
-                    options.ModelBinderProviders.Insert(4, new TrimmingModelBinderProvider());
-                })
-                .AddRazorOptions(options => options.ViewLocationExpanders.Add(new ViewLocationExpander()))
-                .AddViewOptions(options => options.ClientModelValidatorProviders.Add(new ClientValidatorProvider()));
-
-            services.AddAuthentication("Cookies").AddCookie(authentication =>
-            {
-                authentication.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                authentication.Cookie.Name = Config["Cookies:Auth"];
-                authentication.Events = new AuthenticationEvents();
-                authentication.Cookie.HttpOnly = true;
-            });
-
-            services.AddMvcGrid(filters =>
-            {
-                filters.BooleanFalseOptionText = () => Resource.ForString("No");
-                filters.BooleanTrueOptionText = () => Resource.ForString("Yes");
-            });
-
-            services.AddLogging(builder =>
-            {
-                builder.AddConfiguration(Config.GetSection("Logging"));
-
-                if (Environment.IsDevelopment())
-                    builder.AddConsole();
-                else
-                    builder.AddProvider(new FileLoggerProvider(Config["Logging:File:Path"], Config.GetValue<Int64>("Logging:File:RollSize")));
-            });
-        }
-        private void ConfigureOptions(IServiceCollection services)
+            tempData.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            tempData.Cookie.Name = Config["Cookies:TempData"];
+            tempData.Cookie.HttpOnly = true;
+        });
+        services.Configure<AntiforgeryOptions>(antiforgery =>
         {
-            services.Configure<RouteOptions>(options => options.ConstraintMap["slug"] = typeof(SlugifyTransformer));
-            services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-            services.Configure<MailConfiguration>(Config.GetSection("Mail"));
-            services.Configure<CookieTempDataProviderOptions>(tempData =>
-            {
-                tempData.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                tempData.Cookie.Name = Config["Cookies:TempData"];
-                tempData.Cookie.HttpOnly = true;
-            });
-            services.Configure<AntiforgeryOptions>(antiforgery =>
-            {
-                antiforgery.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                antiforgery.Cookie.Name = Config["Cookies:Antiforgery"];
-                antiforgery.FormFieldName = "_Token_";
-                antiforgery.Cookie.HttpOnly = true;
-            });
-            services.Configure<SessionOptions>(session =>
-            {
-                session.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                session.Cookie.Name = Config["Cookies:Session"];
-                session.Cookie.HttpOnly = true;
-            });
-        }
-        private void ConfigureDependencies(IServiceCollection services)
+            antiforgery.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            antiforgery.Cookie.Name = Config["Cookies:Antiforgery"];
+            antiforgery.FormFieldName = "_Token_";
+            antiforgery.Cookie.HttpOnly = true;
+        });
+        services.Configure<SessionOptions>(session =>
         {
-            services.AddSession();
-            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            session.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            session.Cookie.Name = Config["Cookies:Session"];
+            session.Cookie.HttpOnly = true;
+        });
+    }
+    private void ConfigureDependencies(IServiceCollection services)
+    {
+        services.AddSession();
+        services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<Configuration>();
-            services.AddDbContext<DbContext, Context>(options =>
-            {
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(Config["Data:Connection"]);
-            });
-            services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
-                provider.GetRequiredService<DbContext>(),
-                provider.GetRequiredService<IMapper>(),
-                provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User.Id() ?? 0));
-
-            services.AddSingleton<IHasher, BCrypter>();
-            services.AddSingleton<IMailClient, SmtpMailClient>();
-            services.AddSingleton<IValidationAttributeAdapterProvider, ValidationAdapterProvider>();
-            services.AddSingleton<IAuthorization>(provider => new Authorization(typeof(AController).Assembly, provider));
-            services.AddSingleton(new MapperConfiguration(mapper => mapper.AddMaps(typeof(AView).Assembly)).CreateMapper());
-
-            Language[] supported = Config.GetSection("Languages:Supported").Get<Language[]>();
-            services.AddSingleton<ILanguages>(new Languages(Config["Languages:Default"], supported));
-
-            services.AddSingleton<ISiteMap>(provider => new SiteMap(
-                File.ReadAllText(Config["SiteMap:Path"]), provider.GetRequiredService<IAuthorization>()));
-
-            services.AddScopedImplementations<IService>();
-            services.AddScopedImplementations<IValidator>();
-
-            IServiceProvider provider = services.BuildServiceProvider();
-            LinkGenerator generator = provider.GetRequiredService<LinkGenerator>();
-
-            services.Remove(services.First(descriptor => descriptor.ServiceType == typeof(LinkGenerator)));
-            services.AddSingleton<LinkGenerator>(new DefaultLinkGenerator(generator));
-        }
-
-        private void RegisterResources()
+        services.AddScoped<Configuration>();
+        services.AddDbContext<DbContext, Context>(options =>
         {
-            if (Config["Resources:Path"] is String path && Directory.Exists(path))
-                foreach (String resource in Directory.GetFiles(path, "*.json", SearchOption.AllDirectories))
-                {
-                    String type = Path.GetFileNameWithoutExtension(resource);
-                    String language = Path.GetExtension(type).TrimStart('.');
-                    type = Path.GetFileNameWithoutExtension(type);
+            options.EnableSensitiveDataLogging();
+            options.UseSqlServer(Config["Data:Connection"]);
+        });
+        services.AddScoped<IUnitOfWork>(provider => new AuditedUnitOfWork(
+            provider.GetRequiredService<DbContext>(),
+            provider.GetRequiredService<IMapper>(),
+            provider.GetRequiredService<IHttpContextAccessor>().HttpContext?.User.Id() ?? 0));
 
-                    Resource.Set(type).Override(language, File.ReadAllText(resource));
-                }
+        services.AddSingleton<IHasher, BCrypter>();
+        services.AddSingleton<IMailClient, SmtpMailClient>();
+        services.AddSingleton<IValidationAttributeAdapterProvider, ValidationAdapterProvider>();
+        services.AddSingleton<IAuthorization>(provider => new Authorization(typeof(AController).Assembly, provider));
+        services.AddSingleton(new MapperConfiguration(mapper => mapper.AddMaps(typeof(AView).Assembly)).CreateMapper());
 
-            foreach (Type view in typeof(AView).Assembly.GetTypes())
+        Language[] supported = Config.GetSection("Languages:Supported").Get<Language[]>();
+        services.AddSingleton<ILanguages>(new Languages(Config["Languages:Default"], supported));
+
+        services.AddSingleton<ISiteMap>(provider => new SiteMap(
+            File.ReadAllText(Config["SiteMap:Path"]), provider.GetRequiredService<IAuthorization>()));
+
+        services.AddScopedImplementations<IService>();
+        services.AddScopedImplementations<IValidator>();
+
+        IServiceProvider provider = services.BuildServiceProvider();
+        LinkGenerator generator = provider.GetRequiredService<LinkGenerator>();
+
+        services.Remove(services.First(descriptor => descriptor.ServiceType == typeof(LinkGenerator)));
+        services.AddSingleton<LinkGenerator>(new DefaultLinkGenerator(generator));
+    }
+
+    private void RegisterResources()
+    {
+        if (Config["Resources:Path"] is String path && Directory.Exists(path))
+            foreach (String resource in Directory.GetFiles(path, "*.json", SearchOption.AllDirectories))
             {
-                Type type = view;
+                String type = Path.GetFileNameWithoutExtension(resource);
+                String language = Path.GetExtension(type).TrimStart('.');
+                type = Path.GetFileNameWithoutExtension(type);
 
-                while (typeof(AView).IsAssignableFrom(type.BaseType))
-                {
-                    Resource.Set(view.Name).Inherit(Resource.Set(type.BaseType!.Name));
+                Resource.Set(type).Override(language, File.ReadAllText(resource));
+            }
 
-                    type = type.BaseType;
-                }
+        foreach (Type view in typeof(AView).Assembly.GetTypes())
+        {
+            Type type = view;
+
+            while (typeof(AView).IsAssignableFrom(type.BaseType))
+            {
+                Resource.Set(view.Name).Inherit(Resource.Set(type.BaseType!.Name));
+
+                type = type.BaseType;
             }
         }
-        private void RegisterConstants(IApplicationBuilder app)
+    }
+    private void RegisterConstants(IApplicationBuilder app)
+    {
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        using IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+    }
+    private void RegisterMiddleware(IApplicationBuilder app)
+    {
+        if (Environment.IsDevelopment())
+            app.UseMiddleware<DeveloperExceptionPageMiddleware>();
+        else
+            app.UseMiddleware<ErrorResponseMiddleware>();
+
+        app.UseMiddleware<SecureHeadersMiddleware>();
+
+        app.UseHttpsRedirection();
+
+        app.UseStaticFiles(new StaticFileOptions
         {
-            using IServiceScope scope = app.ApplicationServices.CreateScope();
-            using IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-        }
-        private void RegisterMiddleware(IApplicationBuilder app)
+            OnPrepareResponse = response => response.Context.Response.Headers["Cache-Control"] = "max-age=8640000"
+        });
+
+        app.UseSession();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            if (Environment.IsDevelopment())
-                app.UseMiddleware<DeveloperExceptionPageMiddleware>();
-            else
-                app.UseMiddleware<ErrorResponseMiddleware>();
+            endpoints.MapControllerRoute("MultiArea", "{language}/{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
+            endpoints.MapControllerRoute("DefaultArea", "{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
+            endpoints.MapControllerRoute("Multi", "{language}/{controller:slug}/{action:slug=Index}/{id:long?}");
+            endpoints.MapControllerRoute("Default", "{controller:slug}/{action:slug=Index}/{id:long?}");
+            endpoints.MapControllerRoute("Home", "{controller:slug=Home}/{action:slug=Index}");
+        });
+    }
 
-            app.UseMiddleware<SecureHeadersMiddleware>();
+    private void SeedDatabase(IApplicationBuilder app)
+    {
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        using Configuration configuration = scope.ServiceProvider.GetRequiredService<Configuration>();
 
-            app.UseHttpsRedirection();
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = response => response.Context.Response.Headers["Cache-Control"] = "max-age=8640000"
-            });
-
-            app.UseSession();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("MultiArea", "{language}/{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
-                endpoints.MapControllerRoute("DefaultArea", "{area:slug:exists}/{controller:slug}/{action:slug=Index}/{id:long?}");
-                endpoints.MapControllerRoute("Multi", "{language}/{controller:slug}/{action:slug=Index}/{id:long?}");
-                endpoints.MapControllerRoute("Default", "{controller:slug}/{action:slug=Index}/{id:long?}");
-                endpoints.MapControllerRoute("Home", "{controller:slug=Home}/{action:slug=Index}");
-            });
-        }
-
-        private void SeedDatabase(IApplicationBuilder app)
-        {
-            using IServiceScope scope = app.ApplicationServices.CreateScope();
-            using Configuration configuration = scope.ServiceProvider.GetRequiredService<Configuration>();
-
-            configuration.Migrate();
-        }
+        configuration.Migrate();
     }
 }

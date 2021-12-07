@@ -1,35 +1,33 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using MvcTemplate.Services;
 using MvcTemplate.Validators;
-using System;
 
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+public abstract class ValidatedController<TValidator, TService> : ServicedController<TService>
+    where TValidator : IValidator
+    where TService : IService
 {
-    public abstract class ValidatedController<TValidator, TService> : ServicedController<TService>
-        where TValidator : IValidator
-        where TService : IService
+    protected TValidator Validator { get; }
+
+    protected ValidatedController(TValidator validator, TService service)
+        : base(service)
     {
-        protected TValidator Validator { get; }
+        Validator = validator;
+    }
 
-        protected ValidatedController(TValidator validator, TService service)
-            : base(service)
-        {
-            Validator = validator;
-        }
+    public override void OnActionExecuting(ActionExecutingContext context)
+    {
+        base.OnActionExecuting(context);
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
+        Validator.ModelState = ModelState;
+        Validator.Alerts = Alerts;
+    }
 
-            Validator.ModelState = ModelState;
-            Validator.Alerts = Alerts;
-        }
+    protected override void Dispose(Boolean disposing)
+    {
+        Validator.Dispose();
 
-        protected override void Dispose(Boolean disposing)
-        {
-            Validator.Dispose();
-
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

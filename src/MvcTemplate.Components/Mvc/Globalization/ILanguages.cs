@@ -1,13 +1,10 @@
-using System;
+namespace MvcTemplate.Components.Mvc;
 
-namespace MvcTemplate.Components.Mvc
+public interface ILanguages
 {
-    public interface ILanguages
-    {
-        Language Default { get; }
-        Language[] Supported { get; }
-        Language Current { get; set; }
+    Language Default { get; }
+    Language[] Supported { get; }
+    Language Current { get; set; }
 
-        Language this[String abbreviation] { get; }
-    }
+    Language this[String abbreviation] { get; }
 }

@@ -1,13 +1,10 @@
-using Xunit;
+namespace MvcTemplate.Components.Security;
 
-namespace MvcTemplate.Components.Security
+public class AuthorizeAsAttributeTests
 {
-    public class AuthorizeAsAttributeTests
+    [Fact]
+    public void AuthorizeAsAttribute_SetsAction()
     {
-        [Fact]
-        public void AuthorizeAsAttribute_SetsAction()
-        {
-            Assert.Equal("Action", new AuthorizeAsAttribute("Action").Action);
-        }
+        Assert.Equal("Action", new AuthorizeAsAttribute("Action").Action);
     }
 }

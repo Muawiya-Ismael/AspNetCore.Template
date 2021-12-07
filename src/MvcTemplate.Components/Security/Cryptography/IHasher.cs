@@ -1,13 +1,10 @@
-using System;
+namespace MvcTemplate.Components.Security;
 
-namespace MvcTemplate.Components.Security
+public interface IHasher
 {
-    public interface IHasher
-    {
-        String Hash(String value);
-        String HashPassword(String value);
+    String Hash(String value);
+    String HashPassword(String value);
 
-        Boolean Verify(String? value, String? hash);
-        Boolean VerifyPassword(String? value, String? passhash);
-    }
+    Boolean Verify(String? value, String? hash);
+    Boolean VerifyPassword(String? value, String? passhash);
 }

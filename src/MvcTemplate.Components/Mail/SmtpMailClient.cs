@@ -1,36 +1,33 @@
 using Microsoft.Extensions.Options;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MvcTemplate.Components.Mail
+namespace MvcTemplate.Components.Mail;
+
+[ExcludeFromCodeCoverage]
+public class SmtpMailClient : IMailClient
 {
-    [ExcludeFromCodeCoverage]
-    public class SmtpMailClient : IMailClient
+    private MailConfiguration Config { get; }
+
+    public SmtpMailClient(IOptions<MailConfiguration> config)
     {
-        private MailConfiguration Config { get; }
+        Config = config.Value;
+    }
 
-        public SmtpMailClient(IOptions<MailConfiguration> config)
-        {
-            Config = config.Value;
-        }
+    public async Task SendAsync(String email, String subject, String body)
+    {
+        using SmtpClient client = new(Config.Host, Config.Port);
+        using MailMessage mail = new(Config.Sender!, email, subject, body);
 
-        public async Task SendAsync(String email, String subject, String body)
-        {
-            using SmtpClient client = new(Config.Host, Config.Port);
-            using MailMessage mail = new(Config.Sender!, email, subject, body);
+        client.Credentials = new NetworkCredential(Config.Sender, Config.Password);
+        client.EnableSsl = Config.EnableSsl;
 
-            client.Credentials = new NetworkCredential(Config.Sender, Config.Password);
-            client.EnableSsl = Config.EnableSsl;
+        mail.SubjectEncoding = Encoding.UTF8;
+        mail.BodyEncoding = Encoding.UTF8;
+        mail.IsBodyHtml = true;
 
-            mail.SubjectEncoding = Encoding.UTF8;
-            mail.BodyEncoding = Encoding.UTF8;
-            mail.IsBodyHtml = true;
-
-            await client.SendMailAsync(mail);
-        }
+        await client.SendMailAsync(mail);
     }
 }

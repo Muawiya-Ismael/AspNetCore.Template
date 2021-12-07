@@ -1,19 +1,15 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+namespace MvcTemplate.Objects;
 
-namespace MvcTemplate.Objects
+public class AccountEditView : AView<Account>
 {
-    public class AccountEditView : AView<Account>
-    {
-        [StringLength(32)]
-        public String Username { get; set; }
+    [StringLength(32)]
+    public String Username { get; set; }
 
-        [EmailAddress]
-        [StringLength(256)]
-        public String Email { get; set; }
+    [EmailAddress]
+    [StringLength(256)]
+    public String Email { get; set; }
 
-        public Boolean IsLocked { get; set; }
+    public Boolean IsLocked { get; set; }
 
-        public Int64? RoleId { get; set; }
-    }
+    public Int64? RoleId { get; set; }
 }

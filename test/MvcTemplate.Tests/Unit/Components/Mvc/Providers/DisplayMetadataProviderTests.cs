@@ -2,54 +2,50 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using MvcTemplate.Objects;
 using MvcTemplate.Resources;
-using System;
-using System.Reflection;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class DisplayMetadataProviderTests
 {
-    public class DisplayMetadataProviderTests
+    [Fact]
+    public void CreateDisplayMetadata_NullContainerType_DoesNotSetDisplayName()
     {
-        [Fact]
-        public void CreateDisplayMetadata_NullContainerType_DoesNotSetDisplayName()
-        {
-            DisplayMetadataProvider provider = new();
-            DisplayMetadataProviderContext context = new(
-                   ModelMetadataIdentity.ForType(typeof(RoleView)),
-                   ModelAttributes.GetAttributesForType(typeof(RoleView)));
+        DisplayMetadataProvider provider = new();
+        DisplayMetadataProviderContext context = new(
+            ModelMetadataIdentity.ForType(typeof(RoleView)),
+            ModelAttributes.GetAttributesForType(typeof(RoleView)));
 
-            provider.CreateDisplayMetadata(context);
+        provider.CreateDisplayMetadata(context);
 
-            Assert.Null(context.DisplayMetadata.DisplayName);
-        }
+        Assert.Null(context.DisplayMetadata.DisplayName);
+    }
 
-        [Fact]
-        public void CreateDisplayMetadata_NullResource_DoesNotSetDisplayName()
-        {
-            PropertyInfo property = typeof(AllTypesView).GetProperty(nameof(AllTypesView.StringField))!;
-            DisplayMetadataProviderContext context = new(
-                ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(AllTypesView)),
-                ModelAttributes.GetAttributesForType(typeof(AllTypesView)));
+    [Fact]
+    public void CreateDisplayMetadata_NullResource_DoesNotSetDisplayName()
+    {
+        PropertyInfo property = typeof(AllTypesView).GetProperty(nameof(AllTypesView.StringField))!;
+        DisplayMetadataProviderContext context = new(
+            ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(AllTypesView)),
+            ModelAttributes.GetAttributesForType(typeof(AllTypesView)));
 
-            new DisplayMetadataProvider().CreateDisplayMetadata(context);
+        new DisplayMetadataProvider().CreateDisplayMetadata(context);
 
-            Assert.Null(context.DisplayMetadata.DisplayName);
-        }
+        Assert.Null(context.DisplayMetadata.DisplayName);
+    }
 
-        [Fact]
-        public void CreateDisplayMetadata_SetsDisplayName()
-        {
-            PropertyInfo property = typeof(RoleView).GetProperty(nameof(RoleView.Title))!;
-            DisplayMetadataProviderContext context = new(
-                ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(RoleView)),
-                ModelAttributes.GetAttributesForType(typeof(RoleView)));
+    [Fact]
+    public void CreateDisplayMetadata_SetsDisplayName()
+    {
+        PropertyInfo property = typeof(RoleView).GetProperty(nameof(RoleView.Title))!;
+        DisplayMetadataProviderContext context = new(
+            ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(RoleView)),
+            ModelAttributes.GetAttributesForType(typeof(RoleView)));
 
-            new DisplayMetadataProvider().CreateDisplayMetadata(context);
+        new DisplayMetadataProvider().CreateDisplayMetadata(context);
 
-            String expected = Resource.ForProperty(typeof(RoleView), nameof(RoleView.Title));
-            String actual = context.DisplayMetadata.DisplayName();
+        String expected = Resource.ForProperty(typeof(RoleView), nameof(RoleView.Title));
+        String? actual = context.DisplayMetadata.DisplayName?.Invoke();
 
-            Assert.Equal(expected, actual);
-        }
+        Assert.Equal(expected, actual);
     }
 }

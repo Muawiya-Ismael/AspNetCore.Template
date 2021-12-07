@@ -8,12 +8,14 @@
             <div class="widget-header-buttons">
                 <authorize action="@nameof(Roles.Edit)">
                     <a asp-action="@nameof(Roles.Edit)" asp-route-id="@Model.Id" class="btn">
-                        <span class="fa fa-pencil-alt"></span><span class="text">@Resource.ForAction(nameof(Roles.Edit))</span>
+                        <span class="fa fa-pencil-alt"></span>
+                        <span class="text">@Resource.ForAction(nameof(Roles.Edit))</span>
                     </a>
                 </authorize>
                 <authorize action="@nameof(Roles.Delete)">
                     <a asp-action="@nameof(Roles.Delete)" asp-route-id="@Model.Id" class="btn">
-                        <span class="fa fa-times"></span><span class="text">@Resource.ForAction(nameof(Roles.Delete))</span>
+                        <span class="fa fa-times"></span>
+                        <span class="text">@Resource.ForAction(nameof(Roles.Delete))</span>
                     </a>
                 </authorize>
             </div>

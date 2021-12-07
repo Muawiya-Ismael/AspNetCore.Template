@@ -3,27 +3,24 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class TruncatedAttribute : ModelBinderAttribute, IModelBinder
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class TruncatedAttribute : ModelBinderAttribute, IModelBinder
+    public TruncatedAttribute()
     {
-        public TruncatedAttribute()
-        {
-            BinderType = GetType();
-        }
+        BinderType = GetType();
+    }
 
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
-        {
-            ILoggerFactory logger = bindingContext.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+    public async Task BindModelAsync(ModelBindingContext bindingContext)
+    {
+        ILoggerFactory logger = bindingContext.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
 
-            await new SimpleTypeModelBinder(typeof(DateTime?), logger).BindModelAsync(bindingContext);
+        await new SimpleTypeModelBinder(typeof(DateTime?), logger).BindModelAsync(bindingContext);
 
-            if (bindingContext.Result.IsModelSet)
-                bindingContext.Result = ModelBindingResult.Success((bindingContext.Result.Model as DateTime?)?.Date);
-        }
+        if (bindingContext.Result.IsModelSet)
+            bindingContext.Result = ModelBindingResult.Success((bindingContext.Result.Model as DateTime?)?.Date);
     }
 }

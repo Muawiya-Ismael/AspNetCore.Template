@@ -1,47 +1,45 @@
 using MvcTemplate.Resources;
-using Xunit;
 
-namespace MvcTemplate.Components.Mvc
+namespace MvcTemplate.Components.Mvc;
+
+public class IntegerAttributeTests
 {
-    public class IntegerAttributeTests
+    private IntegerAttribute attribute;
+
+    public IntegerAttributeTests()
     {
-        private IntegerAttribute attribute;
+        attribute = new IntegerAttribute();
+    }
 
-        public IntegerAttributeTests()
-        {
-            attribute = new IntegerAttribute();
-        }
+    [Fact]
+    public void IntegerAttribute_SetsErrorMessage()
+    {
+        attribute = new IntegerAttribute();
 
-        [Fact]
-        public void IntegerAttribute_SetsErrorMessage()
-        {
-            attribute = new IntegerAttribute();
+        Assert.Equal(Validation.For("Integer", "Test"), attribute.FormatErrorMessage("Test"));
+    }
 
-            Assert.Equal(Validation.For("Integer", "Test"), attribute.FormatErrorMessage("Test"));
-        }
+    [Fact]
+    public void IsValid_Null()
+    {
+        Assert.True(attribute.IsValid(null));
+    }
 
-        [Fact]
-        public void IsValid_Null()
-        {
-            Assert.True(attribute.IsValid(null));
-        }
+    [Fact]
+    public void IsValid_RealValue_ReturnsFalse()
+    {
+        Assert.False(attribute.IsValid(12.549));
+    }
 
-        [Fact]
-        public void IsValid_RealValue_ReturnsFalse()
-        {
-            Assert.False(attribute.IsValid(12.549));
-        }
+    [Fact]
+    public void IsValid_IntegerValue()
+    {
+        Assert.True(attribute.IsValid(-254679849874447));
+    }
 
-        [Fact]
-        public void IsValid_IntegerValue()
-        {
-            Assert.True(attribute.IsValid(-254679849874447));
-        }
-
-        [Fact]
-        public void IsValid_LongIntegerValue()
-        {
-            Assert.True(attribute.IsValid("+92233720368547758074878484887777"));
-        }
+    [Fact]
+    public void IsValid_LongIntegerValue()
+    {
+        Assert.True(attribute.IsValid("+92233720368547758074878484887777"));
     }
 }

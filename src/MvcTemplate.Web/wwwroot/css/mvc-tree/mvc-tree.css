@@ -21,8 +21,9 @@
 
 .mvc-tree a {
     transition: background-color 0.2s;
-    border-radius: 2px;
     padding-right: 4px;
+    border-radius: 2px;
+    margin-left: -5px;
     line-height: 24px;
     color: inherit;
     outline: none;

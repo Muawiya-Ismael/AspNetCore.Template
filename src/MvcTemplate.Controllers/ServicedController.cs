@@ -1,23 +1,21 @@
 using MvcTemplate.Services;
-using System;
 
-namespace MvcTemplate.Controllers
+namespace MvcTemplate.Controllers;
+
+public abstract class ServicedController<TService> : AController
+    where TService : IService
 {
-    public abstract class ServicedController<TService> : AController
-        where TService : IService
+    protected TService Service { get; }
+
+    protected ServicedController(TService service)
     {
-        protected TService Service { get; }
+        Service = service;
+    }
 
-        protected ServicedController(TService service)
-        {
-            Service = service;
-        }
+    protected override void Dispose(Boolean disposing)
+    {
+        Service.Dispose();
 
-        protected override void Dispose(Boolean disposing)
-        {
-            Service.Dispose();
-
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

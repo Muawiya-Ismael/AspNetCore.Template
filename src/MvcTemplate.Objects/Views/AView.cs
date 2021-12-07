@@ -1,47 +1,45 @@
 using AutoMapper;
-using System;
 
-namespace MvcTemplate.Objects
+namespace MvcTemplate.Objects;
+
+public abstract class AView
 {
-    public abstract class AView
+    public virtual Int64 Id
     {
-        public virtual Int64 Id
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        public virtual DateTime CreationDate
+    public virtual DateTime CreationDate
+    {
+        get
         {
-            get
-            {
-                if (!IsCreationDateSet)
-                    CreationDate = DateTime.Now;
+            if (!IsCreationDateSet)
+                CreationDate = DateTime.Now;
 
-                return InternalCreationDate;
-            }
-            protected set
-            {
-                IsCreationDateSet = true;
-                InternalCreationDate = value;
-            }
+            return InternalCreationDate;
         }
-        private Boolean IsCreationDateSet
+        protected set
         {
-            get;
-            set;
-        }
-        private DateTime InternalCreationDate
-        {
-            get;
-            set;
+            IsCreationDateSet = true;
+            InternalCreationDate = value;
         }
     }
-    public abstract class AView<TModel> : AView
+    private Boolean IsCreationDateSet
     {
-        internal virtual void Map(Profile profile)
-        {
-            profile.CreateMap(typeof(TModel), GetType()).ReverseMap();
-        }
+        get;
+        set;
+    }
+    private DateTime InternalCreationDate
+    {
+        get;
+        set;
+    }
+}
+public abstract class AView<TModel> : AView
+{
+    internal virtual void Map(Profile profile)
+    {
+        profile.CreateMap(typeof(TModel), GetType()).ReverseMap();
     }
 }
