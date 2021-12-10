@@ -33,13 +33,13 @@ public sealed class Configuration : IDisposable
     {
         List<Permission> permissions = new()
         {
-            new Permission { Area = "Administration", Controller = "Accounts", Action = "Create" },
-            new Permission { Area = "Administration", Controller = "Accounts", Action = "Edit" },
-            new Permission { Area = "Administration", Controller = "Accounts", Action = "Index" },
-            new Permission { Area = "Administration", Controller = "Roles", Action = "Create" },
-            new Permission { Area = "Administration", Controller = "Roles", Action = "Delete" },
-            new Permission { Area = "Administration", Controller = "Roles", Action = "Edit" },
-            new Permission { Area = "Administration", Controller = "Roles", Action = "Index" }
+            new() { Area = "Administration", Controller = "Accounts", Action = "Create" },
+            new() { Area = "Administration", Controller = "Accounts", Action = "Edit" },
+            new() { Area = "Administration", Controller = "Accounts", Action = "Index" },
+            new() { Area = "Administration", Controller = "Roles", Action = "Create" },
+            new() { Area = "Administration", Controller = "Roles", Action = "Delete" },
+            new() { Area = "Administration", Controller = "Roles", Action = "Edit" },
+            new() { Area = "Administration", Controller = "Roles", Action = "Index" }
         };
 
         foreach (Permission permission in UnitOfWork.Select<Permission>().ToArray())

@@ -53,13 +53,11 @@ public class Module : GennyModule
 
         if (!File.Exists($"../MvcTemplate.Objects/Models/{path}/{Model}.cs") ||
             !File.Exists($"../MvcTemplate.Objects/Views/{path}/{Model}View.cs"))
-        {
             results = new Dictionary<String, GennyScaffoldingResult>
             {
                 { $"../MvcTemplate.Objects/Models/{path}/{Model}.cs", Scaffold("Objects/Model") },
                 { $"../MvcTemplate.Objects/Views/{path}/{Model}View.cs", Scaffold("Objects/View") }
             };
-        }
 
         if (results.Any(result => result.Value.Errors.Any()))
         {
@@ -214,12 +212,12 @@ public class Module : GennyModule
         Logger.Write("../MvcTemplate.Data/Migrations/Configuration.cs - ");
 
         String content = File.ReadAllText("../MvcTemplate.Data/Migrations/Configuration.cs");
-        String[] permissions = Regex.Matches(content, "new Permission {[^}]+}").Select(match => $"            {match.Value}").ToArray();
+        String[] permissions = Regex.Matches(content, "new\\(\\) {[^}]+}").Select(match => $"            {match.Value}").ToArray();
         String[] newPermissions = permissions
-            .Append($@"            new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Create"" }}")
-            .Append($@"            new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Delete"" }}")
-            .Append($@"            new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Edit"" }}")
-            .Append($@"            new Permission {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Index"" }}")
+            .Append($@"            new() {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Create"" }}")
+            .Append($@"            new() {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Delete"" }}")
+            .Append($@"            new() {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Edit"" }}")
+            .Append($@"            new() {{ Area = ""{Area}"", Controller = ""{Controller}"", Action = ""Index"" }}")
             .Distinct()
             .OrderBy(permission => permission)
             .ToArray();
@@ -230,7 +228,7 @@ public class Module : GennyModule
         }
         else
         {
-            content = Regex.Replace(content, @"( +new Permission {[^}]+},?\r?\n+)+", $"{String.Join(",\n", newPermissions)}\n");
+            content = Regex.Replace(content, @"( +new\(\) {[^}]+},?\r?\n+)+", $"{String.Join(",\n", newPermissions)}\n");
 
             File.WriteAllText("../MvcTemplate.Data/Migrations/Configuration.cs", content);
 
