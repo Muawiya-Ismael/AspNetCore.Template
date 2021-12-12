@@ -32,9 +32,9 @@ public class Startup
         Environment = host;
         Config = new ConfigurationBuilder()
             .SetBasePath(host.ContentRootPath)
-            .AddEnvironmentVariables("ASPNETCORE_")
             .AddJsonFile("configuration.json")
             .AddJsonFile($"configuration.{host.EnvironmentName.ToLower()}.json", optional: true)
+            .AddEnvironmentVariables($"MvcTemplate__{host.EnvironmentName}__")
             .Build();
     }
 

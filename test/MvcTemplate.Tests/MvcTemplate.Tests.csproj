@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="configuration.testing.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../src/MvcTemplate.Web/MvcTemplate.Web.csproj" />
   </ItemGroup>
 

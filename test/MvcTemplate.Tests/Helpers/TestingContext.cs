@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MvcTemplate.Data;
 using MvcTemplate.Objects;
 using MvcTemplate.Objects.Mapping;
@@ -13,10 +14,9 @@ public static class TestingContext
 
     static TestingContext()
     {
+        IConfiguration config = new ConfigurationBuilder().AddJsonFile($"configuration.testing.json").AddEnvironmentVariables("MvcTemplate__Testing__").Build();
         Mapper = new MapperConfiguration(mapper => mapper.AddProfile(new MappingProfile())).CreateMapper();
-        Options = new DbContextOptionsBuilder()
-            .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MvcTemplateTest;Trusted_Connection=True;MultipleActiveResultSets=True")
-            .Options;
+        Options = new DbContextOptionsBuilder().UseSqlServer(config["Data:Connection"]).Options;
 
         using Context context = new(Options);
 
