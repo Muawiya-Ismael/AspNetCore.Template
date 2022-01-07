@@ -18,6 +18,10 @@
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="System.Text.RegularExpressions" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <SourceRoot Remove="$(NugetPackageRoot)" />
     <SourceRoot Include="$(ProjectDir)" />
