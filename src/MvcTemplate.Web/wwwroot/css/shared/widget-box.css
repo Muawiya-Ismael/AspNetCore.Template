@@ -97,12 +97,12 @@
     text-align: right;
 }
 
-.widget-content .form-actions {
+.widget-content .control-actions {
     text-align: right;
 }
 
 @media (max-width: 991.98px) {
-    .widget-content .form-actions {
+    .widget-content .control-actions {
         text-align: center;
     }
 }
