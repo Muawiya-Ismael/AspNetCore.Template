@@ -31,11 +31,10 @@ public class ErrorResponseMiddleware
             try
             {
                 Logger.LogError(exception, "An unhandled exception has occurred while executing the request.");
-
-                await View(context, "/home/error");
             }
-            catch
+            finally
             {
+                await View(context, "/home/error");
             }
         }
     }
