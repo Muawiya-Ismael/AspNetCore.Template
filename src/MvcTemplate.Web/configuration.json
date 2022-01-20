@@ -28,7 +28,7 @@
         "Port": 587,
         "EnableSsl": true,
         "Host": "smtp.gmail.com",
-        "Sender": "MVC.Template@gmail.com",
+        "Sender": "change-it@gmail.com",
         "Password": "ChangeIt"
     },
     "SiteMap": {
