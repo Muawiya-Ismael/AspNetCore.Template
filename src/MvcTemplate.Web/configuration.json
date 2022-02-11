@@ -1,9 +1,9 @@
 {
     "Cookies": {
-        "Antiforgery": ".Web-Token",
-        "Auth": ".Web-Auth",
-        "TempData": ".Web-Temp",
-        "Session": ".Web-Session"
+        "Antiforgery": ".MvcTemplate-Token",
+        "Auth": ".MvcTemplate-Auth",
+        "TempData": ".MvcTemplate-Temp",
+        "Session": ".MvcTemplate-Session"
     },
     "Data": {
         "Connection": "Server=(localdb)\\mssqllocaldb;Database=MvcTemplate;Trusted_Connection=True;MultipleActiveResultSets=True"

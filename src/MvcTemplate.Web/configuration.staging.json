@@ -1,4 +1,10 @@
 {
+    "Cookies": {
+        "Antiforgery": ".MvcTemplate-Stage-Token",
+        "Auth": ".MvcTemplate-Stage-Auth",
+        "TempData": ".MvcTemplate-Stage-Temp",
+        "Session": ".MvcTemplate-Stage-Session"
+    },
     "Logging": {
         "LogLevel": {
             "Default": "Warning"
