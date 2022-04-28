@@ -27,6 +27,7 @@
     <Content Update="wwwroot/js/**" CopyToPublishDirectory="Never" />
     <Content Update="wwwroot/css/**" CopyToPublishDirectory="Never" />
     <Content Update="wwwroot/css/**/*.woff" CopyToPublishDirectory="Always" />
+    <Content Update="wwwroot/css/**/*.woff2" CopyToPublishDirectory="Always" />
     <Content Update="wwwroot/js/**/*.min.js" CopyToPublishDirectory="Always" />
     <Content Update="wwwroot/css/**/*.min.css" CopyToPublishDirectory="Always" />
     <Content Update="package.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
