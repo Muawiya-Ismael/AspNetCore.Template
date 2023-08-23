@@ -1,0 +1,42 @@
+@model IQueryable<CustomerView>
+
+<div class="col">
+    <div class="widget-box">
+        <div class="widget-header">
+            <span class="icon fa fa-th"></span>
+            <h5>@Resource.ForHeader("Customers")</h5>
+            <div class="widget-header-buttons">
+                <authorize action="@nameof(Customers.Create)">
+                    <a asp-action="@nameof(Customers.Create)" class="btn">
+                        <span class="far fa-file"></span>
+                        <span class="text">@Resource.ForAction(nameof(Customers.Create))</span>
+                    </a>
+                </authorize>
+            </div>
+        </div>
+        <div class="widget-content">
+            @(Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.AddAction(nameof(Customers.Details), "fa fa-info");
+                    columns.AddAction(nameof(Customers.Edit), "fa fa-pencil-alt");
+                    columns.AddAction(nameof(Customers.Delete), "fa fa-times");
+
+                    columns.AddProperty(model => model.Username);
+                    columns.AddProperty(model => model.FirstName);
+                    columns.AddProperty(model => model.LastName);
+                    columns.AddProperty(model => model.Email);
+                    columns.AddProperty(model => model.Phone);
+                    columns.AddProperty(model => model.Address);
+                    columns.AddProperty(model => model.DateOfBirth);
+                    columns.AddProperty(model => model.Gender);
+                    columns.AddProperty(model => model.Country);
+                    columns.AddBoolean(model => model.IsLocked);
+                    columns.AddProperty(model => model.RoleTitle);
+                })
+                .ApplyDefaults()
+                )
+        </div>
+    </div>
+</div>

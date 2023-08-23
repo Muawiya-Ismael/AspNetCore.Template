@@ -1,0 +1,147 @@
+@model CustomerCreateView
+
+<div class="col">
+    <div class="widget-box">
+        <div class="widget-header">
+            <span class="icon fa fa-th-list"></span>
+            <h5>@Resource.ForHeader("Customer")</h5>
+        </div>
+        <div class="widget-content">
+            <form asp-antiforgery="true">
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Username"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="Username" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="FirstName"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="FirstName" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="FirstName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="LastName"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="LastName" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="LastName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Password"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="Password" type="password" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Email"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="Email" class="text-lowercase" inputmode="email" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Phone"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input type="tel" asp-for="Phone" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Phone"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Address"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="Address" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Address"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="DateOfBirth">Date of Birth</label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input type="date" asp-for="DateOfBirth" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="DateOfBirth"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Gender"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <select asp-for="Gender">
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Gender"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="Country"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <input asp-for="Country" />
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="Country"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                </div>
+                <div class="form-group row">
+                    <div class="control-label col-md-4 col-xl-2">
+                        <label asp-for="RoleId"></label>
+                    </div>
+                    <div class="control-content col-md-8 col-xl-4">
+                        <div mvc-lookup-for="RoleId" handler="@nameof(Lookup.Role)"></div>
+                    </div>
+                    <div class="control-validation offset-md-4 col-md-8 offset-xl-0 col-xl-6">
+                        <span asp-validation-for="RoleId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="control-actions col-xl-6">
+                        <button class="btn btn-primary">@Resource.ForAction("Submit")</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

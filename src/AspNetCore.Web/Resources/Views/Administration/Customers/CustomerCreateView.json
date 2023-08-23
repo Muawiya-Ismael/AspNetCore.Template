@@ -1,0 +1,15 @@
+{
+    "Titles": {
+        "Email": "Email",
+        "Password": "Password",
+        "RoleId": "Role",
+        "Username": "Username",
+        "FirstName": "FirstName",
+        "LastName": "LastName",
+        "Phone": "Phone",
+        "Address": "Address",
+        "DateOfBirth": "DateOfBirth",
+        "Gender": "Gender",
+        "Country": "Country"
+    }
+}
