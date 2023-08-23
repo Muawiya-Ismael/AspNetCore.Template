@@ -21,31 +21,36 @@ public class DisplayMetadataProviderTests
     }
 
     [Fact]
-    public void CreateDisplayMetadata_NullResource_DoesNotSetDisplayName()
+    public void CreateDisplayMetadata_DisplayName_EmptyIsNull()
     {
+        String language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
         PropertyInfo property = typeof(AllTypesView).GetProperty(nameof(AllTypesView.StringField))!;
+        Resource.Set(nameof(AllTypesView))[language, "Titles", nameof(AllTypesView.StringField)] = "";
         DisplayMetadataProviderContext context = new(
             ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(AllTypesView)),
             ModelAttributes.GetAttributesForType(typeof(AllTypesView)));
 
         new DisplayMetadataProvider().CreateDisplayMetadata(context);
 
-        Assert.Null(context.DisplayMetadata.DisplayName);
+        Assert.Null(context.DisplayMetadata.DisplayName!.Invoke());
     }
 
     [Fact]
-    public void CreateDisplayMetadata_SetsDisplayName()
+    public void CreateDisplayMetadata_DisplayName_NoCache()
     {
-        PropertyInfo property = typeof(RoleView).GetProperty(nameof(RoleView.Title))!;
+        String language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        PropertyInfo property = typeof(AllTypesView).GetProperty(nameof(AllTypesView.StringField))!;
+        Resource.Set(nameof(AllTypesView))[language, "Titles", nameof(AllTypesView.StringField)] = "Test";
         DisplayMetadataProviderContext context = new(
-            ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(RoleView)),
-            ModelAttributes.GetAttributesForType(typeof(RoleView)));
+            ModelMetadataIdentity.ForProperty(property, typeof(String), typeof(AllTypesView)),
+            ModelAttributes.GetAttributesForType(typeof(AllTypesView)));
 
         new DisplayMetadataProvider().CreateDisplayMetadata(context);
 
-        String expected = Resource.ForProperty(typeof(RoleView), nameof(RoleView.Title));
-        String? actual = context.DisplayMetadata.DisplayName?.Invoke();
+        Assert.Equal("Test", context.DisplayMetadata.DisplayName?.Invoke());
 
-        Assert.Equal(expected, actual);
+        Resource.Set(nameof(AllTypesView))[language, "Titles", nameof(AllTypesView.StringField)] = "Testing";
+
+        Assert.Equal("Testing", context.DisplayMetadata.DisplayName?.Invoke());
     }
 }

@@ -66,7 +66,6 @@ public static class MvcGridExtensions
     public static IGridColumn<T, TProperty> AddEnum<T, TProperty>(this IGridColumnsOf<T> columns, Expression<Func<T, TProperty>> expression)
     {
         Type type = Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty);
-        IDictionary<String, String?> titles = Resource.ForEnum(type.Name, "Titles");
         Func<T, TProperty> valueFor = expression.Compile();
 
         return columns
@@ -74,7 +73,7 @@ public static class MvcGridExtensions
             .Named(NameFor(expression))
             .Css(CssClassFor<TProperty>())
             .Titled(Resource.ForProperty(expression))
-            .RenderedAs(model => titles.TryGetValue(valueFor(model)?.ToString() ?? "", out String? title) ? title : "");
+            .RenderedAs(model => Resource.Localized(type.Name, "Titles", valueFor(model)?.ToString() ?? ""));
     }
     public static IGridColumn<T, TProperty> AddProperty<T, TProperty>(this IGridColumnsOf<T> columns, Expression<Func<T, TProperty>> expression)
     {

@@ -10,8 +10,7 @@ public class DisplayMetadataProvider : IDisplayMetadataProvider
     {
         if (context.Key.MetadataKind == ModelMetadataKind.Property && context.Key.ContainerType is Type view)
         {
-            if (Resource.ForProperty(view, context.Key.Name!) is { Length: > 0 } title)
-                context.DisplayMetadata.DisplayName = () => title;
+            context.DisplayMetadata.DisplayName = () => Resource.ForProperty(view, context.Key.Name!) is { Length: > 0 } title ? title : null;
         }
         else if (context.Key.MetadataKind == ModelMetadataKind.Type)
         {
@@ -19,20 +18,16 @@ public class DisplayMetadataProvider : IDisplayMetadataProvider
 
             if (type.IsEnum)
             {
-                IDictionary<String, String?> titles = Resource.ForEnum(type.Name, "Titles");
-                IDictionary<String, String?> groups = Resource.ForEnum(type.Name, "Groups");
-
                 context.DisplayMetadata.EnumGroupedDisplayNamesAndValues = Enum
                     .GetNames(type)
                     .Select(name =>
                     {
-                        String group = groups.ContainsKey(name) ? groups[name] ?? "" : "";
-                        String title = titles.ContainsKey(name) ? titles[name] ?? name : name;
+                        String group = Resource.Localized(type.Name, "Groups", name);
+                        String title = Resource.Localized(type.Name, "Titles", name);
                         String value = (type.GetField(name)!.GetValue(null) as Enum)!.ToString("d");
 
                         return new KeyValuePair<EnumGroupAndName, String>(new EnumGroupAndName(group, title), value);
-                    })
-                    .ToArray();
+                    });
             }
         }
     }

@@ -93,15 +93,7 @@ public static class Resource
         return expression is MemberExpression member ? ForProperty(member.Expression!.Type, member.Member.Name) : "";
     }
 
-    public static IDictionary<String, String?> ForEnum(String type, String group)
-    {
-        ResourceSet resources = Set(type);
-        String language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-
-        return resources[language, group] ?? resources["", group] ?? new Dictionary<String, String?>();
-    }
-
-    internal static String Localized(String type, String group, String key)
+    public static String Localized(String type, String group, String key)
     {
         ResourceSet resources = Set(type);
         String language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
