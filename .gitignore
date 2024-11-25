@@ -1,8 +1,8 @@
-/src/MvcTemplate.Web/wwwroot/css/**/*.min.css
-/src/MvcTemplate.Web/wwwroot/js/**/*.min.js
-/src/MvcTemplate.Web/node_modules/
+/src/AspNetCore.Web/wwwroot/css/**/*.min.css
+/src/AspNetCore.Web/wwwroot/js/**/*.min.js
+/src/AspNetCore.Web/node_modules/
 
-/src/MvcTemplate.Web/Logs/
+/src/AspNetCore.Web/Logs/
 .vscode/
 .vs/
 bin/
